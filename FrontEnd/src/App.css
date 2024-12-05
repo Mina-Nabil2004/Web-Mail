@@ -1,42 +1,60 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.app-layout {
+  display: flex;
+  margin-top: 80px; /* Assuming this is for spacing below the header */
+  justify-content: space-between; /* Ensures content is between left and right sidebars */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.content {
+  flex: 1;
+  padding: 20px;
+  margin-left: 50px;
+  margin-right: 10px; /* This is fine, as it accounts for Sidebar2 width */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.email-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.email-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.read-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.read-button:hover {
+  background-color: #0056b3;
+}
+
+.left-sidebar {
+  flex: 0 0 250px; /* Fixed width for the left sidebar (Menu) */
+}
+
+.right-sidebar {
+  flex: 0 0 250px; /* Fixed width for the right sidebar (Sidebar2) */
+}
+
+/* Optional: Handle responsiveness */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column; /* Stack the layout vertically on small screens */
   }
-  to {
-    transform: rotate(360deg);
+
+  .content {
+    margin-right: 0; /* Remove right margin for smaller screens */
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  .left-sidebar, .right-sidebar {
+    flex: 0 0 100%; /* Make both sidebars full width */
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }

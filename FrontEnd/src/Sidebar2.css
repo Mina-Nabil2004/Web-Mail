@@ -1,0 +1,50 @@
+.sidebar {
+    width: 250px;
+    background-color: #f4f4f4;
+    border-left: 1px solid #ddd; /* Left border for separation from content */
+    position: fixed; /* Fix the sidebar to the rightmost part of the page */
+    top: 80px; /* Position below the header */
+    right: 0; /* Anchor to the rightmost side */
+    height: calc(100vh - 80px); /* Full height of the viewport minus header */
+    overflow-y: auto; /* Enable scrolling if content exceeds height */
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Shadow for better visibility */
+  }
+  
+  .compose-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .compose-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .menu-item:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .menu-icon {
+    font-size: 18px;
+  }
+  
