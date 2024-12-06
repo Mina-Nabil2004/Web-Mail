@@ -8,15 +8,54 @@ export default function CreateAccount({ toggleForm }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (name === "" || email === "" || password === "" || confirmPassword === "") {
       setError(true);
-    } else if (password !== confirmPassword) {
+      setMessage("All fields are required.");
+      return;
+    }
+    if (password !== confirmPassword) {
       setError(true);
-    } else {
-      setError(false);
-      alert("Account created successfully!");
+      setMessage("Passwords do not match.");
+      return;
+    }
+
+    setError(false);
+
+    // Prepare the data to send
+    const user = {
+      username: name,
+      email: email,
+      password: password,
+    };
+
+    try {
+      // Send the POST request to the signup endpoint
+      const response = await fetch("http://localhost:8080/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert(result.message || "Account created successfully!");
+        setName("");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        setMessage(""); // Clear any previous error messages
+      } else {
+        const errorData = await response.json();
+        setError(true);
+        setMessage(errorData.message || "Failed to create an account.");
+      }
+    } catch (err) {
+      setError(true);
+      setMessage("An error occurred while signing up. Please try again later.");
     }
   };
 

@@ -1,13 +1,13 @@
-package com.webmail;
+package com.Webmail.Webmail;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WebMailApplication {
+public class WebmailApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WebMailApplication.class, args);
+		SpringApplication.run(WebmailApplication.class, args);
 	}
 
 }
