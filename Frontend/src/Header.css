@@ -1,0 +1,133 @@
+/* General header styling */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px; /* Keep the original padding */
+  background: linear-gradient(to right, #ffffff, #f0f4f8); /* Subtle gradient background */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: all 0.3s ease; /* Smooth transition on scroll */
+}
+
+/* Left section: Logo and app name */
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px; /* Keep the original size */
+  margin-right: 10px; /* Original margin */
+  transition: transform 0.3s ease; /* Smooth hover animation for logo */
+}
+
+.header-left h2 {
+  font-size: 20px; /* Keep the original size */
+  margin: 0;
+  color: #333;
+  font-weight: bold; /* Bold app name for emphasis */
+  text-transform: uppercase; /* App name in uppercase for a modern feel */
+}
+
+/* Center section: Search bar */
+.header-center {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 600px; /* Keep the original max-width */
+}
+
+.search-bar {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px 0 0 20px;
+  outline: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.search-bar:focus {
+  border-color: #1a73e8; /* Blue border on focus for better accessibility */
+  box-shadow: 0 0 5px rgba(26, 115, 232, 0.5); /* Soft blue glow */
+}
+
+.search-button {
+  padding: 10px;
+  border: none;
+  background-color: #f1f3f4;
+  border-left: 1px solid #ccc;
+  border-radius: 0 20px 20px 0;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smooth hover transition */
+}
+
+.search-button:hover {
+  background-color: #e8f0fe; /* Slight hover effect for search button */
+}
+
+.search-button i {
+  font-size: 20px;
+  color: #555;
+}
+
+/* Right section: Icons and profile */
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  margin-right: 15px;
+  cursor: pointer;
+  transition: transform 0.3s ease; /* Smooth hover transition for icons */
+}
+
+.icon-button:hover {
+  transform: scale(1.1); /* Slight zoom effect on hover */
+  color: #1a73e8; /* Color change on hover */
+}
+
+.icon-button i {
+  font-size: 24px; /* Keep the original icon size */
+  color: #555;
+}
+
+.user-profile .user-avatar {
+  border-radius: 50%;
+  height: 40px; /* Keep the original size */
+  width: 40px; /* Keep the original size */
+  border: 2px solid #ccc; /* Subtle border around avatar */
+  transition: transform 0.3s ease; /* Smooth hover effect */
+}
+
+.user-profile .user-avatar:hover {
+  transform: scale(1.1); /* Slight zoom effect on hover */
+  border-color: #1a73e8; /* Blue border on hover */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .header-center {
+    display: none; /* Hide search bar on small screens */
+  }
+
+  .header {
+    padding: 10px 20px; /* Keep padding the same for smaller screens */
+  }
+
+  .icon-button {
+    margin-right: 10px; /* Reduced margin for better spacing on small screens */
+  }
+
+  .header-left h2 {
+    font-size: 20px; /* Keep the app name size the same */
+  }
+}

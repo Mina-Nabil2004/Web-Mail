@@ -1,0 +1,60 @@
+.app-layout {
+  display: flex;
+  margin-top: 80px; /* Assuming this is for spacing below the header */
+  justify-content: space-between; /* Ensures content is between left and right sidebars */
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  margin-left: 50px;
+  margin-right: 10px; /* This is fine, as it accounts for Sidebar2 width */
+}
+
+.email-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.email-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.read-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.read-button:hover {
+  background-color: #0056b3;
+}
+
+.left-sidebar {
+  flex: 0 0 250px; /* Fixed width for the left sidebar (Menu) */
+}
+
+.right-sidebar {
+  flex: 0 0 250px; /* Fixed width for the right sidebar (Sidebar2) */
+}
+
+/* Optional: Handle responsiveness */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column; /* Stack the layout vertically on small screens */
+  }
+
+  .content {
+    margin-right: 0; /* Remove right margin for smaller screens */
+  }
+
+  .left-sidebar, .right-sidebar {
+    flex: 0 0 100%; /* Make both sidebars full width */
+  }
+}
