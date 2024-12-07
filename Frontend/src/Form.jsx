@@ -7,11 +7,16 @@ export default function Form({ onLoginSuccess, toggleForm }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (name === "" || email === "" || password === "") {
       setError(true);
     } else {
+      await axios.post('http://localhost:8080/email/signup',{
+        "username": name,
+        "email": email,
+        "password":password
+      });
       setError(false);
       onLoginSuccess();
     }
