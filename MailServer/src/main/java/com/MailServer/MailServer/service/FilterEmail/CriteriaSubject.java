@@ -13,7 +13,6 @@ public class CriteriaSubject implements Criteria{
             if(email.getSubject().contains(this.subject)){
                 subject.add(email);
             }
-
         }
         return subject;
     }
