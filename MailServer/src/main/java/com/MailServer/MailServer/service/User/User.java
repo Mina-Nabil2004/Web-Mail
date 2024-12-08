@@ -12,7 +12,6 @@ import java.util.ArrayList;
 @Entity
 public class User  {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String username;
     private String email;
     private String password;
