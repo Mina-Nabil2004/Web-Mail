@@ -1,16 +1,21 @@
 import { useState } from "react";
 import "./Form.css";
+import axios from "axios";
 
 export default function Form({ onLoginSuccess, toggleForm }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (email === "" || password === "") {
       setError(true);
     } else {
+      /*await axios.post('http://localhost:8080/email/login',{
+        "email": email,
+        "password":password
+      });*/
       setError(false);
       onLoginSuccess();
     }
