@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './ComposeModal.css'; // Add styling for the modal
+import './ComposeModal.css';
 
-const ComposeModal = ({ isOpen, onClose }) => {
+const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
@@ -10,19 +10,47 @@ const ComposeModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null; // Don't render the modal if it's not open
 
-  const handleSubmit = (e) => {
+  const handleSend = (e) => {
     e.preventDefault();
-    // Handle sending the email logic
-    alert('Email sent!');
-    onClose(); // Close the modal after submitting
+    // Create the email object
+    const email = {
+      id: Date.now(),
+      to,
+      subject,
+      body,
+      cc,
+      bcc,
+      sent: new Date().toLocaleString(),
+    };
+    // Trigger the onSend callback with the email data
+    onSend(email);
+    onClose(); // Close the modal after sending
+  };
+
+  const handleDraft = () => {
+    // Create the draft email object
+    const draft = {
+      id: Date.now(),
+      to,
+      subject,
+      body,
+      cc,
+      bcc,
+      saved: new Date().toLocaleString(),
+    };
+    // Trigger the onDraft callback with the draft data
+    onDraft(draft);
+    onClose(); // Close the modal after saving as draft
   };
 
   return (
     <div className="compose-modal">
       <div className="modal-content">
-        <span className="close-btn" onClick={onClose}>&times;</span>
+        <span className="close-btn" onClick={handleDraft}>
+          &times;
+        </span>
         <h2>New Message</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSend}>
           <div className="input-group">
             <label htmlFor="to">To</label>
             <input
@@ -31,6 +59,7 @@ const ComposeModal = ({ isOpen, onClose }) => {
               placeholder="Recipient"
               value={to}
               onChange={(e) => setTo(e.target.value)}
+              required
             />
           </div>
 
@@ -64,6 +93,7 @@ const ComposeModal = ({ isOpen, onClose }) => {
               placeholder="Subject"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
+              required
             />
           </div>
 
@@ -74,12 +104,21 @@ const ComposeModal = ({ isOpen, onClose }) => {
               placeholder="Write your message here..."
               value={body}
               onChange={(e) => setBody(e.target.value)}
+              required
             />
           </div>
 
           <div className="modal-actions">
-            <button type="button" className="discard-btn" onClick={onClose}>Discard</button>
-            <button type="submit" className="send-btn">Send</button>
+            <button
+              type="button"
+              className="discard-btn"
+              onClick={handleDraft}
+            >
+              Discard
+            </button>
+            <button type="submit" className="send-btn">
+              Send
+            </button>
           </div>
         </form>
       </div>

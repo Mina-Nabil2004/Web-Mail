@@ -2,21 +2,15 @@ import { useState } from "react";
 import "./Form.css";
 
 export default function Form({ onLoginSuccess, toggleForm }) {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (name === "" || email === "" || password === "") {
+    if (email === "" || password === "") {
       setError(true);
     } else {
-      await axios.post('http://localhost:8080/email/signup',{
-        "username": name,
-        "email": email,
-        "password":password
-      });
       setError(false);
       onLoginSuccess();
     }
@@ -29,17 +23,6 @@ export default function Form({ onLoginSuccess, toggleForm }) {
         {error && (
           <div className="form-error">Please fill in all the fields!</div>
         )}
-        <label className="form-label" htmlFor="name">
-          Name
-        </label>
-        <input
-          id="name"
-          type="text"
-          className="form-input"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Enter your name"
-        />
         <label className="form-label" htmlFor="email">
           Email
         </label>
