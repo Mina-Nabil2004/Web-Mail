@@ -13,4 +13,16 @@ public class Contact {
         this.email=email;
         this.name=name;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 }

@@ -22,11 +22,22 @@ public class control {
         this.userService = userService;
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody UserRegistrationRequest  request) {
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(@RequestBody UserLoginRequest request) {
+        try {
+            return ResponseEntity.ok(userService.getUser(request.getEmail(), request.getPassword()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<Object> register(@RequestBody UserRegistrationRequest request) {
         try {
             // Call the service to register the user
-            userService.registerUser(request.getUsername(), request.getEmail(), request.getPassword());
+            System.out.println("hello");
+            userService.registerUser(request.getName(), request.getEmail(), request.getPassword());
             return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully!");
         } catch (UserAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists with the provided email!");
@@ -35,13 +46,6 @@ public class control {
         }
     }
 }
-//    @PostMapping("/login")
-//    public ResponseEntity<>login(@ResponseBody ){
-//        try{
-//
-//        }catch(Exception e){
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//        }
 
 //    @PostMapping("/sendemail")
 //    public ResponseEntity<String>sendemail(@ResponseBody ){
