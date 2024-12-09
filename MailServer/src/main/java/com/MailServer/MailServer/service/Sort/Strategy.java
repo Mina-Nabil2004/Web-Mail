@@ -6,5 +6,4 @@ import java.util.ArrayList;
 
 public interface Strategy {
     public ArrayList<Email>doOperation(ArrayList<Email> emails,boolean Order);
-
 }

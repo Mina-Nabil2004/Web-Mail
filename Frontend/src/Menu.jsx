@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
-import { FaInbox, FaStar, FaPaperPlane, FaFileAlt, FaTrashAlt, FaCog } from 'react-icons/fa';
-import { MdLabel, MdMoreVert } from 'react-icons/md';
-import ComposeModal from './ComposeModal'; // Import the modal component
+import React, { useState } from "react";
+import { FaInbox, FaStar, FaPaperPlane, FaFileAlt, FaTrashAlt, FaCog } from "react-icons/fa";
+import { MdLabel, MdMoreVert } from "react-icons/md";
+import ComposeModal from "./ComposeModal";
 
-import './Menu.css'; // Ensure you have styles for the menu
+import "./Menu.css";
 
-const Menu = () => {
-  const [isModalOpen, setModalOpen] = useState(false); // State to control modal visibility
+const Menu = ({ activeMenu, setActiveMenu, onSend, onDraft }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
 
-  // Open the compose modal
   const openModal = () => {
     setModalOpen(true);
   };
 
-  // Close the compose modal
   const closeModal = () => {
     setModalOpen(false);
   };
@@ -27,29 +25,43 @@ const Menu = () => {
 
       {/* Menu Items */}
       <div className="menu-items">
-        <div className="menu-item">
+        <div
+          className={`menu-item ${activeMenu === "Inbox" ? "active" : ""}`}
+          onClick={() => setActiveMenu("Inbox")}
+        >
           <FaInbox className="menu-icon" />
-          <span>Inbox (4)</span>
+          <span>Inbox</span>
         </div>
-        <div className="menu-item">
+        <div
+          className={`menu-item ${activeMenu === "Starred" ? "active" : ""}`}
+          onClick={() => setActiveMenu("Starred")}
+        >
           <FaStar className="menu-icon" />
           <span>Starred</span>
         </div>
-        <div className="menu-item">
+        <div
+          className={`menu-item ${activeMenu === "Sent" ? "active" : ""}`}
+          onClick={() => setActiveMenu("Sent")}
+        >
           <FaPaperPlane className="menu-icon" />
           <span>Sent</span>
         </div>
-        <div className="menu-item">
+        <div
+          className={`menu-item ${activeMenu === "Drafts" ? "active" : ""}`}
+          onClick={() => setActiveMenu("Drafts")}
+        >
           <FaFileAlt className="menu-icon" />
-          <span>Drafts (5)</span>
+          <span>Drafts</span>
         </div>
-        <div className="menu-item">
+        <div
+          className={`menu-item ${activeMenu === "Bin" ? "active" : ""}`}
+          onClick={() => setActiveMenu("Bin")}
+        >
           <FaTrashAlt className="menu-icon" />
           <span>Bin</span>
         </div>
-
-        {/* Categories Section */}
-        <div className="menu-item">
+                {/* Categories Section */}
+                <div className="menu-item">
           <MdLabel className="menu-icon" />
           <span>Categories</span>
           <div className="submenu">
@@ -75,9 +87,9 @@ const Menu = () => {
       </div>
 
       {/* Compose Modal */}
-      <ComposeModal isOpen={isModalOpen} onClose={closeModal} />
+      <ComposeModal isOpen={isModalOpen} onClose={closeModal} onSend={onSend} onDraft={onDraft} />
     </div>
   );
 };
 
-export default Menu; 
+export default Menu;

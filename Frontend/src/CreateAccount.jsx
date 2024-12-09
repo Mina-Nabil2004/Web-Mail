@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Form.css";
+import axios from "axios";
 
 export default function CreateAccount({ toggleForm }) {
   const [name, setName] = useState("");
@@ -8,7 +9,7 @@ export default function CreateAccount({ toggleForm }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (name === "" || email === "" || password === "" || confirmPassword === "") {
       setError(true);
@@ -16,6 +17,13 @@ export default function CreateAccount({ toggleForm }) {
       setError(true);
     } else {
       setError(false);
+      console.log("hello");
+      /*await axios.post('http://localhost:8080/email/register',{
+        "name": name,
+        "email": email,
+        "password":password
+      });*/
+      console.log("hello");
       alert("Account created successfully!");
     }
   };

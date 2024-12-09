@@ -1,47 +1,80 @@
-import { useState } from "react";
-import Header from "./Header"; // Assuming you have a Header component
-import Menu from "./Menu"; // Import the Menu component
-import Sidebar2 from "./Sidebar2"; // Import Sidebar2 component
-import Form from "./Form"; // Import the Form component
-import CreateAccount from "./CreateAccount"; // Import CreateAccount component
+import React, { useState } from "react";
+import Header from "./Header";
+import Menu from "./Menu";
+import Sidebar2 from "./Sidebar2";
+import Form from "./Form";
+import CreateAccount from "./CreateAccount";
+import ComposeModal from "./ComposeModal";
 import "./App.css";
-import "./Sidebar2.css";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false); // State to track login status
-  const [isCreatingAccount, setIsCreatingAccount] = useState(false); // State to toggle forms
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+  const [activeMenu, setActiveMenu] = useState("Inbox");
+  const [emails, setEmails] = useState({
+    Inbox: [
+      {
+        id: 1,
+        subject: "Welcome to EmailApp",
+        sender: "info@emailapp.com",
+        received: "2024-12-04 09:00 AM",
+        body: "Hello! Welcome to EmailApp. We hope you enjoy using our platform!",
+      },
+      {
+        id: 2,
+        subject: "Your Invoice for November",
+        sender: "billing@emailapp.com",
+        received: "2024-12-04 10:15 AM",
+        body: "Dear User, attached is your invoice for the month of November.",
+      },
+    ],
+    Sent: [
+      {
+        id: 3,
+        subject: "Project Update Sent",
+        sender: "me@emailapp.com",
+        received: "2024-12-03 08:00 PM",
+        body: "Sent the project update to the client as discussed.",
+      },
+    ],
+    Drafts: [
+      {
+        id: 4,
+        subject: "Unfinished Email",
+        sender: "me@emailapp.com",
+        received: "2024-12-02 07:00 PM",
+        body: "This is an unfinished draft.",
+      },
+    ],
+    Bin: [],
+    Starred: [],
+  });
 
   const handleLoginSuccess = () => {
-    setLoggedIn(true); // Update the state when login is successful
+    setLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setLoggedIn(false);
   };
 
   const toggleForm = () => {
     setIsCreatingAccount((prev) => !prev);
   };
 
-  const [emails, setEmails] = useState([
-    {
-      id: 1,
-      subject: 'Welcome to EmailApp',
-      sender: 'info@emailapp.com',
-      received: '2024-12-04 09:00 AM',
-      body: 'Hello! Welcome to EmailApp. We hope you enjoy using our platform!',
-    },
-    {
-      id: 2,
-      subject: 'Your Invoice for November',
-      sender: 'billing@emailapp.com',
-      received: '2024-12-04 10:15 AM',
-      body: 'Dear User, attached is your invoice for the month of November.',
-    },
-    {
-      id: 3,
-      subject: 'Meeting Reminder: Project Update',
-      sender: 'manager@emailapp.com',
-      received: '2024-12-04 11:30 AM',
-      body: "Don't forget about the meeting today at 2 PM for the project update.",
-    },
-  ]);
+  const handleSend = (email) => {
+    setEmails((prev) => ({
+      ...prev,
+      Sent: [...prev.Sent, email],
+    }));
+  };
+
+  const handleDraft = (draft) => {
+    setEmails((prev) => ({
+      ...prev,
+      Drafts: [...prev.Drafts, draft],
+    }));
+  };
 
   return (
     <div className="app">
@@ -52,34 +85,38 @@ function App() {
           <Form onLoginSuccess={handleLoginSuccess} toggleForm={toggleForm} />
         )
       ) : (
-        // Show the main app after successful login
         <>
-          <Header />
+          <Header onLogout={handleLogout} />
           <div className="app-layout">
-            {/* Menu on the left side */}
             <div className="left-sidebar">
-              <Menu />
+              <Menu
+                activeMenu={activeMenu}
+                setActiveMenu={setActiveMenu}
+                onSend={handleSend}
+                onDraft={handleDraft}
+              />
             </div>
-
-            {/* Main content in the center */}
             <div className="content">
-              <div className="inbox">
-                <h2>Inbox</h2>
-                <div className="email-list">
-                  {emails.map((email) => (
+              <h2>{activeMenu}</h2>
+              <div className="email-list">
+                {emails[activeMenu].length > 0 ? (
+                  emails[activeMenu].map((email) => (
                     <div key={email.id} className="email-item">
                       <h3>{email.subject}</h3>
-                      <p>{email.sender}</p>
-                      <p>{email.received}</p>
+                      <p>
+                        <strong>From:</strong> {email.sender}
+                      </p>
+                      <p>
+                        <strong>Received:</strong> {email.received}
+                      </p>
                       <p>{email.body}</p>
-                      <button className="read-button">Read More</button>
                     </div>
-                  ))}
-                </div>
+                  ))
+                ) : (
+                  <p>No emails in {activeMenu}</p>
+                )}
               </div>
             </div>
-
-            {/* Sidebar2 on the right side */}
             <div className="right-sidebar">
               <Sidebar2 />
             </div>

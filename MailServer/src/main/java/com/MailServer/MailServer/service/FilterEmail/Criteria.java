@@ -5,5 +5,5 @@ import com.MailServer.MailServer.service.Email.Email;
 import java.util.ArrayList;
 
 public interface Criteria {
-    public ArrayList<Email>meetCriteria(ArrayList<Email> emails);
+    public ArrayList<Email> meetCriteria(ArrayList<Email> emails);
 }
