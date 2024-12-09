@@ -1,24 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Header.css";
-import logoMail from "/src/assets/logoMAIL.jpg";
-import ProfileMenu from "./ProfileMenu";
+import logoMail from "/src/assets/logoMAIL.jpg"; // Corrected import
 
-const Header = ({ onLogout }) => {
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-
-  const toggleProfileMenu = () => {
-    setProfileMenuOpen((prevState) => !prevState);
-  };
-
-  const closeProfileMenu = () => {
-    setProfileMenuOpen(false);
-  };
-
-  const user = {
-    name: "Omar Khaled",
-    email: "omar27@meow.com",
-  };
-
+const Header = () => {
   return (
     <header className="header">
       <div className="header-left">
@@ -29,32 +13,24 @@ const Header = ({ onLogout }) => {
       <div className="header-center">
         <input type="text" className="search-bar" placeholder="Search mail" />
         <button className="search-button">
-          <i className="material-icons">search</i>
+          <i className="material-icons">search</i> {/* Google Material Icon */}
         </button>
       </div>
 
       <div className="header-right">
         <button className="icon-button">
-          <i className="material-icons">apps</i>
+          <i className="material-icons">apps</i> {/* Grid icon */}
         </button>
         <button className="icon-button">
-          <i className="material-icons">notifications</i>
+          <i className="material-icons">notifications</i> {/* Notifications */}
         </button>
-
-        <div className="user-profile" onClick={toggleProfileMenu}>
+        <div className="user-profile">
           <img
             src="https://via.placeholder.com/40"
             alt="User Avatar"
             className="user-avatar"
           />
         </div>
-
-        {profileMenuOpen && (
-          <ProfileMenu user={user} onLogout={() => {
-            onLogout();
-            closeProfileMenu();
-          }} />
-        )}
       </div>
     </header>
   );
