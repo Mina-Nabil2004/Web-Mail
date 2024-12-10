@@ -5,19 +5,27 @@ import axios from "axios";
 export default function Form({ onLoginSuccess, toggleForm }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(0);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (email === "" || password === "") {
-      setError(true);
+      setError(1);
     } else {
-      /*await axios.post('http://localhost:8080/email/login',{
+      const response = await axios.post('http://localhost:8080/email/login',{
         "email": email,
         "password":password
-      });*/
-      setError(false);
-      onLoginSuccess();
+      });
+      if(response.data == "Not Registered"){
+        setError(2);
+      }
+      else if(response.data == "Incorrect Password"){
+        setError(3);
+      }
+      else{
+        setError(0);
+        onLoginSuccess();
+      }
     }
   };
 
@@ -25,8 +33,14 @@ export default function Form({ onLoginSuccess, toggleForm }) {
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>
         <h1 className="form-title">User Registration</h1>
-        {error && (
+        {error == 1 && (
           <div className="form-error">Please fill in all the fields!</div>
+        )}
+        {error == 2 && (
+          <div className="form-error">Please Register First!</div>
+        )}
+        {error == 3 && (
+          <div className="form-error">Incorrect Password!</div>
         )}
         <label className="form-label" htmlFor="email">
           Email

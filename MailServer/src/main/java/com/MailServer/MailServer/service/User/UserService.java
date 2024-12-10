@@ -15,19 +15,22 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User getUser(String email, String password){
+    public Object getUser(String email, String password){
+        if(userRepository.findByEmailAndPassword(email, password) == null){
+            if(userRepository.findByEmail(email) != null){return "Incorrect Password";}
+            return "Not Registered";
+        }
         return userRepository.findByEmailAndPassword(email, password);
     }
 
     @Transactional
-    public void registerUser(String name, String email, String password) throws UserAlreadyExistsException {
-        if (userRepository.findByEmailOrUsername(email, name) != null) {
-            throw new UserAlreadyExistsException("User already exists with email or username: " + email);
+    public Object registerUser(String name, String email, String password){
+        if (userRepository.findByEmail(email) != null) {
+            return "Registered";
         }
-
         User user = new User(name, email, password);
         userRepository.save(user);
+        return user;
     }
-
 }
 

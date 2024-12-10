@@ -2,29 +2,33 @@ import { useState } from "react";
 import "./Form.css";
 import axios from "axios";
 
-export default function CreateAccount({ toggleForm }) {
+export default function CreateAccount({ onLoginSuccess, toggleForm }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(0);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (name === "" || email === "" || password === "" || confirmPassword === "") {
-      setError(true);
+      setError(1);
     } else if (password !== confirmPassword) {
-      setError(true);
+      setError(2);
     } else {
-      setError(false);
-      console.log("hello");
-      /*await axios.post('http://localhost:8080/email/register',{
+      const response = await axios.post('http://localhost:8080/email/register',{
         "name": name,
         "email": email,
         "password":password
-      });*/
-      console.log("hello");
-      alert("Account created successfully!");
+      });
+      if(response.data == "Registered"){
+        setError(3);
+      }
+      else{
+        setError(0);
+        alert("Account created successfully!");
+        onLoginSuccess();
+      }
     }
   };
 
@@ -32,7 +36,9 @@ export default function CreateAccount({ toggleForm }) {
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>
         <h1 className="form-title">Create Account</h1>
-        {error && <div className="form-error">Please fill in all the fields correctly!</div>}
+        {error == 1 && <div className="form-error">Please fill in all the fields correctly!</div>}
+        {error == 2 && <div className="form-error">Wrong Password Confirm!</div>}
+        {error == 3 && <div className="form-error">Registerd Already!</div>}
         <label className="form-label" htmlFor="name">
           Name
         </label>

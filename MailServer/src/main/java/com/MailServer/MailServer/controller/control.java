@@ -36,11 +36,7 @@ public class control {
     public ResponseEntity<Object> register(@RequestBody UserRegistrationRequest request) {
         try {
             // Call the service to register the user
-            System.out.println("hello");
-            userService.registerUser(request.getName(), request.getEmail(), request.getPassword());
-            return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully!");
-        } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists with the provided email!");
+            return ResponseEntity.ok(userService.registerUser(request.getName(), request.getEmail(), request.getPassword()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }

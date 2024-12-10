@@ -80,7 +80,7 @@ function App() {
     <div className="app">
       {!loggedIn ? (
         isCreatingAccount ? (
-          <CreateAccount toggleForm={toggleForm} />
+          <CreateAccount onLoginSuccess={handleLoginSuccess} toggleForm={toggleForm} />
         ) : (
           <Form onLoginSuccess={handleLoginSuccess} toggleForm={toggleForm} />
         )

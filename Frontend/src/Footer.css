@@ -1,12 +1,11 @@
-/* Footer.css */ /*meow*/
 footer {
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     height: 100px;
-    background-color: #ffffff; /* Optional: Set the footer background color */
-    border-top: 1px solid #ffffff; /* Optional: Add a top border */
+    background-color: #ffffff;
+    border-top: 1px solid #ffffff;
     padding: 10px;
     margin-left: 400px;
   }
