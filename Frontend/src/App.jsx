@@ -8,6 +8,7 @@ import ComposeModal from "./ComposeModal";
 import "./App.css";
 
 function App() {
+  const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [activeMenu, setActiveMenu] = useState("Inbox");
@@ -80,9 +81,9 @@ function App() {
     <div className="app">
       {!loggedIn ? (
         isCreatingAccount ? (
-          <CreateAccount onLoginSuccess={handleLoginSuccess} toggleForm={toggleForm} />
+          <CreateAccount setUser = {setUser} onLoginSuccess={handleLoginSuccess} toggleForm={toggleForm} />
         ) : (
-          <Form onLoginSuccess={handleLoginSuccess} toggleForm={toggleForm} />
+          <Form setUser = {setUser} onLoginSuccess={handleLoginSuccess} toggleForm={toggleForm} />
         )
       ) : (
         <>
@@ -90,6 +91,7 @@ function App() {
           <div className="app-layout">
             <div className="left-sidebar">
               <Menu
+                user={user}
                 activeMenu={activeMenu}
                 setActiveMenu={setActiveMenu}
                 onSend={handleSend}
@@ -118,7 +120,7 @@ function App() {
               </div>
             </div>
             <div className="right-sidebar">
-              <Sidebar2 />
+              <Sidebar2 user={user} />
             </div>
           </div>
         </>

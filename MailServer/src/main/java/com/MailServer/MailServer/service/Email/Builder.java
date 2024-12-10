@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class Builder {
     private String sender;
-    private ArrayList<String> receivers;
+    private String receiver;
     private String subject;
     private int id;
     private String body;
@@ -17,17 +17,17 @@ public class Builder {
     private List<Attachment> attatchments;
     private boolean read;
     public Builder(){}
-    public Builder(String sender,ArrayList<String>receivers,int id,String datetime){
+    public Builder(String sender,String receiver,int id,String datetime){
         this.sender=sender;
-        this.receivers=receivers;
+        this.receiver=receiver;
         this.datetime=datetime;
         this.id=id;
     }
     public String getSender() {
         return sender;
     }
-    public ArrayList<String> getreceivers() {
-        return receivers;
+    public String getreceiver() {
+        return receiver;
     }
 
     public int getId() {

@@ -7,19 +7,18 @@ import java.util.List;
 @Data
 public class Email implements Cloneable{
     private String sender;
-    private ArrayList<String> receivers;
+    private String receiver;
     private String subject;
     private String body;
     private String datetime;
     private List<Attachment> attatchments;
-    private int id;
     private boolean read;
 
     public Email() {
     }
     public Email(Builder builder){
         this.sender= builder.getSender();
-        this.receivers=builder.getreceivers();
+        this.receiver=builder.getreceiver();
         this.subject=builder.getSubject();
         this.body=builder.getBody();
         this.datetime=builder.getdatetime();
@@ -29,18 +28,12 @@ public class Email implements Cloneable{
     }
     public Email(Email email){
         this.sender= email.getSender();
-        this.receivers=email.getreceivers();
+        this.receiver=email.getreceiver();
         this.subject=email.getSubject();
         this.body=email.getBody();
         this.datetime=email.getdatetime();
         this.read=email.isRead();
         this.attatchments=attatchments;
-    }
-    public void getreceivers(ArrayList<String> receivers) {
-        this.receivers = receivers;
-    }
-    public void setId(int id) {
-        this.id = id;
     }
     public void setSubject(String subject) {
         this.subject = subject;
@@ -54,11 +47,8 @@ public class Email implements Cloneable{
     public String getSender() {
         return sender;
     }
-    public ArrayList<String> getreceivers() {
-        return receivers;
-    }
-    public int getId() {
-        return id;
+    public String getreceiver() {
+        return receiver;
     }
     public String getSubject() {
         return subject;

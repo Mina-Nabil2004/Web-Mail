@@ -1,5 +1,6 @@
 package com.MailServer.MailServer.controller;
 
+import com.MailServer.MailServer.service.Email.Builder;
 import com.MailServer.MailServer.service.User.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,15 @@ public class control {
         try {
             // Call the service to register the user
             return ResponseEntity.ok(userService.registerUser(request.getName(), request.getEmail(), request.getPassword()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
+
+    @PostMapping("/compose")
+    public ResponseEntity<Object> compose(@RequestBody Builder request) {
+        try {
+            return ResponseEntity.ok(userService.compose(request));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }

@@ -2,6 +2,8 @@ package com.MailServer.MailServer.service.User;
 
 import com.MailServer.MailServer.controller.UserLoginRequest;
 import com.MailServer.MailServer.repository.UserRepository;
+import com.MailServer.MailServer.service.Email.Builder;
+import com.MailServer.MailServer.service.Email.Email;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,13 @@ public class UserService {
         User user = new User(name, email, password);
         userRepository.save(user);
         return user;
+    }
+
+    @Transactional
+    public Object compose(Builder request){
+        Email email = request.build();
+        //send to reciever
+        return email;
     }
 }
 

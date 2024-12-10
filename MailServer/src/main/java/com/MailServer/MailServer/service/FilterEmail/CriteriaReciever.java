@@ -14,10 +14,8 @@ public class CriteriaReciever implements Criteria{
     public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
         ArrayList<Email> recievers = new ArrayList<Email>();
         for(Email email:emails){
-            for(String reciever : email.getreceivers()){
-                if(reciever.contains(this.reciever)){
-                   recievers.add(email);
-                }
+            if(email.getreceiver().equals(this.reciever)){
+                recievers.add(email);
             }
         }
         return recievers;

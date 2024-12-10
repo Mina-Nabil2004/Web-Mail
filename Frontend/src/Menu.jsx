@@ -5,7 +5,7 @@ import ComposeModal from "./ComposeModal";
 
 import "./Menu.css";
 
-const Menu = ({ activeMenu, setActiveMenu, onSend, onDraft }) => {
+const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft }) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   const openModal = () => {
@@ -87,7 +87,7 @@ const Menu = ({ activeMenu, setActiveMenu, onSend, onDraft }) => {
       </div>
 
       {/* Compose Modal */}
-      <ComposeModal isOpen={isModalOpen} onClose={closeModal} onSend={onSend} onDraft={onDraft} />
+      <ComposeModal user = {user} isOpen={isModalOpen} onClose={closeModal} onSend={onSend} onDraft={onDraft} />
     </div>
   );
 };

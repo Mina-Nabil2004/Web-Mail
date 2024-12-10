@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './ComposeModal.css';
 
-const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
+const ComposeModal = ({ user, isOpen, onClose, onSend, onDraft }) => {
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
@@ -10,21 +10,18 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
 
   if (!isOpen) return null; // Don't render the modal if it's not open
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     // Create the email object
-    const email = {
-      id: Date.now(),
-      to,
-      subject,
-      body,
-      cc,
-      bcc,
-      sent: new Date().toLocaleString(),
-    };
-    // Trigger the onSend callback with the email data
-    onSend(email);
-    onClose(); // Close the modal after sending
+    const response = await axios.post('http://localhost:8080/email/compose',{
+      "sender": user.email,
+      "reciever": to,
+      "subject": subject,
+      "body": body,
+      "datetime": new Date().toLocaleString()
+    });
+    onSend(response.data);
+    onClose();
   };
 
   const handleDraft = () => {
