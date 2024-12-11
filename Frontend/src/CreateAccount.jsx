@@ -27,6 +27,7 @@ export default function CreateAccount({ onLoginSuccess, toggleForm }) {
       else{
         setError(0);
         alert("Account created successfully!");
+        console.log(response.data);
         onLoginSuccess();
       }
     }

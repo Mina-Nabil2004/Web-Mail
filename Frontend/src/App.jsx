@@ -51,7 +51,7 @@ function App() {
     Starred: [],
   });
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = async () => {
     setLoggedIn(true);
   };
 

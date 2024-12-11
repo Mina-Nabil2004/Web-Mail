@@ -1,8 +1,5 @@
 package com.MailServer.MailServer.service.User;
 
-import com.MailServer.MailServer.service.Contact;
-import com.MailServer.MailServer.service.Email.Email;
-import com.MailServer.MailServer.service.Folder;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -10,9 +7,11 @@ import lombok.Setter;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
+@Getter
+@Setter
 @Data
 @Entity
-public class User  {
+public class User {
     @Id
     @SequenceGenerator(
             name = "user_sequence",
@@ -35,5 +34,21 @@ public class User  {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public Long getUserID() {
+        return userID;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

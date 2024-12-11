@@ -1,4 +1,4 @@
-package com.MailServer.MailServer.service;
+package com.MailServer.MailServer.service.Email;
 
 import lombok.Data;
 

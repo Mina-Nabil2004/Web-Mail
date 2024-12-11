@@ -1,6 +1,8 @@
 package com.MailServer.MailServer.controller;
 
 import com.MailServer.MailServer.service.Email.Builder;
+import com.MailServer.MailServer.service.Email.Email;
+import com.MailServer.MailServer.service.Email.EmailDTO;
 import com.MailServer.MailServer.service.User.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,31 +45,22 @@ public class control {
         }
     }
 
-    @PostMapping("/compose")
-    public ResponseEntity<Object> compose(@RequestBody Builder request) {
+    @GetMapping("/folders/{userID}")
+    public ResponseEntity<Object> getFolders(@PathVariable Long userID) {
         try {
-            return ResponseEntity.ok(userService.compose(request));
+            // Call the service to register the user
+            return ResponseEntity.ok(userService.getUserFolders(userID));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
+
+    @PostMapping("/send/{userID}")
+    public ResponseEntity<Object> compose(@RequestBody EmailDTO request, @PathVariable Long userID) {
+        try {
+            return ResponseEntity.ok(userService.send(request,userID));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
     }
 }
-
-//    @PostMapping("/sendemail")
-//    public ResponseEntity<String>sendemail(@ResponseBody ){
-//        try{
-//
-//        }catch(Exception e){
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//        }
-//    }
-//}
-//    @PostMapping("/getEmails/{folder}")
-//    public ResponseEntity<>getEmails(@PathVariable String account, @PathVariable String folder) {
-//        try {
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//
-//        }
-
-

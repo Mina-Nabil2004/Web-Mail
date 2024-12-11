@@ -1,17 +1,30 @@
 package com.MailServer.MailServer.service.Email;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-
+@Setter
+@Getter
 @Data
-public class Builder {
+public class EmailDTO {
+    // Getters and Setters
     private String sender;
     private String receiver;
     private String subject;
-    private int id;
     private String body;
     private String datetime;
-    private boolean read;
+
+    // Constructors
+    public EmailDTO() {}
+
+    public EmailDTO(String sender, String receiver, String subject, String body, String datetime) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.subject = subject;
+        this.body = body;
+        this.datetime = datetime;
+    }
 
     public String getSender() {
         return sender;
@@ -27,14 +40,6 @@ public class Builder {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getSubject() {
@@ -59,24 +64,5 @@ public class Builder {
 
     public void setDatetime(String datetime) {
         this.datetime = datetime;
-    }
-
-    public boolean isRead() {
-        return read;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
-    }
-
-    public Builder(){}
-    public Builder(String sender,String receiver,int id,String datetime){
-        this.sender=sender;
-        this.receiver=receiver;
-        this.datetime=datetime;
-        this.id=id;
-    }
-    public Email build(){
-        return new Email(this);
     }
 }

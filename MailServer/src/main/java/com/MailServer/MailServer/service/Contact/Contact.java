@@ -1,4 +1,4 @@
-package com.MailServer.MailServer.service;
+package com.MailServer.MailServer.service.Contact;
 
 import com.MailServer.MailServer.service.User.User;
 import jakarta.persistence.*;
