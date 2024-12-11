@@ -1,38 +1,38 @@
 import React, { useState } from 'react';
 import './ComposeModal.css';
 
-const ComposeModal = ({ user, isOpen, onClose, onSend, onDraft }) => {
-  const [to, setTo] = useState('');
+const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
+  const [sender, setSender] = useState('');
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
-  const [cc, setCc] = useState('');
-  const [bcc, setBcc] = useState('');
+  const [received, setReceived] = useState('');
 
   if (!isOpen) return null; // Don't render the modal if it's not open
 
-  const handleSend = async (e) => {
+  const handleSend = (e) => {
     e.preventDefault();
     // Create the email object
-    const response = await axios.post('http://localhost:8080/email/compose',{
-      "sender": user.email,
-      "reciever": to,
-      "subject": subject,
-      "body": body,
-      "datetime": new Date().toLocaleString()
-    });
-    onSend(response.data);
-    onClose();
+    const email = {
+      id: Date.now(),
+      sender,
+      subject,
+      body,
+      received,
+      sent: new Date().toLocaleString(),
+    };
+    // Trigger the onSend callback with the email data
+    onSend(email);
+    onClose(); // Close the modal after sending
   };
 
   const handleDraft = () => {
     // Create the draft email object
     const draft = {
       id: Date.now(),
-      to,
+      sender,
       subject,
       body,
-      cc,
-      bcc,
+      received,
       saved: new Date().toLocaleString(),
     };
     // Trigger the onDraft callback with the draft data
@@ -49,36 +49,25 @@ const ComposeModal = ({ user, isOpen, onClose, onSend, onDraft }) => {
         <h2>New Message</h2>
         <form onSubmit={handleSend}>
           <div className="input-group">
-            <label htmlFor="to">To</label>
+            <label htmlFor="sender">Sender</label>
             <input
               type="email"
-              id="to"
-              placeholder="Recipient"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
+              id="sender"
+              placeholder="Sender"
+              value={sender}
+              onChange={(e) => setSender(e.target.value)}
               required
             />
           </div>
 
           <div className="input-group">
-            <label htmlFor="cc">Cc</label>
+            <label htmlFor="received">Received</label>
             <input
               type="email"
-              id="cc"
-              placeholder="Cc (optional)"
-              value={cc}
-              onChange={(e) => setCc(e.target.value)}
-            />
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="bcc">Bcc</label>
-            <input
-              type="email"
-              id="bcc"
-              placeholder="Bcc (optional)"
-              value={bcc}
-              onChange={(e) => setBcc(e.target.value)}
+              id="received"
+              placeholder="Received (optional)"
+              value={received}
+              onChange={(e) => setReceived(e.target.value)}
             />
           </div>
 
