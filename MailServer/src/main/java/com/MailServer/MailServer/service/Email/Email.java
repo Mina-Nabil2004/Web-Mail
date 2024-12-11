@@ -34,7 +34,6 @@ public class Email implements Cloneable{
     @JoinColumn(name = "folderid", referencedColumnName = "folderid")
     private Folder folder;
 
-
     private String sender;
     private String receiver;
     private String subject;

@@ -54,6 +54,16 @@ public class control {
         }
     }
 
+    @GetMapping("/folder/{folderID}/{page}")
+    public ResponseEntity<Object> getFolder(@PathVariable Long folderID, @PathVariable int page) {
+        try {
+            // Call the service to register the user
+            return ResponseEntity.ok(userService.getUserFolder(folderID, page));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
+
     @PostMapping("/send/{userID}")
     public ResponseEntity<Object> compose(@RequestBody EmailDTO request, @PathVariable Long userID) {
         try {

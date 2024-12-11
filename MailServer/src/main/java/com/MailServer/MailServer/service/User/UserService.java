@@ -10,8 +10,11 @@ import com.MailServer.MailServer.service.Folder.Folder;
 import com.MailServer.MailServer.service.Folder.FolderDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,7 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final FolderRepository folderRepository;
     private final EmailRepository emailRepository;
-    
+
     @Autowired
     public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository) {
         this.userRepository = userRepository;
@@ -57,6 +60,12 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public Object getUserFolder(Long folderID, int pageNo){
+        Pageable pageable = PageRequest.of(pageNo, 50);
+        Page<Email> page = emailRepository.findByFolderId(folderID, pageable);
+        return page.map(email -> new EmailDTO(email.getSender(), email.getSubject(), email.getBody(), email.getDatetime()));
+    }
+
     @Transactional
     public Object send(EmailDTO dto, Long userID){
         User sender = userRepository.findById(userID).orElseThrow();
@@ -71,4 +80,3 @@ public class UserService {
         return sendemail;
     }
 }
-
