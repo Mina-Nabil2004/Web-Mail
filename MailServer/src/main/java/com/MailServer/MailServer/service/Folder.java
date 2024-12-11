@@ -2,11 +2,9 @@ package com.MailServer.MailServer.service;
 
 import com.MailServer.MailServer.service.User.User;
 import jakarta.persistence.*;
-import lombok.Data;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
-@Data
 @Entity
 public class Folder {
     @Id
@@ -32,5 +30,29 @@ public class Folder {
     public Folder(String name, User user){
         this.name=name;
         this.user=user;
+    }
+
+    public Long getFolderID() {
+        return folderID;
+    }
+
+    public void setFolderID(Long folderID) {
+        this.folderID = folderID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

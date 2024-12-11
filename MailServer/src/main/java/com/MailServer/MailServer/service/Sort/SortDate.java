@@ -10,7 +10,7 @@ public class SortDate implements Strategy{
     @Override
     public ArrayList<Email> doOperation(ArrayList<Email> emails, boolean Order) {
         if(Order){
-            emails.sort(Comparator.comparing(Email::getdatetime));
+            emails.sort(Comparator.comparing(Email::getDatetime));
         }
         else {
 //            emails.sort(Comparator.comparing(Email::getdatetime).reversed());

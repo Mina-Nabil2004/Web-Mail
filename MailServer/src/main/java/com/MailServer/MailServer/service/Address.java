@@ -37,4 +37,36 @@ public class Address {
     public Address(String email) {
         this.email = email;
     }
+
+    public Long getEmailAddressID() {
+        return emailAddressID;
+    }
+
+    public void setEmailAddressID(Long emailAddressID) {
+        this.emailAddressID = emailAddressID;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

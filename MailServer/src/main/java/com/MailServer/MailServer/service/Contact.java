@@ -2,11 +2,9 @@ package com.MailServer.MailServer.service;
 
 import com.MailServer.MailServer.service.User.User;
 import jakarta.persistence.*;
-import lombok.Data;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
-@Data
 @Entity
 public class Contact {
     @Id
@@ -30,5 +28,29 @@ public class Contact {
     public Contact(){}
     public Contact(String name){
         this.name=name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public int getContactID() {
+        return contactID;
+    }
+
+    public void setContactID(int contactID) {
+        this.contactID = contactID;
     }
 }

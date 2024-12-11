@@ -15,7 +15,7 @@ public class CriteriaDate implements Criteria{
         ArrayList<Email> Date = new ArrayList<Email>();
 
         for(Email email:emails){
-            if (email.getdatetime().contains(this.date)){
+            if (email.getDatetime().contains(this.date)){
                 Date.add(email);
             }
         }
