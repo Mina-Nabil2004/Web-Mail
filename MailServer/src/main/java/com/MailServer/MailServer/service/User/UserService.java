@@ -1,6 +1,7 @@
 package com.MailServer.MailServer.service.User;
 
 import com.MailServer.MailServer.controller.UserLoginRequest;
+import com.MailServer.MailServer.repository.EmailRepository;
 import com.MailServer.MailServer.repository.FolderRepository;
 import com.MailServer.MailServer.repository.UserRepository;
 import com.MailServer.MailServer.service.Email.Builder;
@@ -14,11 +15,13 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final FolderRepository folderRepo;
+//    private final EmailRepository emailRepo;
 
     @Autowired
     public UserService(UserRepository userRepository, FolderRepository folderRepo) {
         this.userRepository = userRepository;
         this.folderRepo = folderRepo;
+//        this.emailRepo=emailRepo;
     }
 
     public Object getUser(String email, String password){
