@@ -25,7 +25,7 @@ public class control {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody EmailDTO request) {
+    public ResponseEntity<Object> login(@RequestBody UserLoginRequest request) {
         try {
             return ResponseEntity.ok(userService.getUser(request.getEmail(), request.getPassword()));
         } catch (Exception e) {

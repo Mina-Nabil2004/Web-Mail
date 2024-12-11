@@ -16,4 +16,20 @@ public class FolderDTO {
         this.folderID = folderID;
         this.name = name;
     }
+
+    public Long getFolderID() {
+        return folderID;
+    }
+
+    public void setFolderID(Long folderID) {
+        this.folderID = folderID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
