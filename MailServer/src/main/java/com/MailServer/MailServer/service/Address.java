@@ -8,27 +8,33 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Data
 @Entity
-public class Contact {
+public class Address {
     @Id
     @SequenceGenerator(
-            name = "contact_sequence",
-            sequenceName = "contact_sequence",
+            name = "address_sequence",
+            sequenceName = "address_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = SEQUENCE,
-            generator = "contact_sequence"
+            generator = "address_sequence"
     )
-    private int contactID;
+    private Long emailAddressID;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userid", referencedColumnName = "userid")
     private User user;
 
-    private String name;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "contactid", referencedColumnName = "contactid")
+    private Contact contact;
 
-    public Contact(){}
-    public Contact(String name){
-        this.name=name;
+    private String email;
+
+    public Address() {
+    }
+
+    public Address(String email) {
+        this.email = email;
     }
 }
