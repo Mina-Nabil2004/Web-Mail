@@ -25,6 +25,11 @@ public class EmailDTO {
         this.body = body;
         this.datetime = datetime;
     }
+    public EmailDTO(String sender, String receiver,String body){
+        this.sender=sender;
+        this.receiver=receiver;
+        this.body=body;
+    }
 
     public String getSender() {
         return sender;
