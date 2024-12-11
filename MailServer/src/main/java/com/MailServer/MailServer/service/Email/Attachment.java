@@ -15,4 +15,27 @@ public class Attachment {
     }
     public Attachment(){}
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public byte[] getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(byte[] attachments) {
+        this.attachments = attachments;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }
