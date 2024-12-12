@@ -15,7 +15,7 @@ public class Folder {
     @GeneratedValue
     private Long folderID;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "userid", referencedColumnName = "userID")
     private User user;
 

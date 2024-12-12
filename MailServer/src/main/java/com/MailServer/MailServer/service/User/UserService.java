@@ -41,7 +41,7 @@ public class UserService {
         folderRepository.save(new Folder("sent", user));
         folderRepository.save(new Folder("draft", user));
         folderRepository.save(new Folder("trash", user));
-        folderRepository.save(new Folder("stared", user));
+        folderRepository.save(new Folder("starred", user));
         return user.getUserID();
     }
 
@@ -65,6 +65,11 @@ public class UserService {
         Page<Email> page = emailRepository.findByFolderFolderID(folderID, pageable);
         return page.map(email -> new EmailDTO(email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
     }
+    public Object getUserAllMail(Long userID, int pageNo){
+        Pageable pageable = PageRequest.of(pageNo, 20);
+        Page<Email> page = emailRepository.findByUserUserID(userID, pageable);
+        return page.map(email -> new EmailDTO(email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
+    }
 
     @Transactional
     public Object send(EmailDTO dto, Long userID){
@@ -83,5 +88,23 @@ public class UserService {
     public Object getUserEmail(Long emailID) {
         Email email = emailRepository.findById(emailID).orElseThrow();
         return new EmailDTO(email.getReceivers(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime());
+    }
+    @Transactional
+    public Object deleteUser(Long userID) {
+        emailRepository.deleteAllByUserUserID(userID);
+        folderRepository.deleteAllByUserUserID(userID);
+        userRepository.deleteById(userID);
+        return "Deleted";
+    }
+    @Transactional
+    public Object deleteFolder(Long folderID) {
+        emailRepository.deleteAllByFolderFolderID(folderID);
+        folderRepository.deleteById(folderID);
+        return "Deleted";
+    }
+    @Transactional
+    public Object deleteEmail(Long emailID) {
+        emailRepository.deleteById(emailID);
+        return "Deleted";
     }
 }
