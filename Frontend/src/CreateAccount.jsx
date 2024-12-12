@@ -16,7 +16,7 @@ export default function CreateAccount({ onLoginSuccess, toggleForm }) {
     } else if (password !== confirmPassword) {
       setError(2);
     } else {
-      const response = await axios.post('http://localhost:8080/email/register',{
+      const response = await axios.post('http://localhost:8088/email/register',{
         "name": name,
         "email": email,
         "password":password

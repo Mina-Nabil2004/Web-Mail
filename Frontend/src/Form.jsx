@@ -12,7 +12,7 @@ export default function Form({ onLoginSuccess, toggleForm, setUserId }) {
     if (email === "" || password === "") {
       setError(1);
     } else {
-      const response = await axios.post('http://localhost:8080/email/login', {
+      const response = await axios.post('http://localhost:8088/email/login', {
         "email": email,
         "password": password
       });

@@ -20,24 +20,39 @@ function App() {
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    if(userId != null)
-    handleLoginSuccess();
-  },[userId]);
+    if (userId != null) handleLoginSuccess();
+  }, [userId]);
 
-  const handleLoginSuccess = async () => {
-    console.log(userId);
-    try {
-      const response = await axios.get(`http://localhost:8080/email/folders/${userId}`);
-      console.log(response);
-      for (let i = 0; i < response.data.length; i++) {
-        FolderFactory.createFolder(response.data[i].name, response.data[i].folderID);
-      }
-      const inboxEmails = await axios.get(`http://localhost:8080/email/folder/${folderID}/${0}`);
-    } catch (error) {
-      console.error("Error fetching folders:", error);
+const handleLoginSuccess = async () => {
+  console.log(userId);
+  try {
+    const response = await axios.get(`http://localhost:8088/email/folders/${userId}`);
+    console.log(response);
+
+    // Loop through each folder and create it using FolderFactory
+    for (let i = 0; i < response.data.length; i++) {
+      const folderData = response.data[i];
+      const folder = FolderFactory.createFolder(folderData.name, folderData.folderID);
+      console.log(`Created folder: ${folderData.name} with ID: ${folderData.folderID}`);
+
+      // Fetch emails for this folder
+      const folderEmails = await axios.get(`http://localhost:8088/email/folder/${folderData.folderID}/0`);
+      console.log(`Emails in ${folderData.name}:`, folderEmails.data);
+
+      // Add the fetched emails to the folder
+      folder.addEmails(folderEmails.data);
+
+      // Update the emails state with the new folder data
+      setEmails((prevEmails) => ({
+        ...prevEmails,
+        [folderData.name]: folder,
+      }));
     }
-    setLoggedIn(true);
-  };
+  } catch (error) {
+    console.error("Error fetching folders:", error);
+  }
+  setLoggedIn(true);
+};
 
   const handleLogout = () => {
     setLoggedIn(false);
