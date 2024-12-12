@@ -81,6 +81,7 @@ public class UserService {
     }
 
     public Object getUserEmail(Long emailID) {
-        return emailRepository.findById(emailID).orElseThrow();
+        Email email = emailRepository.findById(emailID).orElseThrow();
+        return new EmailDTO(email.getReceiver(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime());
     }
 }
