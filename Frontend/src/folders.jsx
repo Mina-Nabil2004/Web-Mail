@@ -1,8 +1,8 @@
 // Folder class (Composite Pattern)
 class Folder {
-    constructor(name) {
+    constructor(name, folderID) {
       this.name = name;
-      this.emails = [];
+      this.folderID = folderID;
     }
   
     addEmail(email) {
@@ -17,7 +17,7 @@ class Folder {
       this.emails = this.emails.filter(email => email.id !== emailId);
     }
   }
-  
+  Inbox.folderID
   // Specific folder classes (Leaf Nodes in Composite Pattern)
   class Inbox extends Folder {
     constructor() {
@@ -51,20 +51,20 @@ class Folder {
   
   // Factory Class (Factory Pattern)
   class FolderFactory {
-    static createFolder(type) {
-      switch (type) {
+    static createFolder(name, folderID) {
+      switch (name) {
         case "Inbox":
-          return new Inbox();
+          return new Inbox(folderID);
         case "Sent":
-          return new Sent();
+          return new Sent(folderID);
         case "Drafts":
-          return new Drafts();
-        case "Bin":
-          return new Bin();
+          return new Drafts(folderID);
+        case "Trash":
+          return new Bin(folderID);
         case "Starred":
-          return new Starred();
+          return new Starred(folderID);
         default:
-          throw new Error(`Unknown folder type: ${type}`);
+          return new UserFolder(name, folderID);
       }
     }
   }

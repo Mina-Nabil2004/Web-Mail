@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Form.css";
 import axios from "axios";
 
-export default function Form({ onLoginSuccess, toggleForm, onUserIdFetched }) {
+export default function Form({ onLoginSuccess, toggleForm, setUserId }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(0);
@@ -23,9 +23,7 @@ export default function Form({ onLoginSuccess, toggleForm, onUserIdFetched }) {
         setError(3);
       } else {
         setError(0);
-        console.log(response.data);
-        onUserIdFetched(response.data);
-        onLoginSuccess();
+        setUserId(response.data);
       }
     }
   };

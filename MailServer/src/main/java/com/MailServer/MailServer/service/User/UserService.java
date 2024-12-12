@@ -91,6 +91,7 @@ public class UserService {
 //        Email email = emailRepository.findById(emailID).orElseThrow();
 //        return new EmailDTO(email.getReceivers(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime());
 //    }
+
     @Transactional
     public Object deleteUser(Long userID) {
         emailRepository.deleteAllByUserUserID(userID);

@@ -17,28 +17,26 @@ function App() {
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [activeMenu, setActiveMenu] = useState("Inbox");
   const [emails, setEmails] = useState(initialEmails);
-  const [userId, setUserId] = useState(null);  // Store userId here
+  const [userId, setUserId] = useState(null);
 
-  // This function is responsible for logging in and fetching the folders
+  useEffect(() => {
+    if(userId != null)
+    handleLoginSuccess();
+  },[userId]);
+
   const handleLoginSuccess = async () => {
-    setLoggedIn(true);
-    // Fetch user folders after login
-    if (userId) {
-      try {
-        const response = await axios.get(`http://localhost:8080/email/folders/${userId}`);
-        const folders = response.data;
-
-        // Map the fetched folders to the `emails` state
-        const foldersMap = folders.reduce((acc, folder) => {
-          acc[folder.name.charAt(0).toUpperCase() + folder.name.slice(1)] = FolderFactory.createFolder(folder.name);
-          return acc;
-        }, {});
-
-        setEmails(foldersMap);  // Update the state with the fetched folders
-      } catch (error) {
-        console.error("Error fetching folders:", error);
+    console.log(userId);
+    try {
+      const response = await axios.get(`http://localhost:8080/email/folders/${userId}`);
+      console.log(response);
+      for (let i = 0; i < response.data.length; i++) {
+        FolderFactory.createFolder(response.data[i].name, response.data[i].folderID);
       }
+      const inboxEmails = await axios.get(`http://localhost:8080/email/folder/${folderID}/${0}`);
+    } catch (error) {
+      console.error("Error fetching folders:", error);
     }
+    setLoggedIn(true);
   };
 
   const handleLogout = () => {
@@ -61,18 +59,13 @@ function App() {
     setEmails({ ...emails, Drafts: newDraftsFolder });
   };
 
-  // This function will be passed to the Form to get the userId
-  const handleUserIdFetched = (id) => {
-    setUserId(id);  // Store the userId fetched from the login response
-  };
-
   return (
     <div className="app">
       {!loggedIn ? (
         isCreatingAccount ? (
           <CreateAccount toggleForm={toggleForm} />
         ) : (
-          <Form onLoginSuccess={handleLoginSuccess} toggleForm={toggleForm} onUserIdFetched={handleUserIdFetched} />
+          <Form onLoginSuccess={handleLoginSuccess} toggleForm={toggleForm} setUserId={setUserId} />
         )
       ) : (
         <>
