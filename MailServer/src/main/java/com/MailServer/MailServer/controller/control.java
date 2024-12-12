@@ -84,4 +84,28 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
     }
+    @DeleteMapping("/deleteUser/{userID}")
+    public ResponseEntity<Object> deleteUser(@PathVariable Long userID) {
+        try {
+            return ResponseEntity.ok(userService.deleteUser(userID));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
+    @DeleteMapping("/deleteFolder/{folderID}")
+    public ResponseEntity<Object> deleteFolder(@PathVariable Long folderID) {
+        try {
+            return ResponseEntity.ok(userService.deleteFolder(folderID));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
+    @DeleteMapping("/deleteEmail/{emailID}")
+    public ResponseEntity<Object> deleteEmail(@PathVariable Long emailID) {
+        try {
+            return ResponseEntity.ok(userService.deleteEmail(emailID));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
 }

@@ -26,11 +26,11 @@ public class Email implements Cloneable{
     )
     private Long emailID;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "userid", referencedColumnName = "userid")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "folderid", referencedColumnName = "folderid")
     private Folder folder;
 
