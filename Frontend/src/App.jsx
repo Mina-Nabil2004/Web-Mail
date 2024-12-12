@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Menu from "./Menu";
 import Sidebar2 from "./Sidebar2";
@@ -7,21 +7,10 @@ import CreateAccount from "./CreateAccount";
 import ComposeModal from "./ComposeModal";
 import { FolderFactory } from "./folders";
 import "./App.css";
+import axios from "axios";
 
-// Folder setup for email
-const inbox = FolderFactory.createFolder("Inbox");
-const sent = FolderFactory.createFolder("Sent");
-const drafts = FolderFactory.createFolder("Drafts");
-const bin = FolderFactory.createFolder("Bin");
-const starred = FolderFactory.createFolder("Starred");
-
-const initialEmails = {
-  Inbox: inbox,
-  Sent: sent,
-  Drafts: drafts,
-  Bin: bin,
-  Starred: starred,
-};
+// Initializing folders as an empty object, we'll fill them after login
+const initialEmails = {};
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -30,8 +19,26 @@ function App() {
   const [emails, setEmails] = useState(initialEmails);
   const [userId, setUserId] = useState(null);  // Store userId here
 
+  // This function is responsible for logging in and fetching the folders
   const handleLoginSuccess = async () => {
     setLoggedIn(true);
+    // Fetch user folders after login
+    if (userId) {
+      try {
+        const response = await axios.get(`http://localhost:8080/email/folders/${userId}`);
+        const folders = response.data;
+
+        // Map the fetched folders to the `emails` state
+        const foldersMap = folders.reduce((acc, folder) => {
+          acc[folder.name.charAt(0).toUpperCase() + folder.name.slice(1)] = FolderFactory.createFolder(folder.name);
+          return acc;
+        }, {});
+
+        setEmails(foldersMap);  // Update the state with the fetched folders
+      } catch (error) {
+        console.error("Error fetching folders:", error);
+      }
+    }
   };
 
   const handleLogout = () => {
@@ -82,7 +89,7 @@ function App() {
             <div className="content">
               <h2>{activeMenu}</h2>
               <div className="email-list">
-                {emails[activeMenu].getEmails().length > 0 ? (
+                {emails[activeMenu] && emails[activeMenu].getEmails().length > 0 ? (
                   emails[activeMenu]
                     .getEmails()
                     .map((email) => (
