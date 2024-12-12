@@ -1,8 +1,9 @@
 package com.MailServer.MailServer.service.FilterEmail;
 import com.MailServer.MailServer.service.Email.Email;
 import java.util.ArrayList;
+
 public class CriteriaSubject implements Criteria{
-    private String subject;
+    private final String subject;
     public CriteriaSubject(String subject){
         this.subject=subject;
     }

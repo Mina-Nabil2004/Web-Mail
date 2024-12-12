@@ -5,7 +5,7 @@ import com.MailServer.MailServer.service.Email.Email;
 import java.util.ArrayList;
 
 public class CriteriaSender implements Criteria{
-    private String sender;
+    private final String sender;
     public CriteriaSender(String sender){
         this.sender=sender;
     }

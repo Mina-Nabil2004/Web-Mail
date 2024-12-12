@@ -3,7 +3,6 @@ package com.MailServer.MailServer.service.User;
 import com.MailServer.MailServer.repository.EmailRepository;
 import com.MailServer.MailServer.repository.FolderRepository;
 import com.MailServer.MailServer.repository.UserRepository;
-import com.MailServer.MailServer.service.Email.Builder;
 import com.MailServer.MailServer.service.Email.Email;
 import com.MailServer.MailServer.service.Email.EmailDTO;
 import com.MailServer.MailServer.service.Folder.Folder;
@@ -12,7 +11,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.stream.Collectors;

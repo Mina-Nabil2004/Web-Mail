@@ -53,15 +53,15 @@ class Folder {
   class FolderFactory {
     static createFolder(name, folderID) {
       switch (name) {
-        case "Inbox":
+        case "inbox":
           return new Inbox(folderID);
-        case "Sent":
+        case "sent":
           return new Sent(folderID);
-        case "Drafts":
+        case "drafts":
           return new Drafts(folderID);
-        case "Trash":
+        case "trash":
           return new Bin(folderID);
-        case "Starred":
+        case "starred":
           return new Starred(folderID);
         default:
           return new UserFolder(name, folderID);

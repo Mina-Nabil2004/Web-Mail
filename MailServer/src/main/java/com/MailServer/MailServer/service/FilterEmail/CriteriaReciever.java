@@ -14,7 +14,7 @@
 //    public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
 //        ArrayList<Email> recievers = new ArrayList<Email>();
 //        for(Email email:emails){
-//            if(email.getreceiver().equals(this.reciever)){
+//            if(email.geteceiver().equals(this.reciever)){
 //                recievers.add(email);
 //            }
 //        }

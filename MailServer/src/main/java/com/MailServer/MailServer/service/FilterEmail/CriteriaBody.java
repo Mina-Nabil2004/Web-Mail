@@ -4,8 +4,8 @@ import com.MailServer.MailServer.service.Email.Email;
 
 import java.util.ArrayList;
 
-public class CriteriaBody implements  Criteria{
-    private String body;
+public class CriteriaBody implements Criteria{
+    private final String body;
     public CriteriaBody(String body){
         this.body=body;
     }
