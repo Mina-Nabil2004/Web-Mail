@@ -8,7 +8,7 @@ import java.util.Set;
 @Data
 public class Builder {
     private String sender;
-    private Set<String> receivers;
+    private String receivers;
     private String subject;
     private int id;
     private String body;
@@ -16,7 +16,7 @@ public class Builder {
     private boolean read;
 
     public Builder(){}
-    public Builder(String sender,Set<String> receivers,int id,String datetime){
+    public Builder(String sender,String receivers,int id,String datetime){
         this.sender=sender;
         this.receivers=receivers;
         this.datetime=datetime;
@@ -34,11 +34,11 @@ public class Builder {
         this.sender = sender;
     }
 
-    public Set<String> getReceivers() {
+    public String getReceivers() {
         return receivers;
     }
 
-    public void setReceivers(Set<String> receivers) {
+    public void setReceivers(String receivers) {
         this.receivers = receivers;
     }
 

@@ -46,7 +46,7 @@ public class Email implements Cloneable{
     }
     public Email(Builder builder){
         this.sender= builder.getSender();
-        this.receivers=builder.getReceiver();
+        this.receivers=builder.getReceivers();
         this.subject=builder.getSubject();
         this.body=builder.getBody();
         this.datetime=builder.getDatetime();
