@@ -108,4 +108,14 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
     }
+    @GetMapping("/user/{userID}")
+    public ResponseEntity<Object> getUserDetails(@PathVariable Long userID) {
+        try {
+            User user = userService.getUserDetails(userID);  // Assuming getUserDetails is implemented in UserService
+            UserDTO userDTO = new UserDTO(user.getUsername(), user.getEmail(), ""); // Do not include password for security reasons
+            return ResponseEntity.ok(userDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
+        }
+    }
 }

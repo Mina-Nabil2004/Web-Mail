@@ -13,7 +13,7 @@ import java.util.Set;
 public class EmailDTO {
     // Getters and Setters
     private String sender;
-    private Set<User> receivers;
+    private String receivers;
     private String subject;
     private String body;
     private String datetime;
@@ -21,28 +21,6 @@ public class EmailDTO {
     // Constructors
     public EmailDTO() {}
 
-    public EmailDTO(String sender, Set<User> receivers, String subject, String body, String datetime) {
-        this.sender = sender;
-        this.receivers = receivers;
-        this.subject = subject;
-        this.body = body;
-        this.datetime = datetime;
-    }
-    public EmailDTO(String sender, String subject, String body, String datetime) {
-        this.sender = sender;
-        this.receivers = receivers;
-        this.subject = subject;
-        this.body = body;
-        this.datetime = datetime;
-    }
-
-    public EmailDTO(Set<User> receivers, String sender, String subject, String body, String datetime) {
-        this.sender = sender;
-        this.receivers = receivers;
-        this.subject = subject;
-        this.body = body;
-        this.datetime = datetime;
-    }
 
     public String getBodySnippet(String body) {
         if (body == null || body.length() <= 50) {
@@ -50,9 +28,16 @@ public class EmailDTO {
         }
         return body.substring(0, 50);
     }
-    public EmailDTO(String sender, Set<User> receivers, String body, String datetime){
+    public EmailDTO(String sender, String subject, String body, String datetime){
         this.sender=sender;
+        this.subject = subject;
+        this.body=getBodySnippet(body);
+        this.datetime=datetime;
+    }
+    public EmailDTO(String receivers,String sender,String subject, String body, String datetime){
         this.receivers=receivers;
+        this.sender=sender;
+        this.subject = subject;
         this.body=getBodySnippet(body);
         this.datetime=datetime;
     }
@@ -64,12 +49,12 @@ public class EmailDTO {
         this.sender = sender;
     }
 
-    public Set<User> getReceiver() {
+    public String getReceivers() {
         return receivers;
     }
 
-    public void setReceiver(Set<User> receiver) {
-        this.receivers = receiver;
+    public void setReceivers(String receivers) {
+        this.receivers = receivers;
     }
 
     public String getSubject() {

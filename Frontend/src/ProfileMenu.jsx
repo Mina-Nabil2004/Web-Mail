@@ -5,7 +5,7 @@ const ProfileMenu = ({ user, onLogout }) => {
   return (
     <div className="profile-menu">
       <div className="profile-details">
-        <p><strong>{user.name}</strong></p>
+        <p><strong>{user.username}</strong></p>
         <p>{user.email}</p>
       </div>
       <button className="logout-button" onClick={onLogout}>

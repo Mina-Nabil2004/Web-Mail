@@ -70,12 +70,15 @@ public class UserService {
         Page<Email> page = emailRepository.findByUserUserID(userID, pageable);
         return page.map(email -> new EmailDTO(email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
     }
+    public User getUserDetails(Long userID) {
+        return userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
+    }
 
     @Transactional
     public Object send(EmailDTO dto, Long userID){
         User sender = userRepository.findById(userID).orElseThrow();
+        User receiver = userRepository.findByEmail(dto.getReceivers());
         dto.setSender(sender.getEmail());
-        User receiver = userRepository.findByEmail(dto.getReceiver());
         Folder sentFolder = folderRepository.findByUserUserIDAndName(sender.getUserID(),"sent");
         Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiver.getUserID(),"inbox");
         Email sendemail = new Email(dto, sender, sentFolder);
