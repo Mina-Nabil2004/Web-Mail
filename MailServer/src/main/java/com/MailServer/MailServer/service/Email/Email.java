@@ -36,9 +36,7 @@ public class Email implements Cloneable{
     private Folder folder;
 
     private String sender;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "email_receivers",joinColumns = @JoinColumn(name = "emailid"),inverseJoinColumns = @JoinColumn(name = "userid"))
-    private Set<User> receivers;
+    private Set<String> receivers;
     private String subject;
     private String body;
     private String datetime;
@@ -48,7 +46,7 @@ public class Email implements Cloneable{
     }
     public Email(Builder builder){
         this.sender= builder.getSender();
-        this.receivers=builder.build().getReceivers();
+        this.receivers=builder.getReceivers();
         this.subject=builder.getSubject();
         this.body=builder.getBody();
         this.datetime=builder.getDatetime();
@@ -57,7 +55,7 @@ public class Email implements Cloneable{
 
     public Email(EmailDTO dto, User user, Folder folder){
         this.sender= dto.getSender();
-        this.receivers = receivers;
+        this.receivers = dto.getReceivers();
         this.subject=dto.getSubject();
         this.body=dto.getBody();
         this.datetime=dto.getDatetime();
@@ -118,11 +116,11 @@ public class Email implements Cloneable{
         this.sender = sender;
     }
 
-    public Set<User> getReceivers() {
+    public Set<String> getReceivers() {
         return receivers;
     }
 
-    public void setReceivers(Set<User> receivers) {
+    public void setReceivers(Set<String> receivers) {
         this.receivers = receivers;
     }
 
