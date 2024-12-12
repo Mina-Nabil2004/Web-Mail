@@ -79,4 +79,8 @@ public class UserService {
         emailRepository.save(receivedEmail);
         return sendemail;
     }
+
+    public Object getUserEmail(Long emailID) {
+        return emailRepository.findById(emailID).orElseThrow();
+    }
 }
