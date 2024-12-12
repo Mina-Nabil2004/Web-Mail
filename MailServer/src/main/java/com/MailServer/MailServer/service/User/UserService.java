@@ -65,6 +65,11 @@ public class UserService {
         Page<Email> page = emailRepository.findByFolderFolderID(folderID, pageable);
         return page.map(email -> new EmailDTO(email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
     }
+    public Object getUserAllMail(Long userID, int pageNo){
+        Pageable pageable = PageRequest.of(pageNo, 20);
+        Page<Email> page = emailRepository.findByUserUserID(userID, pageable);
+        return page.map(email -> new EmailDTO(email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
+    }
 
     @Transactional
     public Object send(EmailDTO dto, Long userID){

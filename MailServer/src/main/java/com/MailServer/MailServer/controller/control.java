@@ -60,6 +60,14 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
     }
+    @GetMapping("/allMail/{userID}/{page}")
+    public ResponseEntity<Object> getAllMail(@PathVariable Long userID, @PathVariable int page) {
+        try {
+            return ResponseEntity.ok(userService.getUserAllMail(userID, page));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
     @PostMapping("/send/{userID}")
     public ResponseEntity<Object> compose(@RequestBody EmailDTO request, @PathVariable Long userID) {
         try {
