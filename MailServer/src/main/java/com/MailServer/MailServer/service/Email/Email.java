@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.Set;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -35,7 +36,9 @@ public class Email implements Cloneable{
     private Folder folder;
 
     private String sender;
-    private String receiver;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "email_receivers",joinColumns = @JoinColumn(name = "emailid"),inverseJoinColumns = @JoinColumn(name = "userid"))
+    private Set<User> receivers;
     private String subject;
     private String body;
     private String datetime;
@@ -45,7 +48,7 @@ public class Email implements Cloneable{
     }
     public Email(Builder builder){
         this.sender= builder.getSender();
-        this.receiver=builder.getReceiver();
+        this.receivers=builder.build().getReceivers();
         this.subject=builder.getSubject();
         this.body=builder.getBody();
         this.datetime=builder.getDatetime();
@@ -54,7 +57,7 @@ public class Email implements Cloneable{
 
     public Email(EmailDTO dto, User user, Folder folder){
         this.sender= dto.getSender();
-        this.receiver=dto.getReceiver();
+        this.receivers = receivers;
         this.subject=dto.getSubject();
         this.body=dto.getBody();
         this.datetime=dto.getDatetime();
@@ -65,7 +68,7 @@ public class Email implements Cloneable{
 
     public Email(Email email){
         this.sender= email.getSender();
-        this.receiver=email.getReceiver();
+        this.receivers=email.getReceivers();
         this.subject=email.getSubject();
         this.body=email.getBody();
         this.datetime=email.getDatetime();
@@ -115,12 +118,12 @@ public class Email implements Cloneable{
         this.sender = sender;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public Set<User> getReceivers() {
+        return receivers;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setReceivers(Set<User> receivers) {
+        this.receivers = receivers;
     }
 
     public String getSubject() {

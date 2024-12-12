@@ -1,8 +1,11 @@
 package com.MailServer.MailServer.service.Email;
 
+import com.MailServer.MailServer.service.User.User;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Setter
 @Getter
@@ -10,7 +13,7 @@ import lombok.Setter;
 public class EmailDTO {
     // Getters and Setters
     private String sender;
-    private String receiver;
+    private Set<User> receivers;
     private String subject;
     private String body;
     private String datetime;
@@ -18,22 +21,38 @@ public class EmailDTO {
     // Constructors
     public EmailDTO() {}
 
-    public EmailDTO(String sender, String receiver, String subject, String body, String datetime) {
+    public EmailDTO(String sender, Set<User> receivers, String subject, String body, String datetime) {
         this.sender = sender;
-        this.receiver = receiver;
+        this.receivers = receivers;
         this.subject = subject;
         this.body = body;
         this.datetime = datetime;
     }
+    public EmailDTO(String sender, String subject, String body, String datetime) {
+        this.sender = sender;
+        this.receivers = receivers;
+        this.subject = subject;
+        this.body = body;
+        this.datetime = datetime;
+    }
+
+    public EmailDTO(Set<User> receivers, String sender, String subject, String body, String datetime) {
+        this.sender = sender;
+        this.receivers = receivers;
+        this.subject = subject;
+        this.body = body;
+        this.datetime = datetime;
+    }
+
     public String getBodySnippet(String body) {
         if (body == null || body.length() <= 50) {
             return body;
         }
         return body.substring(0, 50);
     }
-    public EmailDTO(String sender,String receiver,String body,String datetime){
+    public EmailDTO(String sender, Set<User> receivers, String body, String datetime){
         this.sender=sender;
-        this.receiver=receiver;
+        this.receivers=receivers;
         this.body=getBodySnippet(body);
         this.datetime=datetime;
     }
@@ -45,12 +64,12 @@ public class EmailDTO {
         this.sender = sender;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public Set<User> getReceiver() {
+        return receivers;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setReceiver(Set<User> receiver) {
+        this.receivers = receiver;
     }
 
     public String getSubject() {
