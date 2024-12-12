@@ -61,9 +61,9 @@ public class UserService {
     }
 
     public Object getUserFolder(Long folderID, int pageNo){
-        Pageable pageable = PageRequest.of(pageNo, 50);
-        Page<Email> page = emailRepository.findByFolderId(folderID, pageable);
-        return page.map(email -> new EmailDTO(email.getSender(), email.getSubject(), email.getBody(), email.getDatetime()));
+        Pageable pageable = PageRequest.of(pageNo, 20);
+        Page<Email> page = emailRepository.findByFolderFolderID(folderID, pageable);
+        return page.map(email -> new EmailDTO(email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
     }
 
     @Transactional

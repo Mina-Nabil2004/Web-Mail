@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EmailRepository extends JpaRepository<Email,Long> {
-    Page<Email> findByFolderId(Long folderId, Pageable pageable);
+    Page<Email> findByFolderFolderID(Long folderId, Pageable pageable);
 }

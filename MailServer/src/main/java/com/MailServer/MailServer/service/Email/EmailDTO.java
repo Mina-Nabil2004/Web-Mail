@@ -25,16 +25,16 @@ public class EmailDTO {
         this.body = body;
         this.datetime = datetime;
     }
-    public String getBodySnippet(int length) {
-        if (body == null || body.length() <= length) {
+    public String getBodySnippet(String body) {
+        if (body == null || body.length() <= 50) {
             return body;
         }
-        return body.substring(0, length);
+        return body.substring(0, 50);
     }
     public EmailDTO(String sender,String receiver,String body,String datetime){
         this.sender=sender;
         this.receiver=receiver;
-        this.body=body;
+        this.body=getBodySnippet(body);
         this.datetime=datetime;
     }
     public String getSender() {
