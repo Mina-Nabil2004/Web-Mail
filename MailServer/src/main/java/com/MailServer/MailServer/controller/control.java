@@ -76,14 +76,14 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
     }
-    @GetMapping("/email/{emailID}")
-    public ResponseEntity<Object> getEmail(@PathVariable Long emailID) {
-        try {
-            return ResponseEntity.ok(userService.getUserEmail(emailID));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
-        }
-    }
+//    @GetMapping("/email/{emailID}")
+//    public ResponseEntity<Object> getEmail(@PathVariable Long emailID) {
+//        try {
+//            return ResponseEntity.ok(userService.getUserEmail(emailID));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+//        }
+//    }
     @DeleteMapping("/deleteUser/{userID}")
     public ResponseEntity<Object> deleteUser(@PathVariable Long userID) {
         try {

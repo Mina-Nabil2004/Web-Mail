@@ -80,18 +80,21 @@ public class UserService {
         User receiver = userRepository.findByEmail(dto.getReceivers());
         dto.setSender(sender.getEmail());
         Folder sentFolder = folderRepository.findByUserUserIDAndName(sender.getUserID(),"sent");
-        Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiver.getUserID(),"inbox");
-        Email sendemail = new Email(dto, sender, sentFolder);
-        Email receivedEmail = new Email(dto, receiver, inboxFolder);
-        emailRepository.save(sendemail);
-        emailRepository.save(receivedEmail);
-        return sendemail;
+        for (String receiverEmail : dto.getReceivers()) {
+            User receiver = userRepository.findByEmail(receiverEmail);
+            Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiver.getUserID(), "inbox");
+            Email receivedEmail = new Email(dto, receiver, inboxFolder);
+            emailRepository.save(receivedEmail);
+        }
+        Email sendEmail = new Email(dto, sender, sentFolder);
+        emailRepository.save(sendEmail);
+        return sendEmail;
     }
 
-    public Object getUserEmail(Long emailID) {
-        Email email = emailRepository.findById(emailID).orElseThrow();
-        return new EmailDTO(email.getReceivers(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime());
-    }
+//    public Object getUserEmail(Long emailID) {
+//        Email email = emailRepository.findById(emailID).orElseThrow();
+//        return new EmailDTO(email.getReceivers(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime());
+//    }
     @Transactional
     public Object deleteUser(Long userID) {
         emailRepository.deleteAllByUserUserID(userID);
