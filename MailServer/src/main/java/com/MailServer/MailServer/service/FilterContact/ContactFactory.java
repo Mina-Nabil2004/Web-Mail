@@ -1,19 +1,19 @@
-//package com.MailServer.MailServer.service.FilterContact;
-//
-//public class ContactFactory {
-//    public CriteriaContact getCriteria(String nameofcriteria,String Valueofcriteria){
-//        if(nameofcriteria==null){
-//            return null;
-//        }
-//        else if(nameofcriteria.equals("email")){
-//            return new CriteriaEmail(Valueofcriteria);
-//        }
-//        else if(nameofcriteria.equals("name")){
-//            return new CriteriaName(Valueofcriteria);
-//        }
-//        else if(nameofcriteria.equals("show all")){
-//            return new OrCriteria(new CriteriaEmail(Valueofcriteria),new CriteriaName(Valueofcriteria));
-//        }
-//        return null;
-//    }
-//}
+package com.MailServer.MailServer.service.FilterContact;
+
+public class ContactFactory {
+    public CriteriaContact getCriteria(ContactFilterDTO DTO,String criteria){
+        if(criteria==null){
+            return null;
+        }
+        else if(criteria.equals("email")){
+            return new CriteriaEmail(DTO);
+        }
+        else if(criteria.equals("name")){
+            return new CriteriaName(DTO);
+        }
+        else if(criteria.equals("show all")){
+            return new OrCriteria(new CriteriaEmail(DTO),new CriteriaName(DTO));
+        }
+        return null;
+    }
+}
