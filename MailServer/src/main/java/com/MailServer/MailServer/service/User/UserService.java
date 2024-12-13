@@ -17,6 +17,8 @@ import com.MailServer.MailServer.service.FilterEmail.FilterDTO;
 import com.MailServer.MailServer.service.FilterEmail.OrCriteria;
 import com.MailServer.MailServer.service.Folder.Folder;
 import com.MailServer.MailServer.service.Folder.FolderDTO;
+import com.MailServer.MailServer.service.Sort.SortFactory;
+import com.MailServer.MailServer.service.Sort.Strategy;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
