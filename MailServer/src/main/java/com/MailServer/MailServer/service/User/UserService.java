@@ -1,10 +1,16 @@
 package com.MailServer.MailServer.service.User;
 
+import com.MailServer.MailServer.repository.ContactRepository;
 import com.MailServer.MailServer.repository.EmailRepository;
 import com.MailServer.MailServer.repository.FolderRepository;
 import com.MailServer.MailServer.repository.UserRepository;
+import com.MailServer.MailServer.service.Contact.Contact;
+import com.MailServer.MailServer.service.Contact.ContactDTO;
 import com.MailServer.MailServer.service.Email.Email;
 import com.MailServer.MailServer.service.Email.EmailDTO;
+import com.MailServer.MailServer.service.FilterContact.ContactFactory;
+import com.MailServer.MailServer.service.FilterContact.ContactFilterDTO;
+import com.MailServer.MailServer.service.FilterContact.CriteriaContact;
 import com.MailServer.MailServer.service.FilterEmail.Criteria;
 import com.MailServer.MailServer.service.FilterEmail.CriteriaFactory;
 import com.MailServer.MailServer.service.FilterEmail.FilterDTO;
@@ -137,5 +143,20 @@ public class UserService {
 
         // Create and return a Page object
         return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
+    }
+
+    public Object filterContact(ContactFilterDTO request, Long contactID, String criteria, int pageNo) {
+        CriteriaContact filter = ContactFactory.getCriteria(request,criteria);
+        ArrayList<Contact> contacts = ContactRepository.findByContactContactID(contactID);
+        ArrayList<Contact> filtered = filter.meetCriteria(contacts);
+        List<ContactDTO> contactDTOs = filtered.stream()
+                .map(contact -> new ContactDTO(contact.getName(),contact.getContactID()))
+                .collect(Collectors.toList());
+        // Create Pageable object
+        Pageable pageable = PageRequest.of(pageNo, 20);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), ContactDTO.size());
+        List<ContactDTO> pagedEmailDTOs = contactDTOs.subList(start, end);
+        return new PageImpl<>(pagedEmailDTOs, pageable, ContactDTO.size()).getContent();
     }
 }

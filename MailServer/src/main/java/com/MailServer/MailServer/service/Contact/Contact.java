@@ -17,23 +17,13 @@ public class Contact {
             strategy = SEQUENCE,
             generator = "contact_sequence"
     )
-    private int contactID;
+    private Long contactID;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userid", referencedColumnName = "userid")
     private User user;
 
     private String name;
-
-    private String email;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public Contact(){}
     public Contact(String name){
@@ -56,11 +46,11 @@ public class Contact {
         this.user = user;
     }
 
-    public int getContactID() {
+    public Long getContactID() {
         return contactID;
     }
 
-    public void setContactID(int contactID) {
+    public void setContactID(Long contactID) {
         this.contactID = contactID;
     }
 }

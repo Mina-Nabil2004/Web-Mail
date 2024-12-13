@@ -20,5 +20,8 @@ public class CriteriaName implements CriteriaContact{
         }
         return nemeContacts;
     }
+    public String get(){
+        return this.name;
+    }
 
 }

@@ -23,6 +23,7 @@ public class EmailDTO {
     public EmailDTO() {}
 
 
+
     public String getBodySnippet(String body) {
         if (body == null || body.length() <= 50) {
             return body;

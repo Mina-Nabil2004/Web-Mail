@@ -2,19 +2,23 @@ package com.MailServer.MailServer.service.Contact;
 
 public class ContactDTO {
    private String name;
-   private String email;
+   private Long contactID;
 
-   public ContactDTO(String name, String email) {
+   public ContactDTO(String name,Long contactID) {
 	   this.name = name;
-	   this.email = email;
+       this.contactID=contactID;
    }
 
-    public String getEmail() {
-        return email;
+    public static int size() {
+       return size();
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public Long getContactID() {
+        return contactID;
+    }
+
+    public void setContactID(Long contactID) {
+        this.contactID = contactID;
     }
 
     public String getName() {

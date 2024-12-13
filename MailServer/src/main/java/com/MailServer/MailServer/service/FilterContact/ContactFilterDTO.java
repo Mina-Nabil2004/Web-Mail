@@ -2,14 +2,14 @@ package com.MailServer.MailServer.service.FilterContact;
 
 public class ContactFilterDTO {
     private String name;
-    private String email;
+    private Long contactID;
 
-    public String getEmail() {
-        return email;
+    public Long getContactID() {
+        return contactID;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setContactID(Long contactID) {
+        this.contactID = contactID;
     }
 
     public String getName() {

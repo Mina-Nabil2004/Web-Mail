@@ -18,6 +18,7 @@ public class CriteriaSubject implements Criteria{
         return subject;
     }
     public String get(){
+
         return this.subject;
     }
 }

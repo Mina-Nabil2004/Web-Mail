@@ -3,6 +3,7 @@ package com.MailServer.MailServer.controller;
 import com.MailServer.MailServer.service.Email.Builder;
 import com.MailServer.MailServer.service.Email.Email;
 import com.MailServer.MailServer.service.Email.EmailDTO;
+import com.MailServer.MailServer.service.FilterContact.ContactFilterDTO;
 import com.MailServer.MailServer.service.FilterEmail.FilterDTO;
 import com.MailServer.MailServer.service.User.*;
 import jakarta.servlet.http.PushBuilder;
@@ -127,5 +128,14 @@ public class control {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
         }
+    }
+    @GetMapping("/filterContact/{contactID}/{criteria}/{page}")
+    public ResponseEntity<Object> filterContact(@RequestBody ContactFilterDTO request, @PathVariable Long contactID, @PathVariable String criteria, @PathVariable int page){
+        try{
+            return ResponseEntity.ok(userService.filterContact(request,contactID,criteria,page));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
+        }
+
     }
 }
