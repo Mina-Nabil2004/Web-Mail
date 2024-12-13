@@ -14,7 +14,7 @@ public class EmailDTO {
     // Getters and Setters
     private Long emailID;
     private String sender;
-    private String receivers;
+    private Set<Receiver> receivers;
     private String subject;
     private String body;
     private String datetime;
@@ -37,7 +37,7 @@ public class EmailDTO {
         this.body=getBodySnippet(body);
         this.datetime=datetime;
     }
-    public EmailDTO(String receivers,String sender,String subject, String body, String datetime){
+    public EmailDTO(Set<Receiver> receivers,String sender,String subject, String body, String datetime){
         this.receivers=receivers;
         this.sender=sender;
         this.subject = subject;
@@ -52,11 +52,11 @@ public class EmailDTO {
         this.sender = sender;
     }
 
-    public String getReceivers() {
+    public Set<Receiver> getReceivers() {
         return receivers;
     }
 
-    public void setReceivers(String receivers) {
+    public void setReceivers(Set<Receiver> receivers) {
         this.receivers = receivers;
     }
 

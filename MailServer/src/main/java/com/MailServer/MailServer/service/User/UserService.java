@@ -6,6 +6,7 @@ import com.MailServer.MailServer.service.Contact.Contact;
 import com.MailServer.MailServer.service.Contact.ContactDTO;
 import com.MailServer.MailServer.service.Email.Email;
 import com.MailServer.MailServer.service.Email.EmailDTO;
+import com.MailServer.MailServer.service.Email.Receiver;
 import com.MailServer.MailServer.service.FilterContact.ContactFactory;
 import com.MailServer.MailServer.service.FilterContact.ContactFilterDTO;
 import com.MailServer.MailServer.service.FilterContact.CriteriaContact;
@@ -28,6 +29,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,14 +39,16 @@ public class UserService {
     private final EmailRepository emailRepository;
     private final ContactRepository contactRepository;
     private final AddressRepository addressRepository;
+    private final ReceiverRepository receiverRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository, AddressRepository addressRepository) {
+    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository, AddressRepository addressRepository,ReceiverRepository receiverRepository) {
         this.userRepository = userRepository;
         this.folderRepository = folderRepository;
         this.emailRepository = emailRepository;
         this.contactRepository = contactRepository;
         this.addressRepository = addressRepository;
+        this.receiverRepository=receiverRepository;
     }
 
     @Transactional
@@ -101,24 +105,30 @@ public class UserService {
         }
         return contact.getContactID();
     }
+
     @Transactional
     public Object send(EmailDTO dto, Long userID){
         User sender = userRepository.findById(userID).orElseThrow();
-        User receiver = userRepository.findByEmail(dto.getReceivers());
+        Set<Receiver> receivers = receiverRepository.findReceiversByEmailIDAndUserID(userID);
         dto.setSender(sender.getEmail());
         Folder sentFolder = folderRepository.findByUserUserIDAndName(sender.getUserID(),"sent");
-        Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiver.getUserID(), "inbox");
-        Email receivedEmail = new Email(dto, receiver, inboxFolder);
-        emailRepository.save(receivedEmail);
+//        Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiver.getUserID(), "inbox");
+//        Email receivedEmail = new Email(dto, receiver, inboxFolder);
+//        emailRepository.save(receivedEmail);
+        for (Receiver receiver : receivers) {
+            User receiverUser = receiver.getUser();
+            Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiverUser.getUserID(),"inbox");
+            Email receivedEmail = new Email(dto, receiverUser, inboxFolder);
+            emailRepository.save(receivedEmail);
+        }
         Email sendEmail = new Email(dto, sender, sentFolder);
         emailRepository.save(sendEmail);
         return sendEmail;
     }
-//    public Object getUserEmail(Long emailID) {
-//        Email email = emailRepository.findById(emailID).orElseThrow();
-//        return new EmailDTO(email.getReceivers(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime());
-//    }
-
+    public Object getUserEmail(Long emailID) {
+        Email email = emailRepository.findById(emailID).orElseThrow();
+        return new EmailDTO(email.getReceivers(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime());
+    }
     @Transactional
     public Object deleteUser(Long userID) {
         emailRepository.deleteAllByUserUserID(userID);
@@ -210,5 +220,14 @@ public class UserService {
         int end = Math.min((start + pageable.getPageSize()), emailDTOs.size());
         List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
         return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
+    }
+
+    public Object copyEmail(Long folderID) {
+        ArrayList<Email> emails = emailRepository.findByFolderFolderID(folderID);
+        List<Email> clonedEmails = new ArrayList<>();
+        for(Email email : emails){
+            clonedEmails.add(email.clone());
+        }
+        return clonedEmails;
     }
 }

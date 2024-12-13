@@ -179,4 +179,13 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
         }
     }
+    @GetMapping("/copy/{folderID}")
+    public ResponseEntity<Object> copy(@PathVariable Long folderID) {
+        try {
+            return ResponseEntity.ok(userService.copyEmail(folderID));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
+        }
+    }
+
 }
