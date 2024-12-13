@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class CriteriaSubject implements Criteria{
     private final String subject;
-    public CriteriaSubject(String subject){
-        this.subject=subject;
+    public CriteriaSubject(FilterDTO dto){
+        this.subject= dto.getSubject();
     }
     @Override
     public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
@@ -16,5 +16,8 @@ public class CriteriaSubject implements Criteria{
             }
         }
         return subject;
+    }
+    public String get(){
+        return this.subject;
     }
 }

@@ -5,14 +5,21 @@ import com.MailServer.MailServer.repository.FolderRepository;
 import com.MailServer.MailServer.repository.UserRepository;
 import com.MailServer.MailServer.service.Email.Email;
 import com.MailServer.MailServer.service.Email.EmailDTO;
+import com.MailServer.MailServer.service.FilterEmail.Criteria;
+import com.MailServer.MailServer.service.FilterEmail.CriteriaFactory;
+import com.MailServer.MailServer.service.FilterEmail.FilterDTO;
 import com.MailServer.MailServer.service.Folder.Folder;
 import com.MailServer.MailServer.service.Folder.FolderDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -107,5 +114,28 @@ public class UserService {
     public Object deleteEmail(Long emailID) {
         emailRepository.deleteById(emailID);
         return "Deleted";
+    }
+
+    public Object filterEmails(FilterDTO request, Long folderID, String criteria, int pageNo) {
+        Criteria filter = CriteriaFactory.getCriteria(request, criteria);
+        ArrayList<Email> emails =  emailRepository.findByFolderFolderID(folderID);
+        ArrayList<Email> filtered = filter.meetCriteria(emails);
+        // Convert filtered list to EmailDTO list
+        List<EmailDTO> emailDTOs = filtered.stream()
+                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime()))
+                .collect(Collectors.toList());
+
+        // Create Pageable object
+        Pageable pageable = PageRequest.of(pageNo, 20);
+
+        // Calculate start and end indices for the current page
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), emailDTOs.size());
+
+        // Create a sublist for the current page
+        List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
+
+        // Create and return a Page object
+        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
     }
 }

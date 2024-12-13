@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class CriteriaDate implements Criteria{
     private final String date;
-    public CriteriaDate(String date){
-        this.date=date;
+    public CriteriaDate(FilterDTO dto){
+        this.date=dto.getDatetime();
     }
 
     @Override
@@ -20,5 +20,8 @@ public class CriteriaDate implements Criteria{
             }
         }
         return Date;
+    }
+    public String get(){
+        return this.date;
     }
 }

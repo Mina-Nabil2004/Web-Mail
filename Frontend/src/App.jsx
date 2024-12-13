@@ -16,7 +16,7 @@ const initialEmails = {inbox: [], sent: [], drafts: [], trash: [], starred: [] }
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
-  const [activeMenu, setActiveMenu] = useState({});
+  const [activeMenu, setActiveMenu] = useState("Inbox");
   const [activeFolder, setActiveFolder] = useState(null);
   const [emails, setEmails] = useState(initialEmails);
   const [userId, setUserId] = useState(null);

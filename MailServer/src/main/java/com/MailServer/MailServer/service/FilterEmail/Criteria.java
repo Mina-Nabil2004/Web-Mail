@@ -6,4 +6,5 @@ import java.util.ArrayList;
 
 public interface Criteria {
     public ArrayList<Email> meetCriteria(ArrayList<Email> emails);
+    public String get();
 }

@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class CriteriaSender implements Criteria{
     private final String sender;
-    public CriteriaSender(String sender){
-        this.sender=sender;
+    public CriteriaSender(FilterDTO dto){
+        this.sender= dto.getSender();
     }
     @Override
     public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
@@ -18,5 +18,8 @@ public class CriteriaSender implements Criteria{
             }
         }
         return sender;
+    }
+    public String get(){
+        return this.sender;
     }
 }

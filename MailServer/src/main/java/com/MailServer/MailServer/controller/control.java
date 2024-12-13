@@ -3,6 +3,7 @@ package com.MailServer.MailServer.controller;
 import com.MailServer.MailServer.service.Email.Builder;
 import com.MailServer.MailServer.service.Email.Email;
 import com.MailServer.MailServer.service.Email.EmailDTO;
+import com.MailServer.MailServer.service.FilterEmail.FilterDTO;
 import com.MailServer.MailServer.service.User.*;
 import jakarta.servlet.http.PushBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +115,15 @@ public class control {
             User user = userService.getUserDetails(userID);  // Assuming getUserDetails is implemented in UserService
             UserDTO userDTO = new UserDTO(user.getUsername(), user.getEmail(), ""); // Do not include password for security reasons
             return ResponseEntity.ok(userDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
+        }
+    }
+
+    @GetMapping("/filterEmails/{folderID}/{criteria}/{page}")
+    public ResponseEntity<Object> filterEmails(@RequestBody FilterDTO request, @PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page) {
+        try {
+            return ResponseEntity.ok(userService.filterEmails(request, folderID, criteria, page));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
         }

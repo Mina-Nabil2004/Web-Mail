@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class CriteriaBody implements Criteria{
     private final String body;
-    public CriteriaBody(String body){
-        this.body=body;
+    public CriteriaBody(FilterDTO dto){
+        this.body = dto.getBody();
     }
 
     @Override
@@ -19,5 +19,8 @@ public class CriteriaBody implements Criteria{
             }
         }
         return body;
+    }
+    public String get(){
+        return this.body;
     }
 }
