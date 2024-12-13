@@ -1,9 +1,7 @@
 package com.MailServer.MailServer.service.User;
 
-import com.MailServer.MailServer.repository.ContactRepository;
-import com.MailServer.MailServer.repository.EmailRepository;
-import com.MailServer.MailServer.repository.FolderRepository;
-import com.MailServer.MailServer.repository.UserRepository;
+import com.MailServer.MailServer.repository.*;
+import com.MailServer.MailServer.service.Contact.Address;
 import com.MailServer.MailServer.service.Contact.Contact;
 import com.MailServer.MailServer.service.Contact.ContactDTO;
 import com.MailServer.MailServer.service.Email.Email;
@@ -37,13 +35,15 @@ public class UserService {
     private final FolderRepository folderRepository;
     private final EmailRepository emailRepository;
     private final ContactRepository contactRepository;
+    private final AddressRepository addressRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository) {
+    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository, AddressRepository addressRepository) {
         this.userRepository = userRepository;
         this.folderRepository = folderRepository;
         this.emailRepository = emailRepository;
         this.contactRepository = contactRepository;
+        this.addressRepository = addressRepository;
     }
 
     @Transactional
@@ -89,6 +89,17 @@ public class UserService {
     public User getUserDetails(Long userID) {
         return userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
     }
+    @Transactional
+    public Object addContact(Long userID, String name, ArrayList<String> addresses) {
+        User user = userRepository.findById(userID).orElseThrow();
+        Contact contact = new Contact(name, user);
+        contactRepository.save(contact);
+        for(String add : addresses){
+            Address address = new Address(add, contact);
+            addressRepository.save(address);
+        }
+        return contact.getContactID();
+    }
 
     @Transactional
     public Object send(EmailDTO dto, Long userID){
@@ -124,6 +135,18 @@ public class UserService {
     @Transactional
     public Object deleteEmail(Long emailID) {
         emailRepository.deleteById(emailID);
+        return "Deleted";
+    }
+
+    @Transactional
+    public Object deleteAddress(Long addressID) {
+        addressRepository.deleteById(addressID);
+        return "Deleted";
+    }
+    @Transactional
+    public Object deleteContact(Long contactID) {
+        addressRepository.deleteAllByContactContactID(contactID);
+        contactRepository.deleteById(contactID);
         return "Deleted";
     }
 

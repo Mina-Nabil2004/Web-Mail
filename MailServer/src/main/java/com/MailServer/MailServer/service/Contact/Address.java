@@ -19,39 +19,28 @@ public class Address {
             strategy = SEQUENCE,
             generator = "address_sequence"
     )
-    private Long emailAddressID;
+    private Long addressID;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userid", referencedColumnName = "userid")
-    private User user;
-
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "contactid", referencedColumnName = "contactid")
     private Contact contact;
 
-    private String email;
+    private String address;
 
     public Address() {
     }
 
-    public Address(String email) {
-        this.email = email;
+    public Address(String address, Contact contact) {
+        this.address = address;
+        this.contact = contact;
     }
 
     public Long getEmailAddressID() {
-        return emailAddressID;
+        return addressID;
     }
 
     public void setEmailAddressID(Long emailAddressID) {
-        this.emailAddressID = emailAddressID;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+        this.addressID = emailAddressID;
     }
 
     public Contact getContact() {
@@ -62,11 +51,19 @@ public class Address {
         this.contact = contact;
     }
 
-    public User getUser() {
-        return user;
+    public Long getAddressID() {
+        return addressID;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAddressID(Long addressID) {
+        this.addressID = addressID;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
