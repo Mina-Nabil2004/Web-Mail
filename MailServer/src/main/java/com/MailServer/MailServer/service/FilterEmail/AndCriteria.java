@@ -21,7 +21,7 @@ public class AndCriteria implements Criteria {
 
     @Override
     public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
-        ArrayList<Email> finalizer =new ArrayList<Email>();
+        ArrayList<Email> finalizer =new ArrayList<Email>(emails);
         if(this.criteria1.get() != null){
             finalizer =this.criteria1.meetCriteria(finalizer);
         }

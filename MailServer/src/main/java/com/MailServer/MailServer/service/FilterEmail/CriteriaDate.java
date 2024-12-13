@@ -9,7 +9,9 @@ public class CriteriaDate implements Criteria{
     public CriteriaDate(FilterDTO dto){
         this.date=dto.getDatetime();
     }
-
+    public CriteriaDate(String criteria){
+        this.date = criteria;
+    }
     @Override
     public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
         ArrayList<Email> Date = new ArrayList<Email>();
