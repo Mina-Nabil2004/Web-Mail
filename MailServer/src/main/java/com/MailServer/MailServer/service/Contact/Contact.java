@@ -19,7 +19,7 @@ public class Contact {
     )
     private Long contactID;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "userid", referencedColumnName = "userid")
     private User user;
 
@@ -29,6 +29,7 @@ public class Contact {
     public Contact(String name){
         this.name=name;
     }
+    public Contact(String name, User user){this.name=name;this.user = user;}
 
     public String getName() {
         return name;

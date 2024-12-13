@@ -15,6 +15,8 @@ import com.MailServer.MailServer.service.User.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/email")
@@ -110,6 +112,22 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
     }
+    @DeleteMapping("/deleteContact/{contactID}")
+    public ResponseEntity<Object> deleteContact(@PathVariable Long contactID) {
+        try {
+            return ResponseEntity.ok(userService.deleteContact(contactID));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
+    @DeleteMapping("/deleteAddress/{addressID}")
+    public ResponseEntity<Object> deleteAddress(@PathVariable Long addressID) {
+        try {
+            return ResponseEntity.ok(userService.deleteAddress(addressID));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
     @GetMapping("/user/{userID}")
     public ResponseEntity<Object> getUserDetails(@PathVariable Long userID) {
         try {
@@ -141,6 +159,15 @@ public class control {
     public ResponseEntity<Object> filterContact(@RequestBody ContactFilterDTO request, @PathVariable Long userID, @PathVariable String criteria, @PathVariable int page){
         try{
             return ResponseEntity.ok(userService.filterContact(request,userID,criteria,page));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
+        }
+
+    }
+    @PostMapping("/addContact/{userID}/{name}/{addresses}")
+    public ResponseEntity<Object> addContact(@PathVariable Long userID, @PathVariable String name, @PathVariable ArrayList<String> addresses){
+        try{
+            return ResponseEntity.ok(userService.addContact(userID,name,addresses));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
         }
