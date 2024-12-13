@@ -129,10 +129,18 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
         }
     }
+    @GetMapping("/searchEmails/{folderID}/{criteria}/{page}")
+    public ResponseEntity<Object> searchEmails(@PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page) {
+        try {
+            return ResponseEntity.ok(userService.searchEmails(folderID, criteria, page));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
+        }
+    }
     @GetMapping("/filterContact/{contactID}/{criteria}/{page}")
-    public ResponseEntity<Object> filterContact(@RequestBody ContactFilterDTO request, @PathVariable Long contactID, @PathVariable String criteria, @PathVariable int page){
+    public ResponseEntity<Object> filterContact(@RequestBody ContactFilterDTO request, @PathVariable Long userID, @PathVariable String criteria, @PathVariable int page){
         try{
-            return ResponseEntity.ok(userService.filterContact(request,contactID,criteria,page));
+            return ResponseEntity.ok(userService.filterContact(request,userID,criteria,page));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
         }

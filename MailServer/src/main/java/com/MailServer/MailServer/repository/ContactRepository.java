@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.ArrayList;
 
 public interface ContactRepository extends JpaRepository <Contact,Long> {
-    static ArrayList<Contact> findByContactContactID(Long contactID);
+    ArrayList<Contact> findByUserUserID(Long userID);
 }

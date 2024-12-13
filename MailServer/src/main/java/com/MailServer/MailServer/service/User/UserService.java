@@ -34,12 +34,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final FolderRepository folderRepository;
     private final EmailRepository emailRepository;
+    private final ContactRepository contactRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository) {
+    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository) {
         this.userRepository = userRepository;
         this.folderRepository = folderRepository;
         this.emailRepository = emailRepository;
+        this.contactRepository = contactRepository;
     }
 
     @Transactional
@@ -155,9 +157,9 @@ public class UserService {
         return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
     }
 
-    public Object filterContact(ContactFilterDTO request, Long contactID, String criteria, int pageNo) {
+    public Object filterContact(ContactFilterDTO request, Long userID, String criteria, int pageNo) {
         CriteriaContact filter = ContactFactory.getCriteria(request,criteria);
-        ArrayList<Contact> contacts = ContactRepository.findByContactContactID(contactID);
+        ArrayList<Contact> contacts = contactRepository.findByUserUserID(userID);
         ArrayList<Contact> filtered = filter.meetCriteria(contacts);
         List<ContactDTO> contactDTOs = filtered.stream()
                 .map(contact -> new ContactDTO(contact.getName(),contact.getContactID()))

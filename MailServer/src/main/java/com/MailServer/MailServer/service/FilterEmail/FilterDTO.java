@@ -7,8 +7,6 @@ public class FilterDTO {
     private String body;
     private String datetime;
 
-
-
     public String getSender() {
         return sender;
     }
