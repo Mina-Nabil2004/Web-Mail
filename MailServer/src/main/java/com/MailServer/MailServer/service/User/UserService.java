@@ -196,4 +196,17 @@ public class UserService {
         List<ContactDTO> pagedEmailDTOs = contactDTOs.subList(start, end);
         return new PageImpl<>(pagedEmailDTOs, pageable, ContactDTO.size()).getContent();
     }
+    public static Object sortEmail(String request, boolean order, int page, int pageSize, List<Email> emails) {
+        Strategy sort = SortFactory.getSort(request);
+        if (sort == null) {
+            throw new IllegalArgumentException("Invalid sort type: " + request);
+        }
+        ArrayList<Email> sortedEmails = sort.doOperation(new ArrayList<>(emails), order);
+        int start = page * pageSize;
+        int end = Math.min(start + pageSize, sortedEmails.size());
+        if (start >= sortedEmails.size()) {
+            return new ArrayList<>();
+        }
+        return sortedEmails.subList(start, end);
+    }
 }
