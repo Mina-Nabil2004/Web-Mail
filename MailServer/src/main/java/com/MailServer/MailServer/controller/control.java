@@ -171,10 +171,10 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
         }
     }
-    @PostMapping("/sort/{sortBy}/{order}/{page}/{pageSize}")
-    public ResponseEntity<Object> sortEmails(@PathVariable String sortBy, @PathVariable boolean order, @PathVariable int page, @PathVariable int pageSize, @RequestBody ArrayList<Email> emails) {
+    @GetMapping("/sort/{request}/{folderID}/{order}/{page}")
+    public ResponseEntity<Object> sortEmails(@PathVariable String request,@PathVariable Long folderID,@PathVariable boolean order, @PathVariable int page) {
         try {
-            return ResponseEntity.ok(userService.sortEmail(sortBy, order, page, pageSize, emails));
+            return ResponseEntity.ok(userService.sortEmail(request,folderID,order,page));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
         }

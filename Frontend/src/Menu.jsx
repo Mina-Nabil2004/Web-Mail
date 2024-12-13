@@ -16,8 +16,8 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
     setModalOpen(false);
   };
   const handleMenuClick = (menu) => {
-    setActiveMenu(menu); // Update active menu
-    handleLoginSuccess(); // Trigger login success to fetch emails for the active menu
+    setActiveMenu(menu); 
+    handleLoginSuccess(); 
   };
 
   return (

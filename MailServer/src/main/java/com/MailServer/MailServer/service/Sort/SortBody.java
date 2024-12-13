@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class SortDate implements Strategy {
+public class SortBody implements Strategy {
 
     @Override
     public ArrayList<Email> doOperation(ArrayList<Email> emails, boolean order) {
         if (order) {
-            emails.sort(Comparator.comparing(Email::getDatetime));
+            emails.sort(Comparator.comparing(Email::getBody));
         } else {
-            emails.sort(Comparator.comparing(Email::getDatetime).reversed());
+            emails.sort(Comparator.comparing(Email::getBody).reversed());
         }
         return emails;
     }

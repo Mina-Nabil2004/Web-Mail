@@ -15,6 +15,7 @@ import com.MailServer.MailServer.service.FilterEmail.FilterDTO;
 import com.MailServer.MailServer.service.FilterEmail.OrCriteria;
 import com.MailServer.MailServer.service.Folder.Folder;
 import com.MailServer.MailServer.service.Folder.FolderDTO;
+import com.MailServer.MailServer.service.Sort.SortDTO;
 import com.MailServer.MailServer.service.Sort.SortFactory;
 import com.MailServer.MailServer.service.Sort.Strategy;
 import jakarta.transaction.Transactional;
@@ -100,7 +101,6 @@ public class UserService {
         }
         return contact.getContactID();
     }
-
     @Transactional
     public Object send(EmailDTO dto, Long userID){
         User sender = userRepository.findById(userID).orElseThrow();
@@ -189,24 +189,26 @@ public class UserService {
         List<ContactDTO> contactDTOs = filtered.stream()
                 .map(contact -> new ContactDTO(contact.getName(),contact.getContactID()))
                 .collect(Collectors.toList());
-        // Create Pageable object
         Pageable pageable = PageRequest.of(pageNo, 20);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), ContactDTO.size());
         List<ContactDTO> pagedEmailDTOs = contactDTOs.subList(start, end);
         return new PageImpl<>(pagedEmailDTOs, pageable, ContactDTO.size()).getContent();
     }
-    public static Object sortEmail(String request, boolean order, int page, int pageSize, List<Email> emails) {
+    public  Object sortEmail(String request, Long folderID, boolean order, int pageNo) {
         Strategy sort = SortFactory.getSort(request);
         if (sort == null) {
             throw new IllegalArgumentException("Invalid sort type: " + request);
         }
-        ArrayList<Email> sortedEmails = sort.doOperation(new ArrayList<>(emails), order);
-        int start = page * pageSize;
-        int end = Math.min(start + pageSize, sortedEmails.size());
-        if (start >= sortedEmails.size()) {
-            return new ArrayList<>();
-        }
-        return sortedEmails.subList(start, end);
+        ArrayList<Email> emails =emailRepository.findByFolderFolderID(folderID);
+        ArrayList<Email> Sorted = sort.doOperation(emails,order);
+        List<EmailDTO> emailDTOs = Sorted.stream()
+                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime()))
+                .collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(pageNo, 20);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), emailDTOs.size());
+        List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
+        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
     }
 }
