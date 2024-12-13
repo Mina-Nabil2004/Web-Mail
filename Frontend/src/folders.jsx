@@ -23,25 +23,25 @@ export class Folder {
 // Specific folder classes (Leaf Nodes in Composite Pattern)
 class Inbox extends Folder {
   constructor(folderID) {
-    super("Inbox", folderID);
+    super("inbox", folderID);
   }
 }
 
 class Sent extends Folder {
   constructor(folderID) {
-    super("Sent", folderID);
+    super("sent", folderID);
   }
 }
 
 class Drafts extends Folder {
   constructor(folderID) {
-    super("Drafts", folderID);
+    super("drafts", folderID);
   }
 }
 
-class Bin extends Folder {
+class Trash extends Folder {
   constructor(folderID) {
-    super("Bin", folderID);
+    super("trash", folderID);
   }
 }
 
@@ -55,15 +55,16 @@ class Starred extends Folder {
 class FolderFactory {
   static createFolder(name, folderID) {
     switch (name) {
-      case "Inbox":
+      case "inbox":
+        console.log("hello");
         return new Inbox(folderID);
-      case "Sent":
+      case "sent":
         return new Sent(folderID);
-      case "Drafts":
+      case "drafts":
         return new Drafts(folderID);
-      case "Trash":
-        return new Bin(folderID);
-      case "Starred":
+      case "trash":
+        return new Trash(folderID);
+      case "starred":
         return new Starred(folderID);
       default:
         return new Folder(name, folderID);  // Generic folder for user-defined names
@@ -71,4 +72,4 @@ class FolderFactory {
   }
 }
 
-export { FolderFactory, Inbox, Sent, Drafts, Bin, Starred };
+export { FolderFactory, Inbox, Sent, Drafts, Trash, Starred };

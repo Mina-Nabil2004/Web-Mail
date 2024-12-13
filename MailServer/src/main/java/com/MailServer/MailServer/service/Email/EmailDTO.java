@@ -12,6 +12,7 @@ import java.util.Set;
 @Data
 public class EmailDTO {
     // Getters and Setters
+    private Long emailID;
     private String sender;
     private String receivers;
     private String subject;
@@ -28,7 +29,8 @@ public class EmailDTO {
         }
         return body.substring(0, 50);
     }
-    public EmailDTO(String sender, String subject, String body, String datetime){
+    public EmailDTO(Long emailID,String sender, String subject, String body, String datetime){
+        this.emailID = emailID;
         this.sender=sender;
         this.subject = subject;
         this.body=getBodySnippet(body);
@@ -79,5 +81,12 @@ public class EmailDTO {
 
     public void setDatetime(String datetime) {
         this.datetime = datetime;
+    }
+    public Long getEmailID() {
+        return emailID;
+    }
+
+    public void setEmailID(Long emailID) {
+        this.emailID = emailID;
     }
 }

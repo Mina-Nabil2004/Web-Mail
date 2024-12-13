@@ -20,7 +20,7 @@ const Header = ({ userId, onLogout }) => {
     async function fetchUserDetails() {
       if (userId) {
         try {
-          const response = await axios.get(`http://localhost:8088/email/user/${userId}`);
+          const response = await axios.get(`http://localhost:8080/email/user/${userId}`);
           console.log(response.data);
           setUser(response.data); // Assuming response.data contains { username, email }
         } catch (error) {

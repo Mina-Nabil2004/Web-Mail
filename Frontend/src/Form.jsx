@@ -12,19 +12,19 @@ export default function Form({ onLoginSuccess, toggleForm, setUserId }) {
     if (email === "" || password === "") {
       setError(1);
     } else {
-      const response = await axios.post('http://localhost:8088/email/login', {
-        "email": email,
-        "password": password
-      });
-
-      if (response.data === "Not Registered") {
-        setError(2);
-      } else if (response.data === "Incorrect Password") {
-        setError(3);
-      } else {
-        setError(0);
-        setUserId(response.data);
-      }
+    console.log("hello");
+    const response = await axios.post('http://localhost:8080/email/login', {
+      "email": email,
+      "password": password
+    });
+    if (response.data === "Not Registered") {
+      setError(2);
+    } else if (response.data === "Incorrect Password") {
+      setError(3);
+    } else {
+      setError(0);
+      setUserId(response.data);
+    }
     }
   };
 

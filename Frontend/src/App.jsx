@@ -5,17 +5,19 @@ import Sidebar2 from "./Sidebar2";
 import Form from "./Form";
 import CreateAccount from "./CreateAccount";
 import ComposeModal from "./ComposeModal";
+import { Inbox } from "./folders";
 import { FolderFactory } from "./folders";
 import "./App.css";
 import axios from "axios";
 
 // Initializing folders as an empty object, we'll fill them after login
-const initialEmails = {};
+const initialEmails = {inbox: [], sent: [], drafts: [], trash: [], starred: [] };
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
-  const [activeMenu, setActiveMenu] = useState("Inbox");
+  const [activeMenu, setActiveMenu] = useState({});
+  const [activeFolder, setActiveFolder] = useState(null);
   const [emails, setEmails] = useState(initialEmails);
   const [userId, setUserId] = useState(null);
 
@@ -23,31 +25,28 @@ function App() {
     if (userId != null) handleLoginSuccess();
   }, [userId]);
 
-const handleLoginSuccess = async () => {
-  console.log(userId);
-  try {
-    const response = await axios.get(`http://localhost:8088/email/folders/${userId}`);
-    console.log(response);
-
-    // Loop through each folder and create it using FolderFactory
-    for (let i = 0; i < response.data.length; i++) {
-      const folderData = response.data[i];
-      const folder = FolderFactory.createFolder(folderData.name, folderData.folderID);
-      console.log(`Created folder: ${folderData.name} with ID: ${folderData.folderID}`);
-
-      // Fetch emails for this folder
-      const folderEmails = await axios.get(`http://localhost:8088/email/folder/${folderData.folderID}/0`);
-      console.log(`Emails in ${folderData.name}:`, folderEmails.data);
-
-      // Add the fetched emails to the folder
-      folder.addEmails(folderEmails.data);
-
-      // Update the emails state with the new folder data
-      setEmails((prevEmails) => ({
-        ...prevEmails,
-        [folderData.name]: folder,
-      }));
-    }
+  const handleLoginSuccess = async () => {
+    console.log(userId);
+    try {
+      const response = await axios.get(`http://localhost:8080/email/folders/${userId}`);
+      console.log(response);
+  
+      response.data.forEach(async (folderData) => {
+        const folder = FolderFactory.createFolder(folderData.name.toLowerCase(), folderData.folderID);
+        console.log(`Created folder: ${folderData.name} with ID: ${folderData.folderID}`);
+        
+        if (folder instanceof Inbox) {
+          try {
+            const folderEmails = await axios.get(`http://localhost:8080/email/folder/${folderData.folderID}/0`);
+            folder.addEmails(folderEmails.data);
+            emails.inbox = folderEmails.data;
+            setActiveFolder(folder);
+            console.log(folder.getEmails());
+          } catch (emailError) {
+            console.error("Error fetching emails for inbox:", emailError);
+          }
+        }
+      });
   } catch (error) {
     console.error("Error fetching folders:", error);
   }
@@ -89,6 +88,7 @@ const handleLoginSuccess = async () => {
             <div className="left-sidebar">
               <Menu
                 activeMenu={activeMenu}
+                setActiveFolder={setActiveFolder}
                 setActiveMenu={setActiveMenu}
                 onSend={handleSend}
                 onDraft={handleDraft}
@@ -97,11 +97,9 @@ const handleLoginSuccess = async () => {
             <div className="content">
               <h2>{activeMenu}</h2>
               <div className="email-list">
-                {emails[activeMenu] && emails[activeMenu].getEmails().length > 0 ? (
-                  emails[activeMenu]
-                    .getEmails()
-                    .map((email) => (
-                      <div key={email.id} className="email-item">
+                {activeFolder && activeFolder.getEmails().length > 0 ? (
+                  activeFolder.getEmails().map((email) => (
+                      <div key={email.emailID} className="email-item">
                         <h3>{email.subject}</h3>
                         <p><strong>From:</strong> {email.sender}</p>
                         <p><strong>Received:</strong> {email.received}</p>

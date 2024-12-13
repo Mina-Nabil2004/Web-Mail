@@ -5,7 +5,7 @@ import ComposeModal from "./ComposeModal";
 
 import "./Menu.css";
 
-const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft }) => {
+const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, setActiveFolder }) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   const openModal = () => {
@@ -15,6 +15,11 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft }) => {
   const closeModal = () => {
     setModalOpen(false);
   };
+
+  const handleActive = (name) =>{
+    setActiveMenu(name);
+    setActiveFolder(folder);
+  }
 
   return (
     <div className="menu">
@@ -27,35 +32,35 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft }) => {
       <div className="menu-items">
         <div
           className={`menu-item ${activeMenu === "Inbox" ? "active" : ""}`}
-          onClick={() => setActiveMenu("Inbox")}
+          onClick={() => handleActive("Inbox")}
         >
           <FaInbox className="menu-icon" />
           <span>Inbox</span>
         </div>
         <div
           className={`menu-item ${activeMenu === "Starred" ? "active" : ""}`}
-          onClick={() => setActiveMenu("Starred")}
+          onClick={() => handleActive("Starred")}
         >
           <FaStar className="menu-icon" />
           <span>Starred</span>
         </div>
         <div
           className={`menu-item ${activeMenu === "Sent" ? "active" : ""}`}
-          onClick={() => setActiveMenu("Sent")}
+          onClick={() => handleActive("Sent")}
         >
           <FaPaperPlane className="menu-icon" />
           <span>Sent</span>
         </div>
         <div
           className={`menu-item ${activeMenu === "Drafts" ? "active" : ""}`}
-          onClick={() => setActiveMenu("Drafts")}
+          onClick={() => handleActive("Drafts")}
         >
           <FaFileAlt className="menu-icon" />
           <span>Drafts</span>
         </div>
         <div
           className={`menu-item ${activeMenu === "Bin" ? "active" : ""}`}
-          onClick={() => setActiveMenu("Bin")}
+          onClick={() => handleActive("Trash")}
         >
           <FaTrashAlt className="menu-icon" />
           <span>Bin</span>
