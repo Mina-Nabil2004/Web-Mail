@@ -11,29 +11,53 @@
   margin-right: 10px; /* This is fine, as it accounts for Sidebar2 width */
 }
 
-.email-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 .email-item {
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
+  border: 1px solid #ddd;
+  padding: 20px; /* Increased padding for better spacing */
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  transition: box-shadow 0.3s, background-color 0.3s;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Make email items fill the available width */
+  max-width: 800px; /* Set a maximum width for better readability */
+  margin: 0 auto; /* Center email items within the parent container */
 }
 
+.email-item:hover {
+  background-color: #f1f1f1;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.email-item h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.email-item p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.email-item strong {
+  color: #000;
+}
+
+/* Button styling for actions inside email items */
 .read-button {
-  background-color: #007bff;
+  background-color: #28a745;
   color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
+  padding: 8px 12px;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
 }
 
 .read-button:hover {
-  background-color: #0056b3;
+  background-color: #218838;
 }
 
 .left-sidebar {
@@ -54,7 +78,16 @@
     margin-right: 0; /* Remove right margin for smaller screens */
   }
 
-  .left-sidebar, .right-sidebar {
+  .left-sidebar,
+  .right-sidebar {
     flex: 0 0 100%; /* Make both sidebars full width */
   }
+}
+
+/* Center the email list and add spacing */
+.email-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Increase gap between email items */
+  align-items: center; /* Center email items horizontally */
 }

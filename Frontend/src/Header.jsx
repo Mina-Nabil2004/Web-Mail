@@ -28,7 +28,6 @@ const Header = ({ userId, onLogout }) => {
         }
       }
     }
-
     fetchUserDetails();
   }, [userId]); // Dependency on userId
 

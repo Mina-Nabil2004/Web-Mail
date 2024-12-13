@@ -1,12 +1,15 @@
+
 import React, { useState } from "react";
 import { FaInbox, FaStar, FaPaperPlane, FaFileAlt, FaTrashAlt, FaCog } from "react-icons/fa";
 import { MdLabel, MdMoreVert } from "react-icons/md";
 import ComposeModal from "./ComposeModal";
+import ContactsWindow from "./ContactsWindow";
 
 import "./Menu.css";
 
 const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuccess }) => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isContactsOpen, setContactsOpen] = useState(false);
 
   const openModal = () => {
     setModalOpen(true);
@@ -15,9 +18,18 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
   const closeModal = () => {
     setModalOpen(false);
   };
+
+  const openContacts = () => {
+    setContactsOpen(true);
+  };
+
+  const closeContacts = () => {
+    setContactsOpen(false);
+  };
+
   const handleMenuClick = (menu) => {
-    setActiveMenu(menu); 
-    handleLoginSuccess(); 
+    setActiveMenu(menu);
+    handleLoginSuccess();
   };
 
   return (
@@ -47,7 +59,7 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
           className={`menu-item ${activeMenu === "Sent" ? "active" : ""}`}
           onClick={() => handleMenuClick("Sent")}
         >
-          <FaPaperPlane handleLoginSuccess="menu-icon" />
+          <FaPaperPlane className="menu-icon" />
           <span>Sent</span>
         </div>
         <div
@@ -64,8 +76,9 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
           <FaTrashAlt className="menu-icon" />
           <span>Bin</span>
         </div>
-                {/* Categories Section */}
-                <div className="menu-item">
+
+        {/* Categories Section */}
+        <div className="menu-item">
           <MdLabel className="menu-icon" />
           <span>Categories</span>
           <div className="submenu">
@@ -88,10 +101,25 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
           <MdMoreVert className="menu-icon" />
           <span>Create new label</span>
         </div>
+
+        {/* Contacts Button */}
+        <div className="menu-item" onClick={openContacts}>
+          <FaCog className="menu-icon" />
+          <span>Contacts</span>
+        </div>
       </div>
 
       {/* Compose Modal */}
-      <ComposeModal user = {user} isOpen={isModalOpen} onClose={closeModal} onSend={onSend} onDraft={onDraft} />
+      <ComposeModal
+        user={user}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSend={onSend}
+        onDraft={onDraft}
+      />
+
+      {/* Contacts Window */}
+      {isContactsOpen && <ContactsWindow onClose={closeContacts} />}
     </div>
   );
 };
