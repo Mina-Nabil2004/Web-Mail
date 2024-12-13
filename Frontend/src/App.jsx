@@ -34,41 +34,14 @@ function App() {
       response.data.forEach(async (folderData) => {
         const folder = FolderFactory.createFolder(folderData.name.toLowerCase(), folderData.folderID);
         console.log(`Created folder: ${folderData.name} with ID: ${folderData.folderID}`);
-      // const folderClassMap = {
-      //   inbox: Inbox,
-      //   sent: Sent,
-      //   drafts: Drafts,
-      //   trash: Trash,
-      //   starred: Starred,
-      // };
-      //   const formattedName = folderData.name.charAt(0).toUpperCase() + folderData.name.slice(1).toLowerCase();
-      //   console.log(`Formatted folder name: ${formattedName}`);
-      //   const folderClass = folderClassMap[folderData.name.toLowerCase()];
-      //   if (formattedName.toLowerCase() === activeMenu.toLowerCase()) {
-      //     try {
-      //       const folderEmails = await axios.get(`http://localhost:8080/email/folder/${folderData.folderID}/0`);
-      //       console.log(`Fetched emails for ${formattedName}:`, folderEmails.data);
-      //       folder.addEmails(folderEmails.data);
-      //       setEmails((prevEmails) => ({
-      //         ...prevEmails,
-      //         [folderData.name.toLowerCase()]: folderEmails.data,
-      //       }));
-      //       setActiveFolder(folder);
-      //       console.log(`Emails in ${formattedName}:`, folder.getEmails());
-      //     } catch (emailError) {
-      //       console.error(`Error fetching emails for ${formattedName}:`, emailError);
-      //     }
-      //   }
         if (folderData.name.toLowerCase() === activeMenu.toLowerCase()) {
           try {
             const folderEmails = await axios.get(`http://localhost:8080/email/folder/${folderData.folderID}/0`);
             folder.addEmails(folderEmails.data);
-        
             setEmails((prevEmails) => ({
               ...prevEmails,
               [folderData.name.toLowerCase()]: folderEmails.data,
             }));
-        
             setActiveFolder(folder);
             console.log(`Fetched emails for ${activeMenu}:`, folder.getEmails());
           } catch (emailError) {
