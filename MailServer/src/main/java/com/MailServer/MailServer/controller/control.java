@@ -128,4 +128,12 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
         }
     }
+    @GetMapping("/searchEmails/{folderID}/{criteria}/{page}")
+    public ResponseEntity<Object> filterEmails(@PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page) {
+        try {
+            return ResponseEntity.ok(userService.searchEmails(folderID, criteria, page));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
+        }
+    }
 }

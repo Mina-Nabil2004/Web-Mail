@@ -7,6 +7,9 @@ public class CriteriaSubject implements Criteria{
     public CriteriaSubject(FilterDTO dto){
         this.subject= dto.getSubject();
     }
+    public CriteriaSubject(String criteria){
+        this.subject= criteria;
+    }
     @Override
     public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
         ArrayList<Email> subject=new ArrayList<Email>();

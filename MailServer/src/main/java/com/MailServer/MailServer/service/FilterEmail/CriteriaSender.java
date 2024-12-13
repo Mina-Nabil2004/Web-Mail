@@ -9,6 +9,9 @@ public class CriteriaSender implements Criteria{
     public CriteriaSender(FilterDTO dto){
         this.sender= dto.getSender();
     }
+    public CriteriaSender(String criteria){
+        this.sender= criteria;
+    }
     @Override
     public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
         ArrayList<Email> sender = new ArrayList<Email>();

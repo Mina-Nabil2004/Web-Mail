@@ -9,7 +9,9 @@ public class CriteriaBody implements Criteria{
     public CriteriaBody(FilterDTO dto){
         this.body = dto.getBody();
     }
-
+    public CriteriaBody(String criteria){
+        this.body = criteria;
+    }
     @Override
     public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
         ArrayList<Email> body = new ArrayList<Email>();

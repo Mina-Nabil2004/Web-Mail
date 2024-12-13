@@ -26,7 +26,5 @@ public class CriteriaFactory {
         else{
             return null;
         }
-
     }
-
 }
