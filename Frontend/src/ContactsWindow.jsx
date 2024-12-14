@@ -1,10 +1,10 @@
-
 import React, { useState } from "react";
 import "./ContactsWindow.css";
 
 const ContactsWindow = ({ onClose }) => {
   const [contacts, setContacts] = useState([]);
   const [newContact, setNewContact] = useState({ name: "", email: "" });
+  const [editingIndex, setEditingIndex] = useState(null);
 
   const handleAddContact = () => {
     if (newContact.name && newContact.email) {
@@ -16,6 +16,22 @@ const ContactsWindow = ({ onClose }) => {
   const handleDeleteContact = (index) => {
     const updatedContacts = contacts.filter((_, i) => i !== index);
     setContacts(updatedContacts);
+  };
+
+  const handleEditContact = (index) => {
+    const contactToEdit = contacts[index];
+    setNewContact(contactToEdit); // Fill the form with the contact data
+    setEditingIndex(index); // Track which contact is being edited
+  };
+
+  const handleSaveContact = () => {
+    if (editingIndex !== null) {
+      const updatedContacts = [...contacts];
+      updatedContacts[editingIndex] = newContact; // Update the contact with new data
+      setContacts(updatedContacts);
+      setNewContact({ name: "", email: "" });
+      setEditingIndex(null); // Reset the editing mode
+    }
   };
 
   return (
@@ -34,6 +50,7 @@ const ContactsWindow = ({ onClose }) => {
               <strong>Email:</strong> {contact.email}
             </p>
             <button onClick={() => handleDeleteContact(index)}>Delete</button>
+            <button onClick={() => handleEditContact(index)}>Edit</button>
           </div>
         ))}
       </div>
@@ -50,7 +67,11 @@ const ContactsWindow = ({ onClose }) => {
           value={newContact.email}
           onChange={(e) => setNewContact({ ...newContact, email: e.target.value })}
         />
-        <button onClick={handleAddContact}>Add Contact</button>
+        {editingIndex !== null ? (
+          <button onClick={handleSaveContact}>Save Contact</button>
+        ) : (
+          <button onClick={handleAddContact}>Add Contact</button>
+        )}
       </div>
     </div>
   );

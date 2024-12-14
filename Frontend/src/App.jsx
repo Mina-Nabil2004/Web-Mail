@@ -79,7 +79,8 @@ function App() {
     console.log("Search query:", searchQuery); // Check search query
     try {
       console.log(activeFolder.folderID);
-      const response = await axios.get(`http://localhost:8080/searchEmails/${activeFolder.folderID}/${searchQuery}/${page}`
+      const response = await axios.get(
+        `http://localhost:8080/searchEmails/${activeFolder.folderID}/${searchQuery}/${page}`
       );
       console.log("Search results:", response.data);
     } catch (error) {
