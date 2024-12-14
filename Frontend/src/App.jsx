@@ -22,6 +22,7 @@ function App() {
   const [userId, setUserId] = useState(null);
   const [isContacting, setIsContacting] = useState(false); // State for showing contact form
   const [page, setPage] = useState(0); // State for managing page number
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (userId != null) handleLoginSuccess();
@@ -32,6 +33,12 @@ function App() {
       fetchEmailsForActiveFolder(page);
     }
   }, [activeFolder, page]);
+
+  useEffect(() => {
+    if (searchQuery) {
+      handleSearch();
+    }
+  }, [activeFolder,searchQuery]);
 
   const handleLoginSuccess = async () => {
     console.log(userId);
@@ -67,7 +74,18 @@ function App() {
       console.error(`Error fetching emails for ${activeMenu}, page ${page}:`, emailError);
     }
   };
-
+  const handleSearch = async (page=0) => {
+    console.log("Active folder:", activeFolder);
+    console.log("Search query:", searchQuery); // Check search query
+    try {
+      console.log(activeFolder.folderID);
+      const response = await axios.get(`http://localhost:8080/searchEmails/${activeFolder.folderID}/${searchQuery}/${page}`
+      );
+      console.log("Search results:", response.data);
+    } catch (error) {
+      console.error("Error performing search:", error);
+    }
+  };
   const handleLogout = () => {
     setLoggedIn(false);
   };
@@ -111,13 +129,15 @@ function App() {
         )
       ) : (
         <>
-          <Header userId={userId} onLogout={handleLogout} />
+          <Header userId={userId} onLogout={handleLogout} onSearch={handleSearch} setSearchQuery={setSearchQuery} />
           <div className="app-layout">
             <div className="left-sidebar">
               <Menu
                 activeMenu={activeMenu}
                 setActiveFolder={setActiveFolder}
                 setActiveMenu={handleFolderChange}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
                 onSend={handleSend}
                 onDraft={handleDraft}
                 handleLoginSuccess={handleLoginSuccess}

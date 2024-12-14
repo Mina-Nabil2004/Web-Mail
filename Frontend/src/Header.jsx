@@ -4,7 +4,7 @@ import logoMail from "/src/assets/logoMAIL.jpg";
 import ProfileMenu from "./ProfileMenu";
 import axios from "axios";
 
-const Header = ({ userId, onLogout }) => {
+const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch }) => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [user, setUser] = useState({ });
 
@@ -31,6 +31,16 @@ const Header = ({ userId, onLogout }) => {
     fetchUserDetails();
   }, [userId]); // Dependency on userId
 
+  const handleSearchClick = () => {
+    if (onSearch) {
+      onSearch(searchQuery,1);
+    }
+  };
+  const handleSearchInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+
   return (
     <header className="header">
       <div className="header-left">
@@ -38,8 +48,14 @@ const Header = ({ userId, onLogout }) => {
         <h2>Mail Website</h2>
       </div>
       <div className="header-center">
-        <input type="text" className="search-bar" placeholder="Search mail" />
-        <button className="search-button">
+       <input
+        type="text"
+        className="search-bar"
+        placeholder="Search criteria"
+        value={searchQuery}
+        onChange={handleSearchInputChange} 
+        />
+        <button className="search-button" onClick={handleSearchClick}>
           <i className="material-icons">search</i>
         </button>
       </div>
