@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import com.MailServer.MailServer.service.User.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 
@@ -185,6 +186,16 @@ public class control {
             return ResponseEntity.ok(userService.copyEmail(folderID));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/uploadAttachment")
+    public ResponseEntity<String> handleFileUpload(@RequestParam("attachments") MultipartFile[] files) {
+        try {
+            //userService.uploadAttachment(files);
+            return ResponseEntity.ok("Files uploaded successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload files.");
         }
     }
 

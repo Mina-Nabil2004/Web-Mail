@@ -1,12 +1,8 @@
 package com.MailServer.MailServer.service.User;
 
 import com.MailServer.MailServer.repository.*;
-import com.MailServer.MailServer.service.Contact.Address;
-import com.MailServer.MailServer.service.Contact.Contact;
-import com.MailServer.MailServer.service.Contact.ContactDTO;
-import com.MailServer.MailServer.service.Email.Email;
-import com.MailServer.MailServer.service.Email.EmailDTO;
-import com.MailServer.MailServer.service.Email.Receiver;
+import com.MailServer.MailServer.service.Contact.*;
+import com.MailServer.MailServer.service.Email.*;
 import com.MailServer.MailServer.service.FilterContact.ContactFactory;
 import com.MailServer.MailServer.service.FilterContact.ContactFilterDTO;
 import com.MailServer.MailServer.service.FilterContact.CriteriaContact;
@@ -26,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,29 +103,48 @@ public class UserService {
         return contact.getContactID();
     }
 
+//    @Transactional
+//    public Object send(EmailDTO dto, Long userID){
+//        User sender = userRepository.findById(userID).orElseThrow();
+//        List<Receiver> receivers = receiverRepository.findReceiverByEmailIDAndUserID(userID);
+//        dto.setSender(sender.getEmail());
+//        Folder sentFolder = folderRepository.findByUserUserIDAndName(sender.getUserID(),"sent");
+////        Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiver.getUserID(), "inbox");
+////        Email receivedEmail = new Email(dto, receiver, inboxFolder);
+////        emailRepository.save(receivedEmail);
+//        for (Receiver receiver : receivers) {
+//            User receiverUser = receiver.getUser();
+//            Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiverUser.getUserID(),"inbox");
+//            Email receivedEmail = new Email(dto, receiverUser, inboxFolder);
+//            emailRepository.save(receivedEmail);
+//        }
+//        Email sendEmail = new Email(dto, sender, sentFolder);
+//        emailRepository.save(sendEmail);
+//        return sendEmail;
+//    }
+
     @Transactional
     public Object send(EmailDTO dto, Long userID){
         User sender = userRepository.findById(userID).orElseThrow();
-        Set<Receiver> receivers = receiverRepository.findReceiversByEmailIDAndUserID(userID);
         dto.setSender(sender.getEmail());
         Folder sentFolder = folderRepository.findByUserUserIDAndName(sender.getUserID(),"sent");
-//        Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiver.getUserID(), "inbox");
-//        Email receivedEmail = new Email(dto, receiver, inboxFolder);
-//        emailRepository.save(receivedEmail);
-        for (Receiver receiver : receivers) {
-            User receiverUser = receiver.getUser();
-            Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiverUser.getUserID(),"inbox");
-            Email receivedEmail = new Email(dto, receiverUser, inboxFolder);
+        for (String receiverEmail : dto.getReceivers()) {
+            User receiver = userRepository.findByEmail(receiverEmail);
+            Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiver.getUserID(), "inbox");
+            Email receivedEmail = new Email(dto, receiver, inboxFolder);
             emailRepository.save(receivedEmail);
+            Receiver received = new Receiver(receivedEmail, receiverEmail);
+            receiverRepository.save(received);
         }
         Email sendEmail = new Email(dto, sender, sentFolder);
         emailRepository.save(sendEmail);
         return sendEmail;
     }
-    public Object getUserEmail(Long emailID) {
-        Email email = emailRepository.findById(emailID).orElseThrow();
-        return new EmailDTO(email.getReceivers(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime());
-    }
+
+//    public Object getUserEmail(Long emailID) {
+//        Email email = emailRepository.findById(emailID).orElseThrow();
+//        return new EmailDTO(email.getReceivers(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime());
+//    }
     @Transactional
     public Object deleteUser(Long userID) {
         emailRepository.deleteAllByUserUserID(userID);
@@ -230,4 +246,12 @@ public class UserService {
         }
         return clonedEmails;
     }
+
+
+//    public void uploadAttachment(MultipartFile[] files) {
+//        for (MultipartFile file : files) {
+//            // Process each file (e.g., save to database or file system)
+//        }
+//    }
+
 }

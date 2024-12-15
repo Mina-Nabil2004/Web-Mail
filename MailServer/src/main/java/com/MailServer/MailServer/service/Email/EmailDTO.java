@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Setter
@@ -14,7 +15,7 @@ public class EmailDTO {
     // Getters and Setters
     private Long emailID;
     private String sender;
-    private Set<Receiver> receivers;
+    private List<String> receivers;
     private String subject;
     private String body;
     private String datetime;
@@ -37,7 +38,7 @@ public class EmailDTO {
         this.body=getBodySnippet(body);
         this.datetime=datetime;
     }
-    public EmailDTO(Set<Receiver> receivers,String sender,String subject, String body, String datetime){
+    public EmailDTO(List<String> receivers,String sender,String subject, String body, String datetime){
         this.receivers=receivers;
         this.sender=sender;
         this.subject = subject;
@@ -52,11 +53,11 @@ public class EmailDTO {
         this.sender = sender;
     }
 
-    public Set<Receiver> getReceivers() {
+    public List<String> getReceivers() {
         return receivers;
     }
 
-    public void setReceivers(Set<Receiver> receivers) {
+    public void setReceivers(List<String> receivers) {
         this.receivers = receivers;
     }
 

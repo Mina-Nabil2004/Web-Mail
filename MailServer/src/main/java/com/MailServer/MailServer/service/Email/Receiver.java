@@ -24,24 +24,14 @@ public class Receiver {
     private String emailAddress;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "userid", referencedColumnName = "userid")
-    private User user;
-
-
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "emailid", referencedColumnName = "emailid")
     private Email email;
 
-    @ManyToMany(mappedBy = "receivers")
-    private Set<Email> emails;
-
-    public Set<Email> getEmails() {
-        return emails;
-    }
     public Receiver(){}
 
-    public void setEmails(Set<Email> emails) {
-        this.emails = emails;
+    public Receiver(Email email, String emailAddress){
+        this.email =email;
+        this.emailAddress = emailAddress;
     }
 
     public Email getEmail() {
@@ -50,14 +40,6 @@ public class Receiver {
 
     public void setEmail(Email email) {
         this.email = email;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getEmailAddress() {
