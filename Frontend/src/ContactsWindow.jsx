@@ -3,76 +3,117 @@ import "./ContactsWindow.css";
 
 const ContactsWindow = ({ onClose }) => {
   const [contacts, setContacts] = useState([]);
-  const [newContact, setNewContact] = useState({ name: "", email: "" });
-  const [editingIndex, setEditingIndex] = useState(null);
+  const [selectedContactIndex, setSelectedContactIndex] = useState(null);
 
   const handleAddContact = () => {
-    if (newContact.name && newContact.email) {
-      setContacts([...contacts, newContact]);
-      setNewContact({ name: "", email: "" });
-    }
+    setContacts([...contacts, { name: "", emails: [""] }]);
+  };
+
+  const handleContactClick = (index) => {
+    setSelectedContactIndex(index);
+  };
+
+  const handleSaveContact = (updatedContact) => {
+    setContacts((prevContacts) =>
+      prevContacts.map((contact, index) =>
+        index === selectedContactIndex ? updatedContact : contact
+      )
+    );
+    setSelectedContactIndex(null);
+  };
+
+  const handleCancelEdit = () => {
+    setSelectedContactIndex(null);
   };
 
   const handleDeleteContact = (index) => {
-    const updatedContacts = contacts.filter((_, i) => i !== index);
-    setContacts(updatedContacts);
-  };
-
-  const handleEditContact = (index) => {
-    const contactToEdit = contacts[index];
-    setNewContact(contactToEdit); // Fill the form with the contact data
-    setEditingIndex(index); // Track which contact is being edited
-  };
-
-  const handleSaveContact = () => {
-    if (editingIndex !== null) {
-      const updatedContacts = [...contacts];
-      updatedContacts[editingIndex] = newContact; // Update the contact with new data
-      setContacts(updatedContacts);
-      setNewContact({ name: "", email: "" });
-      setEditingIndex(null); // Reset the editing mode
-    }
+    setContacts(contacts.filter((_, i) => i !== index));
   };
 
   return (
     <div className="contacts-window">
-      <div className="contacts-header">
-        <h3>Contacts</h3>
-        <button onClick={onClose}>Close</button>
+      {selectedContactIndex !== null ? (
+        <EditContactWindow
+          contact={contacts[selectedContactIndex]}
+          onSave={handleSaveContact}
+          onCancel={handleCancelEdit}
+        />
+      ) : (
+        <div className="contacts-list-window">
+          <h3>Contacts</h3>
+          <button onClick={handleAddContact}>Add Contact</button>
+          <div className="contacts-list">
+            {contacts.map((contact, index) => (
+              <div key={index} className="contact-item">
+                <p onClick={() => handleContactClick(index)}>
+                  {contact.name || "Unnamed Contact"}
+                </p>
+                <p>{contact.emails.join(", ")}</p>
+                <button onClick={() => handleDeleteContact(index)}>
+                  Delete Contact
+                </button>
+              </div>
+            ))}
+          </div>
+          <button onClick={onClose}>Close</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const EditContactWindow = ({ contact, onSave, onCancel }) => {
+  const [editedContact, setEditedContact] = useState({ ...contact });
+
+  const handleNameChange = (e) => {
+    setEditedContact({ ...editedContact, name: e.target.value });
+  };
+
+  const handleEmailChange = (index, value) => {
+    const updatedEmails = [...editedContact.emails];
+    updatedEmails[index] = value;
+    setEditedContact({ ...editedContact, emails: updatedEmails });
+  };
+
+  const handleAddEmailField = () => {
+    setEditedContact({
+      ...editedContact,
+      emails: [...editedContact.emails, ""],
+    });
+  };
+
+  const handleDeleteEmail = (index) => {
+    const updatedEmails = editedContact.emails.filter((_, i) => i !== index);
+    setEditedContact({ ...editedContact, emails: updatedEmails });
+  };
+
+  return (
+    <div className="edit-contact-window">
+      <h3>Edit Contact</h3>
+      <div>
+        <label>Name:</label>
+        <input
+          type="text"
+          value={editedContact.name}
+          onChange={handleNameChange}
+        />
       </div>
-      <div className="contacts-list">
-        {contacts.map((contact, index) => (
-          <div key={index} className="contact-item">
-            <p>
-              <strong>Name:</strong> {contact.name}
-            </p>
-            <p>
-              <strong>Email:</strong> {contact.email}
-            </p>
-            <button onClick={() => handleDeleteContact(index)}>Delete</button>
-            <button onClick={() => handleEditContact(index)}>Edit</button>
+      <div>
+        <label>Emails:</label>
+        {editedContact.emails.map((email, index) => (
+          <div key={index}>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => handleEmailChange(index, e.target.value)}
+            />
+            <button onClick={() => handleDeleteEmail(index)}>Delete Email</button>
           </div>
         ))}
       </div>
-      <div className="add-contact">
-        <input
-          type="text"
-          placeholder="Name"
-          value={newContact.name}
-          onChange={(e) => setNewContact({ ...newContact, name: e.target.value })}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={newContact.email}
-          onChange={(e) => setNewContact({ ...newContact, email: e.target.value })}
-        />
-        {editingIndex !== null ? (
-          <button onClick={handleSaveContact}>Save Contact</button>
-        ) : (
-          <button onClick={handleAddContact}>Add Contact</button>
-        )}
-      </div>
+      <button onClick={handleAddEmailField}>Add Email</button>
+      <button onClick={() => onSave(editedContact)}>Save</button>
+      <button onClick={onCancel}>Cancel</button>
     </div>
   );
 };
