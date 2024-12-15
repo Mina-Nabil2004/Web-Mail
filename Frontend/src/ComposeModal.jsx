@@ -50,7 +50,7 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
         <form onSubmit={handleSend}>
           <div className="input-group">
             <label htmlFor="sender">Sender</label>
-            <input
+            <input className='compose-input'
               type="email"
               id="sender"
               placeholder="Sender"
@@ -62,7 +62,7 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
 
           <div className="input-group">
             <label htmlFor="received">Received</label>
-            <input
+            <input className='compose-input'
               type="email"
               id="received"
               placeholder="Received (optional)"
@@ -73,7 +73,7 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
 
           <div className="input-group">
             <label htmlFor="subject">Subject</label>
-            <input
+            <input className='compose-input'
               type="text"
               id="subject"
               placeholder="Subject"
@@ -85,7 +85,7 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
 
           <div className="input-group">
             <label htmlFor="body">Message</label>
-            <textarea
+            <textarea className='compose-input'
               id="body"
               placeholder="Write your message here..."
               value={body}

@@ -51,7 +51,7 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch }) => 
        <input
         type="text"
         className="search-bar"
-        placeholder="Search criteria"
+        placeholder="Search"
         value={searchQuery}
         onChange={handleSearchInputChange} 
         />

@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { FaInbox, FaStar, FaPaperPlane, FaFileAlt, FaTrashAlt, FaCog } from "react-icons/fa";
+import { FaInbox, FaStar, FaPaperPlane, FaFileAlt, FaTrashAlt, FaCog, FaAddressBook } from "react-icons/fa";
 import { MdLabel, MdMoreVert } from "react-icons/md";
 import ComposeModal from "./ComposeModal";
 import ContactsWindow from "./ContactsWindow";
@@ -74,13 +74,13 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
           onClick={() => handleMenuClick("Bin")}
         >
           <FaTrashAlt className="menu-icon" />
-          <span>Bin</span>
+          <span>Trash</span>
         </div>
 
         {/* Categories Section */}
         <div className="menu-item">
-          <MdLabel className="menu-icon" />
-          <span>Categories</span>
+          <MdLabel className="menu-icon"/>
+          <span style={{width: "50px"}}>Categories</span>
           <div className="submenu">
             <div className="submenu-item">Less</div>
             <div className="submenu-item">Important</div>
@@ -92,19 +92,19 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
         </div>
 
         {/* Manage Labels Section */}
-        <div className="menu-item">
+        {/* <div className="menu-item">
           <FaCog className="menu-icon" />
           <span>Manage labels</span>
-        </div>
+        </div> */}
 
-        <div className="menu-item">
+        {/* <div className="menu-item">
           <MdMoreVert className="menu-icon" />
           <span>Create new label</span>
-        </div>
+        </div> */}
 
         {/* Contacts Button */}
         <div className="menu-item" onClick={openContacts}>
-          <FaCog className="menu-icon" />
+        <FaAddressBook className="menu-icon" />
           <span>Contacts</span>
         </div>
       </div>

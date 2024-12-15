@@ -21,6 +21,7 @@
 }
 
 .logo {
+  border-radius: 20px;
   height: 40px; /* Keep the original size */
   margin-right: 10px; /* Original margin */
   transition: transform 0.3s ease; /* Smooth hover animation for logo */
@@ -58,9 +59,12 @@
 }
 
 .search-button {
-  padding: 10px;
+  padding-bottom: 8px;
+  padding-top: 3px;
   border: none;
-  background-color: #f1f3f4;
+  text-align: center;
+  align-items: center;
+  background-color: #e3e8ea;
   border-left: 1px solid #ccc;
   border-radius: 0 20px 20px 0;
   cursor: pointer;
@@ -101,6 +105,8 @@
 }
 
 .user-profile .user-avatar {
+  margin-top: 5px;
+  margin-right: 50px;
   border-radius: 50%;
   height: 40px; /* Keep the original size */
   width: 40px; /* Keep the original size */

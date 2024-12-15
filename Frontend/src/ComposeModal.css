@@ -48,6 +48,7 @@ h2 {
 /* Input Group */
 .input-group {
   margin-bottom: 15px;
+  padding-right: 25px;
 }
 
 .input-group label {
@@ -70,6 +71,7 @@ h2 {
 .input-group textarea {
   resize: vertical;
   min-height: 100px;
+  
 }
 
 /* Modal Actions */

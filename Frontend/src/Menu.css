@@ -1,6 +1,6 @@
 /* General menu styling */
 .menu {
-  width: 220px; /* Reduced width */
+  width: 250px; /* Reduced width */
   background: linear-gradient(to bottom, #ffffff, #f0f4f8); /* Smooth gradient */
   border-right: 1px solid #ccc;
   padding: 15px; /* Reduced padding */
@@ -14,6 +14,7 @@
 
 /* Compose button */
 .compose-btn {
+  margin-top: 15px;
   background-color: #4caf50; /* Fresh green */
   color: white;
   font-size: 16px;
@@ -69,7 +70,7 @@
 
 /* Submenu */
 .submenu {
-  margin-left: 25px;
+  margin-left: 30px;
   display: flex;
   flex-direction: column;
   gap: 10px;

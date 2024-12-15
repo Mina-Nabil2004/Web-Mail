@@ -14,5 +14,5 @@ public interface EmailRepository extends JpaRepository<Email,Long> {
     Page<Email> findByUserUserID(Long userID, Pageable pageable);
     void deleteAllByFolderFolderID(Long folderID);
     void deleteAllByUserUserID(Long userID);
-    Set<Email> findByUser_UserID(Long userID);
+    Set<Email> findByUserUserID(Long userID);
 }

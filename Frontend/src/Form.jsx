@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Form.css";
 import axios from "axios";
 
-export default function Form({ onLoginSuccess, toggleForm, setUserId }) {
+export default function Form({ toggleForm, setUserId }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(0);

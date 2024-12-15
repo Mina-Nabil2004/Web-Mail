@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Form.css";
 import axios from "axios";
 
-export default function CreateAccount({ onLoginSuccess, toggleForm }) {
+export default function CreateAccount({ toggleForm, setUserId }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +28,7 @@ export default function CreateAccount({ onLoginSuccess, toggleForm }) {
         setError(0);
         alert("Account created successfully!");
         console.log(response.data);
-        onLoginSuccess();
+        setUserId(response.data);
       }
     }
   };

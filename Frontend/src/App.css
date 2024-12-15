@@ -8,7 +8,6 @@
   flex: 1;
   padding: 20px;
   margin-left: 50px;
-  margin-right: 10px; /* This is fine, as it accounts for Sidebar2 width */
 }
 
 .email-item {
@@ -86,8 +85,14 @@
 
 /* Center the email list and add spacing */
 .email-list {
+  height: 700px;
   display: flex;
   flex-direction: column;
   gap: 20px; /* Increase gap between email items */
   align-items: center; /* Center email items horizontally */
+}
+
+.pages-button{
+  height: 40px;
+  border-radius: 20px;
 }
