@@ -1,78 +1,70 @@
-import React, { useState } from 'react';
-import './ComposeModal.css';
+import React, { useState } from "react";
+import "./ComposeModal.css";
+import axios from "axios";
+import {Builder} from "./EmailBuilder.jsx"
 
 const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
+  if (!isOpen) return null; 
+  const builder = new Builder();
+  const userId = localStorage.getItem("userId");
 
-  const [subject, setSubject] = useState('');
-  const [body, setBody] = useState('');
-  const [to, setto] = useState('');
-
-  if (!isOpen) return null; // Don't render the modal if it's not open
-
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
+    console.log(userId);
     e.preventDefault();
-    // Create the email object
-    const email = {
-      id: Date.now(),
-      subject,
-      body,
-      to,
-      sent: new Date().toLocaleString(),
-    };
-    // Trigger the onSend callback with the email data
-    onSend(email);
-    onClose(); // Close the modal after sending
+      try{
+        const response = await axios.post(`http://localhost:8080/email/send/${userId}`,builder.build())
+        console.log(response.data);
+      }catch(err){
+       }
   };
-
   const handleDraft = () => {
-    // Create the draft email object
-    const draft = {
-      id: Date.now(),
-      subject,
-      body,
-      to,
-      saved: new Date().toLocaleString(),
-    };
-    // Trigger the onDraft callback with the draft data
-    onDraft(draft);
-    onClose(); // Close the modal after saving as draft
+    // const draft = new Builder()
+    //   .setSubject(subject)
+    //   .setBody(body)
+    //   .setSender(to)
+    //   .build();
+    // onDraft(draft);
+    onClose();
   };
   return (
     <div className="compose-modal">
       <div className="modal-content">
-      <span className="close-btn" onClick={onClose}>
-        &times;
-      </span>
+        <span className="close-btn" onClick={onClose}>
+          &times;
+        </span>
         <h2>New Message</h2>
         <form onSubmit={handleSend}>
           <div className="input-group">
             <label htmlFor="received">To</label>
-            <input className='compose-input'
+            <input
+              className="compose-input"
               type="email"
               id="received"
-              placeholder="To"
-              value={to}
-              onChange={(e) => setto(e.target.value)}
+              placeholder="receivers"
+              value={builder.receivers.join(", ")}
+              onChange={(e) => builder.setReceivers(e.target.value)}
             />
           </div>
           <div className="input-group">
             <label htmlFor="subject">Subject</label>
-            <input className='compose-input'
+            <input
+              className="compose-input"
               type="text"
               id="subject"
               placeholder="Subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
+              value={builder.subject}
+              onChange={(e) => builder.setSubject(e.target.value)}
               required
             />
           </div>
           <div className="input-group">
             <label htmlFor="body">Message</label>
-            <textarea className='compose-input'
+            <textarea
+              className="compose-input"
               id="body"
               placeholder="Write your message here..."
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
+              value={builder.body}
+              onChange={(e) => builder.setBody(e.target.value)}
               required
             />
           </div>
@@ -80,11 +72,13 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
             <button type="submit" className="send-btn">
               Send
             </button>
+            <button type="button" className="draft-btn" onClick={handleDraft}>
+              Save as Draft
+            </button>
           </div>
         </form>
       </div>
     </div>
   );
 };
-
 export default ComposeModal;
