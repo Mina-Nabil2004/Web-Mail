@@ -1,15 +1,25 @@
-
 import React, { useState } from "react";
 import { FaInbox, FaStar, FaPaperPlane, FaFileAlt, FaTrashAlt, FaCog, FaAddressBook } from "react-icons/fa";
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import MailIcon from '@mui/icons-material/Mail';
 import { MdLabel, MdMoreVert } from "react-icons/md";
 import ComposeModal from "./ComposeModal";
 import ContactsWindow from "./ContactsWindow";
+import AddFolderModal from "./AddFolderModal";
 
 import "./Menu.css";
 
 const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuccess }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isContactsOpen, setContactsOpen] = useState(false);
+  const [isAddFolderModalOpen, setAddFolderModalOpen] = useState(false); 
+  const [categories, setCategories] = useState([
+    'Less',
+    'Important',
+    'Chats',
+    'Scheduled',
+    'Spam',
+  ]);
 
   const openModal = () => {
     setModalOpen(true);
@@ -30,6 +40,19 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
   const handleMenuClick = (menu) => {
     setActiveMenu(menu);
     handleLoginSuccess();
+  };
+
+  const openAddFolderModal = () => {
+    setAddFolderModalOpen(true);
+  };
+
+  const closeAddFolderModal = () => {
+    setAddFolderModalOpen(false);
+  };
+
+  const addNewFolder = (folderName) => {
+    setCategories((prevCategories) => [...prevCategories, folderName]);
+    closeAddFolderModal();
   };
 
   return (
@@ -76,35 +99,36 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
           <FaTrashAlt className="menu-icon" />
           <span>Trash</span>
         </div>
+        <div
+          className={`menu-item ${activeMenu === "All Mail" ? "active" : ""}`}
+          onClick={() => handleMenuClick("All Mail")}
+        >
+          <MailIcon className="menu-icon" />
+          <span>All Mail</span>
+        </div>
 
         {/* Categories Section */}
         <div className="menu-item">
-          <MdLabel className="menu-icon"/>
-          <span style={{width: "50px"}}>Categories</span>
+          <MdLabel className="menu-icon" />
+          <span style={{ width: '50px' }}>Categories</span>
           <div className="submenu">
-            <div className="submenu-item">Less</div>
-            <div className="submenu-item">Important</div>
-            <div className="submenu-item">Chats</div>
-            <div className="submenu-item">Scheduled</div>
-            <div className="submenu-item">All Mail</div>
-            <div className="submenu-item">Spam</div>
+            {categories.map((category, index) => (
+              <div key={index} className="submenu-item">
+                {category}
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Manage Labels Section */}
-        {/* <div className="menu-item">
-          <FaCog className="menu-icon" />
-          <span>Manage labels</span>
-        </div> */}
-
-        {/* <div className="menu-item">
-          <MdMoreVert className="menu-icon" />
-          <span>Create new label</span>
-        </div> */}
+        {/* Add Folder Button */}
+        <div className="menu-item" onClick={openAddFolderModal}>
+          <CreateNewFolderIcon className="menu-icon" />
+          <span>Add folder</span>
+        </div>
 
         {/* Contacts Button */}
         <div className="menu-item" onClick={openContacts}>
-        <FaAddressBook className="menu-icon" />
+          <FaAddressBook className="menu-icon" />
           <span>Contacts</span>
         </div>
       </div>
@@ -117,11 +141,57 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
         onSend={onSend}
         onDraft={onDraft}
       />
-
+      
       {/* Contacts Window */}
       {isContactsOpen && <ContactsWindow onClose={closeContacts} />}
+      
+      {/* Add Folder Modal */}
+      <AddFolderModal
+        isOpen={isAddFolderModalOpen}
+        onClose={closeAddFolderModal}
+        onAddFolder={addNewFolder}
+      />
     </div>
   );
 };
 
 export default Menu;
+
+
+ {/* Categories Section */}
+        {/* {<div className="menu-item">
+          <MdLabel className="menu-icon"/>
+          <span style={{width: "50px"}}>Categories</span>
+          <div className="submenu">
+            <div className="submenu-item">Less</div>
+            <div className="submenu-item">Important</div>
+            <div className="submenu-item">Chats</div>
+            <div className="submenu-item">Scheduled</div>
+            <div className="submenu-item">All Mail</div>
+            <div className="submenu-item">Spam</div>
+          </div>
+        </div> } */}
+
+          {/* Categories Section */}
+            {/* <div className="menu-item">
+              <MdLabel className="menu-icon" />
+              <span style={{ width: '50px' }}>Categories</span>
+              <div className="submenu">
+                {categories.map((category, index) => (
+                  <div key={index} className="submenu-item">
+                    {category}
+                  </div>
+                ))}
+              </div>
+            </div> */}
+
+        {/* Manage Labels Section */}
+        {/* <div className="menu-item">
+          <FaCog className="menu-icon" />
+          <span>Manage labels</span>
+        </div> */}
+
+        {/* <div className="menu-item">
+          <MdMoreVert className="menu-icon" />
+          <span>Create new label</span>
+        </div> */}

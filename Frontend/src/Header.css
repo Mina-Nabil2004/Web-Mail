@@ -47,7 +47,7 @@
   flex: 1;
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 20px 0 0 20px;
+  border-radius: 20px 20px 20px 20px;
   outline: none;
   font-size: 14px;
   transition: all 0.3s ease;
@@ -58,17 +58,17 @@
   box-shadow: 0 0 5px rgba(26, 115, 232, 0.5); /* Soft blue glow */
 }
 
+
 .search-button {
-  padding-bottom: 8px;
-  padding-top: 3px;
+  background-color: #e0e0e0; /* Light gray background */
   border: none;
-  text-align: center;
-  align-items: center;
-  background-color: #e3e8ea;
-  border-left: 1px solid #ccc;
-  border-radius: 0 20px 20px 0;
+  border-radius: 50%;
+  padding: 10px; /* Reduced padding around the icon */
   cursor: pointer;
-  transition: all 0.3s ease; /* Smooth hover transition */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0; /* Removed margin-right to bring the icon closer */
 }
 
 .search-button:hover {
@@ -76,7 +76,7 @@
 }
 
 .search-button i {
-  font-size: 20px;
+  font-size: 10px;
   color: #555;
 }
 
@@ -149,5 +149,58 @@
 
   .header-left h2 {
     font-size: 20px; /* Keep the app name size the same */
+  }
+  .filter-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it is on top */
+  }
+  
+  .filter-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    max-width: 100%;
+  }
+  
+  .filter-modal h3 {
+    margin-top: 0;
+  }
+  
+  .filter-option {
+    margin-bottom: 15px;
+  }
+  
+  .filter-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .filter-buttons button {
+    padding: 8px 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .filter-buttons button:hover {
+    background-color: #0056b3;
+  }
+  
+  .filter-buttons button:nth-child(1) {
+    background-color: #ccc;
+  }
+  
+  .filter-buttons button:nth-child(1):hover {
+    background-color: #999;
   }
 }

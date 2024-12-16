@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "./Header.css";
+import FilterWindow from './FilterWindow';
 import logoMail from "/src/assets/logoMAIL.jpg";
+import SearchIcon from '@mui/icons-material/Search';
+import TuneIcon from '@mui/icons-material/Tune';
 import ProfileMenu from "./ProfileMenu";
 import axios from "axios";
 
-const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch }) => {
+const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch}) => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [user, setUser] = useState({ });
   const [initial, setInitial] = useState();
+  const [filterWindowOpen, setFilterWindowOpen] = useState(false);
+  const [filterOptions, setFilterOptions] = useState({ date: '', sender: '' });
 
   const toggleProfileMenu = () => {
     setProfileMenuOpen((prevState) => !prevState);
@@ -42,8 +47,19 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch }) => 
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
+  const handleFilterClick = () => {
+    setFilterWindowOpen(true);
+  };
 
+  const handleCloseFilterWindow = () => {
+    setFilterWindowOpen(false);
+  };
 
+  const handleApplyFilter = (filterOptions) => {
+    console.log("Applied filters:", filterOptions);
+    // Apply the filter logic here
+    setFilterWindowOpen(false);
+  };
   return (
     <header className="header">
       <div className="header-left">
@@ -51,6 +67,9 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch }) => 
         <h2>Mail Website</h2>
       </div>
       <div className="header-center">
+      <button className="search-button" onClick={handleSearchClick}>
+          <SearchIcon />
+        </button>
        <input
         type="text"
         className="search-bar"
@@ -58,10 +77,20 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch }) => 
         value={searchQuery}
         onChange={handleSearchInputChange} 
         />
-        <button className="search-button" onClick={handleSearchClick}>
+        {/* <button className="search-button" onClick={handleSearchClick}>
           <i className="material-icons">search</i>
+        </button> */}
+        <button className="search-button" onClick={handleFilterClick}>
+          <TuneIcon />
         </button>
       </div>
+      {/* Filter Modal */}
+      {filterWindowOpen && (
+        <FilterWindow
+          onClose={handleCloseFilterWindow}
+          onApplyFilter={handleApplyFilter}
+        />
+      )}
       <div className="header-right">
         <button className="icon-button">
           <i className="material-icons">apps</i>
@@ -83,6 +112,7 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch }) => 
           <ProfileMenu user={user} onLogout={onLogout} closeProfileMenu={closeProfileMenu} />
         )}
       </div>
+
     </header>
   );
 };

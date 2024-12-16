@@ -117,5 +117,4 @@ const EditContactWindow = ({ contact, onSave, onCancel }) => {
     </div>
   );
 };
-
 export default ContactsWindow;
