@@ -5,8 +5,7 @@ import { Builder } from "./EmailBuilder.jsx";
 
 const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
   if (!isOpen) return null; 
-
-  const [builder, setBuilder] = useState(new Builder()); // Manage Builder instance in state
+  const [builder, setBuilder] = useState(new Builder());
   const userId = localStorage.getItem("userId");
 
   const handleSend = async (e) => {
@@ -24,13 +23,11 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
   };
 
   const handleDraft = () => {
-    const draft = builder.build(); // Use the Builder to create a draft object
-    onDraft(draft); // Pass draft to the onDraft callback
-    onClose(); // Close the modal
+    const draft = builder.build(); 
+    onDraft(draft); 
+    onClose(); 
   };
-
   const handleChange = (field, value) => {
-    // Update the Builder instance and trigger a re-render
     setBuilder((prevBuilder) => {
       const newBuilder = new Builder();
       Object.assign(newBuilder, prevBuilder); // Clone the current builder
@@ -38,7 +35,6 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
       return newBuilder;
     });
   };
-
   return (
     <div className="compose-modal">
       <div className="modal-content">
@@ -54,8 +50,8 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
               type="text"
               id="received"
               placeholder="Receivers (comma-separated)"
-              value={builder.receivers.join(", ")} // Convert array to string for display
-              onChange={(e) => handleChange("setReceivers", e.target.value)} // Update builder state
+              value={builder.receivers.join(", ")} 
+              onChange={(e) => handleChange("setReceivers", e.target.value)} 
             />
           </div>
           <div className="input-group">
