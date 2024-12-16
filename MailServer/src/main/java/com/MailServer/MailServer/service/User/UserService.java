@@ -25,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class UserService {
     private final FolderRepository folderRepository;
     private final EmailRepository emailRepository;
     private final ContactRepository contactRepository;
-    private final AddressRepository addressRepository;
+//    private final AddressRepository addressRepository;
     private final ReceiverRepository receiverRepository;
 
     @Autowired
@@ -44,7 +45,7 @@ public class UserService {
         this.folderRepository = folderRepository;
         this.emailRepository = emailRepository;
         this.contactRepository = contactRepository;
-        this.addressRepository = addressRepository;
+//        this.addressRepository = addressRepository;
         this.receiverRepository=receiverRepository;
     }
 
@@ -54,12 +55,15 @@ public class UserService {
             return "Registered";
         }
         User user = new User(name, email, password);
+        List<Folder> folders = Arrays.asList(
+                new Folder("inbox", user),
+                new Folder("sent", user),
+                new Folder("draft", user),
+                new Folder("trash", user),
+                new Folder("starred", user)
+        );
+        user.setFolders(folders);
         userRepository.save(user);
-        folderRepository.save(new Folder("inbox", user));
-        folderRepository.save(new Folder("sent", user));
-        folderRepository.save(new Folder("draft", user));
-        folderRepository.save(new Folder("trash", user));
-        folderRepository.save(new Folder("starred", user));
         return user.getUserID();
     }
 
@@ -73,10 +77,12 @@ public class UserService {
     }
 
     public Object getUserFolders(Long userID){
-        return folderRepository.findByUserUserID(userID).stream()
+        return userRepository.findById(userID).orElseThrow().getFolders().stream()
                 .map(folder -> new FolderDTO(folder.getFolderID(), folder.getName()))
                 .collect(Collectors.toList());
     }
+
+//    ============================================================================================
 
     public Object getUserFolder(Long folderID, int pageNo){
         Pageable pageable = PageRequest.of(pageNo, 20);
@@ -88,19 +94,21 @@ public class UserService {
         Page<Email> page = emailRepository.findByUserUserID(userID, pageable);
         return page.map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
     }
+//    ==========================================================================================
     public User getUserDetails(Long userID) {
         return userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
     }
+
     @Transactional
-    public Object addContact(Long userID, String name, ArrayList<String> addresses) {
+    public Object addContact(Long userID, String name, String addresses) {
         User user = userRepository.findById(userID).orElseThrow();
-        Contact contact = new Contact(name, user);
-        contactRepository.save(contact);
-        for(String add : addresses){
-            Address address = new Address(add, contact);
-            addressRepository.save(address);
-        }
-        return contact.getContactID();
+        user.getContacts().add(new Contact(name, user, addresses));
+        userRepository.save(user);
+        return user.getContacts();
+    }
+
+    public Object getContact(Long userID) {
+        return userRepository.findById(userID).orElseThrow().getContacts();
     }
 
 //    @Transactional
@@ -164,14 +172,13 @@ public class UserService {
         return "Deleted";
     }
 
-    @Transactional
-    public Object deleteAddress(Long addressID) {
-        addressRepository.deleteById(addressID);
-        return "Deleted";
-    }
+//    @Transactional
+//    public Object deleteAddress(Long addressID) {
+//        addressRepository.deleteById(addressID);
+//        return "Deleted";
+//    }
     @Transactional
     public Object deleteContact(Long contactID) {
-        addressRepository.deleteAllByContactContactID(contactID);
         contactRepository.deleteById(contactID);
         return "Deleted";
     }

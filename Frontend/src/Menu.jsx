@@ -93,7 +93,7 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
           <span>Drafts</span>
         </div>
         <div
-          className={`menu-item ${activeMenu === "Bin" ? "active" : ""}`}
+          className={`menu-item ${activeMenu === "Trash" ? "active" : ""}`}
           onClick={() => handleMenuClick("Bin")}
         >
           <FaTrashAlt className="menu-icon" />

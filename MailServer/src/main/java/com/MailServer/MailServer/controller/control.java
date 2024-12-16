@@ -165,9 +165,17 @@ public class control {
         }
     }
     @PostMapping("/addContact/{userID}/{name}/{addresses}")
-    public ResponseEntity<Object> addContact(@PathVariable Long userID, @PathVariable String name, @PathVariable ArrayList<String> addresses){
+    public ResponseEntity<Object> addContact(@PathVariable Long userID, @PathVariable String name, @PathVariable String addresses){
         try{
             return ResponseEntity.ok(userService.addContact(userID,name,addresses));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
+        }
+    }
+    @GetMapping("/getContacts/{userID}")
+    public ResponseEntity<Object> addContact(@PathVariable Long userID){
+        try{
+            return ResponseEntity.ok(userService.getContact(userID));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
         }

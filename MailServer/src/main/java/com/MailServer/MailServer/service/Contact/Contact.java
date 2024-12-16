@@ -19,17 +19,18 @@ public class Contact {
     )
     private Long contactID;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne
     @JoinColumn(name = "userid", referencedColumnName = "userid")
     private User user;
 
     private String name;
+    private String addresses;
 
     public Contact(){}
     public Contact(String name){
         this.name=name;
     }
-    public Contact(String name, User user){this.name=name;this.user = user;}
+    public Contact(String name, User user, String addresses){this.name=name;this.user = user;this.addresses=addresses;}
 
     public String getName() {
         return name;
@@ -53,5 +54,13 @@ public class Contact {
 
     public void setContactID(Long contactID) {
         this.contactID = contactID;
+    }
+
+    public String getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(String addresses) {
+        this.addresses = addresses;
     }
 }

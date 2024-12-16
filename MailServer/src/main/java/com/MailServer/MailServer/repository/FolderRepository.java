@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface FolderRepository extends JpaRepository <Folder,Long> {
-    List<Folder> findByUserUserID(Long userID);
     Folder findByUserUserIDAndName(Long userID, String sent);
     void deleteAllByUserUserID(Long userID);
 }
