@@ -32,6 +32,14 @@ public class Contact {
     }
     public Contact(String name, User user, String addresses){this.name=name;this.user = user;this.addresses=addresses;}
 
+    public String getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(String addresses) {
+        this.addresses = addresses;
+    }
+
     public String getName() {
         return name;
     }
@@ -54,13 +62,5 @@ public class Contact {
 
     public void setContactID(Long contactID) {
         this.contactID = contactID;
-    }
-
-    public String getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(String addresses) {
-        this.addresses = addresses;
     }
 }

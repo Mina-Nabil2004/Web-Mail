@@ -108,8 +108,13 @@ public class UserService {
     }
 
     public Object getContact(Long userID) {
-        return userRepository.findById(userID).orElseThrow().getContacts();
+        User user = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
+        if (user.getContacts().isEmpty()) {
+            throw new RuntimeException("No contacts available for this user");
+        }
+        return user.getContacts().get(0);
     }
+
 
 //    @Transactional
 //    public Object send(EmailDTO dto, Long userID){

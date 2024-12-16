@@ -165,7 +165,7 @@ public class control {
         }
     }
     @GetMapping("/getContacts/{userID}")
-    public ResponseEntity<Object> addContact(@PathVariable Long userID){
+    public ResponseEntity<Object> getContact(@PathVariable Long userID){
         try{
             return ResponseEntity.ok(userService.getContact(userID));
         }catch (Exception e){

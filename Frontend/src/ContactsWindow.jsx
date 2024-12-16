@@ -1,35 +1,78 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./ContactsWindow.css";
 
 const ContactsWindow = ({ onClose }) => {
   const [contacts, setContacts] = useState([]);
   const [selectedContactIndex, setSelectedContactIndex] = useState(null);
-
+  const userId = localStorage.getItem("userId");
+  useEffect(() => {
+    const fetchContacts = async () => {
+      console.log(userId);
+      try {
+        // const response = await axios.get(`http://localhost:8080/email/getContacts/${userId}`);
+        const response = {
+          data: [
+            {username: "omar", emails: "legendboudy@gmail.com"}
+        ]
+      };
+        setContacts(response.data);
+        // console.log(response.data);
+        // console.log(contacts);
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+      }
+    };
+    fetchContacts();
+  }, [userId]);
+  useEffect(() => {
+    console.log("Updated contacts:", contacts);
+  }, [contacts]);
   const handleAddContact = () => {
-    setContacts([...contacts, { name: "", emails: [""] }]);
+    setContacts([...contacts, { username: "", emails: [""] }]);
+    setSelectedContactIndex(contacts.length);
+    setContacts(contacts);
   };
-
   const handleContactClick = (index) => {
     setSelectedContactIndex(index);
   };
-
-  const handleSaveContact = (updatedContact) => {
-    setContacts((prevContacts) =>
-      prevContacts.map((contact, index) =>
-        index === selectedContactIndex ? updatedContact : contact
-      )
-    );
-    setSelectedContactIndex(null);
+  const handleSaveContact = async (updatedContact) => {
+    console.log(contacts);
+    if (selectedContactIndex === contacts.length) {
+      try {
+        const response = await axios.post(
+          `http://localhost:8080/email/addContact/${userId}/${username}/${email}`,
+          {
+            username: updatedContact.username,
+            emails: updatedContact.emails,
+          }
+        );
+        setContacts((prevContacts) => [...prevContacts, response.data]);
+        console.log("Contact added successfully:", response.data);
+      } catch (error) {
+        console.error("Error adding contact:", error);
+      }
+    } 
+    setSelectedContactIndex(null); 
   };
-
   const handleCancelEdit = () => {
-    setSelectedContactIndex(null);
+    setSelectedContactIndex(null); 
+  };
+  const fetchContactsss = () => {
+    setContacts(); 
   };
 
-  const handleDeleteContact = (index) => {
-    setContacts(contacts.filter((_, i) => i !== index));
-  };
 
+  // const handleDeleteContact = async (index) => {
+  //   const contactToDelete = contacts[index];
+  //   try {
+  //     await axios.delete(`http://localhost:8080/email/deleteContact/${userId}/${contactToDelete.id}`);
+  //     setContacts(contacts.filter((_, i) => i !== index));
+  //     console.log("Contact deleted successfully:", contactToDelete.id);
+  //   } catch (error) {
+  //     console.error("Error deleting contact:", error);
+  //   }
+  // };
   return (
     <div className="contacts-window">
       {selectedContactIndex !== null ? (
@@ -46,9 +89,9 @@ const ContactsWindow = ({ onClose }) => {
             {contacts.map((contact, index) => (
               <div key={index} className="contact-item">
                 <p onClick={() => handleContactClick(index)}>
-                  {contact.name || "Unnamed Contact"}
+                  {contact.username || "Unnamed Contact"}
                 </p>
-                <p>{contact.emails.join(", ")}</p>
+                <p>{contact.emails}</p>
                 <button onClick={() => handleDeleteContact(index)}>
                   Delete Contact
                 </button>
@@ -61,12 +104,14 @@ const ContactsWindow = ({ onClose }) => {
     </div>
   );
 };
-
 const EditContactWindow = ({ contact, onSave, onCancel }) => {
-  const [editedContact, setEditedContact] = useState({ ...contact });
+  const [editedContact, setEditedContact] = useState({
+    ...contact,
+    emails: contact.emails || [], 
+  });
 
   const handleNameChange = (e) => {
-    setEditedContact({ ...editedContact, name: e.target.value });
+    setEditedContact({ ...editedContact, username: e.target.value });
   };
 
   const handleEmailChange = (index, value) => {
@@ -78,15 +123,13 @@ const EditContactWindow = ({ contact, onSave, onCancel }) => {
   const handleAddEmailField = () => {
     setEditedContact({
       ...editedContact,
-      emails: [...editedContact.emails, ""],
+      emails: [...editedContact.emails, ""], 
     });
   };
-
   const handleDeleteEmail = (index) => {
     const updatedEmails = editedContact.emails.filter((_, i) => i !== index);
     setEditedContact({ ...editedContact, emails: updatedEmails });
   };
-
   return (
     <div className="edit-contact-window">
       <h3>Edit Contact</h3>
@@ -94,7 +137,7 @@ const EditContactWindow = ({ contact, onSave, onCancel }) => {
         <label>Name:</label>
         <input
           type="text"
-          value={editedContact.name}
+          value={editedContact.username}
           onChange={handleNameChange}
         />
       </div>
@@ -117,4 +160,5 @@ const EditContactWindow = ({ contact, onSave, onCancel }) => {
     </div>
   );
 };
+
 export default ContactsWindow;
