@@ -3,7 +3,7 @@ package com.MailServer.MailServer.service.Contact;
 public class ContactDTO {
    private String name;
    private String addresses;
-   private  Long contactID;
+   private Long contactID;
 
    public ContactDTO(String name,String addresses,Long contactID) {
 	   this.name = name;

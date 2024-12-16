@@ -73,14 +73,14 @@ public class control {
 //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
 //        }
 //    }
-//    @PostMapping("/send/{userID}")
-//    public ResponseEntity<Object> compose(@RequestBody EmailDTO request, @PathVariable Long userID) {
-//        try {
-//            return ResponseEntity.ok(userService.send(request,userID));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
-//        }
-//    }
+    @PostMapping("/send/{userID}")
+    public ResponseEntity<Object> compose(@RequestBody EmailDTO request, @PathVariable Long userID) {
+        try {
+            return ResponseEntity.ok(userService.send(request,userID));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
 //    @GetMapping("/email/{emailID}")
 //    public ResponseEntity<Object> getEmail(@PathVariable Long emailID) {
 //        try {

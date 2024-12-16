@@ -22,9 +22,7 @@ public class Builder {
         this.datetime=datetime;
         this.id=id;
     }
-    public Email build(){
-        return new Email(this);
-    }
+
 
     public String getSender() {
         return sender;

@@ -37,16 +37,16 @@ public class UserService {
     private final EmailRepository emailRepository;
     private final ContactRepository contactRepository;
 //    private final AddressRepository addressRepository;
-    private final ReceiverRepository receiverRepository;
+//    private final ReceiverRepository receiverRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository, ReceiverRepository receiverRepository) {
+    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository) {
         this.userRepository = userRepository;
         this.folderRepository = folderRepository;
         this.emailRepository = emailRepository;
         this.contactRepository = contactRepository;
 //        this.addressRepository = addressRepository;
-        this.receiverRepository=receiverRepository;
+//        this.receiverRepository=receiverRepository;
     }
 
     @Transactional
@@ -81,7 +81,6 @@ public class UserService {
                 .map(folder -> new FolderDTO(folder.getFolderID(), folder.getName()))
                 .collect(Collectors.toList());
     }
-
 //    ============================================================================================
 
 //    public Object getUserFolder(Long folderID, int pageNo){
@@ -118,23 +117,23 @@ public class UserService {
     }
 
 
-//    @Transactional
-//    public Object send(EmailDTO dto, Long userID){
-//        User sender = userRepository.findById(userID).orElseThrow();
-//        dto.setSender(sender.getEmail());
-//        Folder sentFolder = folderRepository.findByUserUserIDAndName(sender.getUserID(),"sent");
-//        for (String receiverEmail : dto.getReceivers()) {
-//            User receiver = userRepository.findByEmail(receiverEmail);
-//            Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiver.getUserID(), "inbox");
-//            Email receivedEmail = new Email(dto, receiver, inboxFolder);
-//            emailRepository.save(receivedEmail);
-//            Receiver received = new Receiver(receivedEmail, receiverEmail);
-//            receiverRepository.save(received);
-//        }
-//        Email sendEmail = new Email(dto, sender, sentFolder);
-//        emailRepository.save(sendEmail);
-//        return sendEmail;
-//    }
+    @Transactional
+    public Object send(EmailDTO dto, Long userID){
+        List<User> users =  new ArrayList<>();
+        List<Folder> folders = new ArrayList<>();
+        User sender = userRepository.findById(userID).orElseThrow();
+        dto.setSender(sender.getEmail());
+        users.add(sender);
+        folders.add(sender.getFolders().get(1));
+        for (String receiverEmail : dto.getReceivers()) {
+            User receiver = userRepository.findByEmail(receiverEmail);
+            users.add(receiver);
+            folders.add(receiver.getFolders().getFirst());
+        }
+        Email email = new Email(dto, users, folders);
+        emailRepository.save(email);
+        return email;
+    }
 
 //    public Object getUserEmail(Long emailID) {
 //        Email email = emailRepository.findById(emailID).orElseThrow();
@@ -142,12 +141,24 @@ public class UserService {
 //    }
     @Transactional
     public Object deleteUser(Long userID) {
+        User user = userRepository.findById(userID).orElseThrow();
+        for (Folder folder : user.getFolders()) {
+            for (Email email : folder.getEmails()) {
+                email.getFolders().remove(folder);
+                if(email.getFolders().isEmpty()){
+                    emailRepository.delete(email);
+                }
+            }
+            folder.getEmails().clear();
+        }
         userRepository.deleteById(userID);
         return "Deleted";
     }
     @Transactional
     public Object deleteFolder(Long folderID) {
-        folderRepository.deleteById(folderID);
+        Folder folder = folderRepository.findById(folderID).orElseThrow();
+        folder.getEmails().clear();
+        folderRepository.delete(folder);
         return "Deleted";
     }
     @Transactional

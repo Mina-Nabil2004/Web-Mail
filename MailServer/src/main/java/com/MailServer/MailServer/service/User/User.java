@@ -40,8 +40,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Contact> contacts;
 
-    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
-    private List<Email> emails;
+//    @ManyToMany(mappedBy = "users", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    private List<Email> emails;
 
     public User(){}
 
@@ -99,11 +99,11 @@ public class User {
         this.contacts = contacts;
     }
 
-    public List<Email> getEmails() {
-        return emails;
-    }
-
-    public void setEmails(List<Email> emails) {
-        this.emails = emails;
-    }
+//    public List<Email> getEmails() {
+//        return emails;
+//    }
+//
+//    public void setEmails(List<Email> emails) {
+//        this.emails = emails;
+//    }
 }

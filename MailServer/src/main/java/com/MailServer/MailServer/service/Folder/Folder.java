@@ -2,6 +2,7 @@ package com.MailServer.MailServer.service.Folder;
 
 import com.MailServer.MailServer.service.Email.Email;
 import com.MailServer.MailServer.service.User.User;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -23,7 +24,8 @@ public class Folder {
     @JoinColumn(name = "userid", referencedColumnName = "userid")
     private User user;
 
-    @ManyToMany(mappedBy = "folders", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "folders", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonManagedReference
     private List<Email> emails;
 
     private String name;
