@@ -62,6 +62,15 @@ public class Email implements Cloneable{
         this.folders = folders;
 //        this.read=builder.isRead();
     }
+    public Email(String subject,List<String> receivers,String body,String sender){
+        this.sender=sender;
+        this.subject=subject;
+        this.body=body;
+        this.datetime= LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy"));
+        this.receivers = receivers;
+//        this.folders = folders;
+//        this.read=builder.isRead();
+    }
 
     public Email(Email email){
         this.sender= email.getSender();
@@ -70,6 +79,9 @@ public class Email implements Cloneable{
         this.datetime=email.getDatetime();
 //        this.read=email.isRead();
     }
+
+
+
     public Email clone(){
         return new Email(this);
     }

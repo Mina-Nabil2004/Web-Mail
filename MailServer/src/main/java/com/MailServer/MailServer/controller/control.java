@@ -57,14 +57,14 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
     }
-//    @GetMapping("/folder/{folderID}/{page}")
-//    public ResponseEntity<Object> getFolder(@PathVariable Long folderID, @PathVariable int page) {
-//        try {
-//            return ResponseEntity.ok(userService.getUserFolder(folderID, page));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
-//        }
-//    }
+    @GetMapping("/folder/{folderID}/{page}")
+    public ResponseEntity<Object> getFolder(@PathVariable Long folderID, @PathVariable int page) {
+        try {
+            return ResponseEntity.ok(userService.getUserFolder(folderID));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
 //    @GetMapping("/allMail/{userID}/{page}")
 //    public ResponseEntity<Object> getAllMail(@PathVariable Long userID, @PathVariable int page) {
 //        try {

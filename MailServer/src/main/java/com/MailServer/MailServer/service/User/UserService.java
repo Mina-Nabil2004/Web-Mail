@@ -83,11 +83,13 @@ public class UserService {
     }
 //    ============================================================================================
 
-//    public Object getUserFolder(Long folderID, int pageNo){
-//        Pageable pageable = PageRequest.of(pageNo, 20);
-//        Page<Email> page = emailRepository.findByFolderFolderID(folderID, pageable);
-//        return page.map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
-//    }
+    public Object getUserFolder(Long folderID){
+        Folder folder =folderRepository.findById(folderID).orElseThrow();
+        return folder.getEmails().stream()
+                .map(email -> new Email(email.getSubject(), email.getReceivers(),email.getBody(),email.getSender()))
+                .collect(Collectors.toList());
+
+    }
 //    public Object getUserAllMail(Long userID, int pageNo){
 //        Pageable pageable = PageRequest.of(pageNo, 20);
 //        Page<Email> page = emailRepository.findByUserUserID(userID, pageable);
