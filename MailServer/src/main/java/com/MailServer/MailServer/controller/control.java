@@ -57,30 +57,30 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
     }
-    @GetMapping("/folder/{folderID}/{page}")
-    public ResponseEntity<Object> getFolder(@PathVariable Long folderID, @PathVariable int page) {
-        try {
-            return ResponseEntity.ok(userService.getUserFolder(folderID, page));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
-        }
-    }
-    @GetMapping("/allMail/{userID}/{page}")
-    public ResponseEntity<Object> getAllMail(@PathVariable Long userID, @PathVariable int page) {
-        try {
-            return ResponseEntity.ok(userService.getUserAllMail(userID, page));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
-        }
-    }
-    @PostMapping("/send/{userID}")
-    public ResponseEntity<Object> compose(@RequestBody EmailDTO request, @PathVariable Long userID) {
-        try {
-            return ResponseEntity.ok(userService.send(request,userID));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
-        }
-    }
+//    @GetMapping("/folder/{folderID}/{page}")
+//    public ResponseEntity<Object> getFolder(@PathVariable Long folderID, @PathVariable int page) {
+//        try {
+//            return ResponseEntity.ok(userService.getUserFolder(folderID, page));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+//        }
+//    }
+//    @GetMapping("/allMail/{userID}/{page}")
+//    public ResponseEntity<Object> getAllMail(@PathVariable Long userID, @PathVariable int page) {
+//        try {
+//            return ResponseEntity.ok(userService.getUserAllMail(userID, page));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+//        }
+//    }
+//    @PostMapping("/send/{userID}")
+//    public ResponseEntity<Object> compose(@RequestBody EmailDTO request, @PathVariable Long userID) {
+//        try {
+//            return ResponseEntity.ok(userService.send(request,userID));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+//        }
+//    }
 //    @GetMapping("/email/{emailID}")
 //    public ResponseEntity<Object> getEmail(@PathVariable Long emailID) {
 //        try {
@@ -121,14 +121,6 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
     }
-    @DeleteMapping("/deleteAddress/{addressID}")
-    public ResponseEntity<Object> deleteAddress(@PathVariable Long addressID) {
-        try {
-            return ResponseEntity.ok(userService.deleteAddress(addressID));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
-        }
-    }
     @GetMapping("/user/{userID}")
     public ResponseEntity<Object> getUserDetails(@PathVariable Long userID) {
         try {
@@ -140,30 +132,30 @@ public class control {
         }
     }
 
-    @GetMapping("/filterEmails/{folderID}/{criteria}/{page}")
-    public ResponseEntity<Object> filterEmails(@RequestBody FilterDTO request, @PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page) {
-        try {
-            return ResponseEntity.ok(userService.filterEmails(request, folderID, criteria, page));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
-        }
-    }
-    @GetMapping("/searchEmails/{folderID}/{criteria}/{page}")
-    public ResponseEntity<Object> searchEmails(@PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page) {
-        try {
-            return ResponseEntity.ok(userService.searchEmails(folderID, criteria, page));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
-        }
-    }
-    @GetMapping("/filterContact/{contactID}/{criteria}/{page}")
-    public ResponseEntity<Object> filterContact(@RequestBody ContactFilterDTO request, @PathVariable Long userID, @PathVariable String criteria, @PathVariable int page){
-        try{
-            return ResponseEntity.ok(userService.filterContact(request,userID,criteria,page));
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
-        }
-    }
+//    @GetMapping("/filterEmails/{folderID}/{criteria}/{page}")
+//    public ResponseEntity<Object> filterEmails(@RequestBody FilterDTO request, @PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page) {
+//        try {
+//            return ResponseEntity.ok(userService.filterEmails(request, folderID, criteria, page));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
+//        }
+//    }
+//    @GetMapping("/searchEmails/{folderID}/{criteria}/{page}")
+//    public ResponseEntity<Object> searchEmails(@PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page) {
+//        try {
+//            return ResponseEntity.ok(userService.searchEmails(folderID, criteria, page));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
+//        }
+//    }
+//    @GetMapping("/filterContact/{contactID}/{criteria}/{page}")
+//    public ResponseEntity<Object> filterContact(@RequestBody ContactFilterDTO request, @PathVariable Long userID, @PathVariable String criteria, @PathVariable int page){
+//        try{
+//            return ResponseEntity.ok(userService.filterContact(request,userID,criteria,page));
+//        }catch (Exception e){
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
+//        }
+//    }
     @PostMapping("/addContact/{userID}/{name}/{addresses}")
     public ResponseEntity<Object> addContact(@PathVariable Long userID, @PathVariable String name, @PathVariable String addresses){
         try{
@@ -180,22 +172,22 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
         }
     }
-    @GetMapping("/sort/{request}/{folderID}/{order}/{page}")
-    public ResponseEntity<Object> sortEmails(@PathVariable String request,@PathVariable Long folderID,@PathVariable boolean order, @PathVariable int page) {
-        try {
-            return ResponseEntity.ok(userService.sortEmail(request,folderID,order,page));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
-        }
-    }
-    @GetMapping("/copy/{folderID}")
-    public ResponseEntity<Object> copy(@PathVariable Long folderID) {
-        try {
-            return ResponseEntity.ok(userService.copyEmail(folderID));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
-        }
-    }
+//    @GetMapping("/sort/{request}/{folderID}/{order}/{page}")
+//    public ResponseEntity<Object> sortEmails(@PathVariable String request,@PathVariable Long folderID,@PathVariable boolean order, @PathVariable int page) {
+//        try {
+//            return ResponseEntity.ok(userService.sortEmail(request,folderID,order,page));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
+//        }
+//    }
+//    @GetMapping("/copy/{folderID}")
+//    public ResponseEntity<Object> copy(@PathVariable Long folderID) {
+//        try {
+//            return ResponseEntity.ok(userService.copyEmail(folderID));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
+//        }
+//    }
 
     @PostMapping("/uploadAttachment")
     public ResponseEntity<String> handleFileUpload(@RequestParam("attachments") MultipartFile[] files) {

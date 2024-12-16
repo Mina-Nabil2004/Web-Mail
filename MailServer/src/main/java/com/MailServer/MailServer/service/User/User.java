@@ -1,6 +1,7 @@
 package com.MailServer.MailServer.service.User;
 
 import com.MailServer.MailServer.service.Contact.Contact;
+import com.MailServer.MailServer.service.Email.Email;
 import com.MailServer.MailServer.service.Folder.Folder;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -38,6 +39,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Contact> contacts;
+
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
+    private List<Email> emails;
 
     public User(){}
 
@@ -85,5 +89,21 @@ public class User {
 
     public void setFolders(List<Folder> folders) {
         this.folders = folders;
+    }
+
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
+    }
+
+    public List<Email> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<Email> emails) {
+        this.emails = emails;
     }
 }

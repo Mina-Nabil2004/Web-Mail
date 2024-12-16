@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public interface EmailRepository extends JpaRepository<Email,Long> {
-    Page<Email> findByFolderFolderID(Long folderID, Pageable pageable);
-    ArrayList<Email> findByFolderFolderID(Long folderID);
-    Page<Email> findByUserUserID(Long userID, Pageable pageable);
-    void deleteAllByFolderFolderID(Long folderID);
-    void deleteAllByUserUserID(Long userID);
-    Set<Email> findByUserUserID(Long userID);
+//    Page<Email> findByFolderFolderID(Long folderID, Pageable pageable);
+//    ArrayList<Email> findByFolderFolderID(Long folderID);
+//    Page<Email> findByUserUserID(Long userID, Pageable pageable);
+//    void deleteAllByFolderFolderID(Long folderID);
+//    void deleteAllByUserUserID(Long userID);
+//    Set<Email> findByUserUserID(Long userID);
 }

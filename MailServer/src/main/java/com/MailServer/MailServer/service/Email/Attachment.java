@@ -1,5 +1,6 @@
 package com.MailServer.MailServer.service.Email;
 
+import com.MailServer.MailServer.service.User.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,9 +21,10 @@ public class Attachment {
     )
     private Long attachmentID;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "emailid",referencedColumnName = "emailid" , nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "emailid", referencedColumnName = "emailid")
     private Email email;
+
     private String name;
     private String type;
     private int size;

@@ -40,7 +40,7 @@ public class UserService {
     private final ReceiverRepository receiverRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository, AddressRepository addressRepository,ReceiverRepository receiverRepository) {
+    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository, ReceiverRepository receiverRepository) {
         this.userRepository = userRepository;
         this.folderRepository = folderRepository;
         this.emailRepository = emailRepository;
@@ -84,16 +84,16 @@ public class UserService {
 
 //    ============================================================================================
 
-    public Object getUserFolder(Long folderID, int pageNo){
-        Pageable pageable = PageRequest.of(pageNo, 20);
-        Page<Email> page = emailRepository.findByFolderFolderID(folderID, pageable);
-        return page.map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
-    }
-    public Object getUserAllMail(Long userID, int pageNo){
-        Pageable pageable = PageRequest.of(pageNo, 20);
-        Page<Email> page = emailRepository.findByUserUserID(userID, pageable);
-        return page.map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
-    }
+//    public Object getUserFolder(Long folderID, int pageNo){
+//        Pageable pageable = PageRequest.of(pageNo, 20);
+//        Page<Email> page = emailRepository.findByFolderFolderID(folderID, pageable);
+//        return page.map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
+//    }
+//    public Object getUserAllMail(Long userID, int pageNo){
+//        Pageable pageable = PageRequest.of(pageNo, 20);
+//        Page<Email> page = emailRepository.findByUserUserID(userID, pageable);
+//        return page.map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
+//    }
 //    ==========================================================================================
     public User getUserDetails(Long userID) {
         return userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
@@ -114,40 +114,20 @@ public class UserService {
 //    @Transactional
 //    public Object send(EmailDTO dto, Long userID){
 //        User sender = userRepository.findById(userID).orElseThrow();
-//        List<Receiver> receivers = receiverRepository.findReceiverByEmailIDAndUserID(userID);
 //        dto.setSender(sender.getEmail());
 //        Folder sentFolder = folderRepository.findByUserUserIDAndName(sender.getUserID(),"sent");
-////        Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiver.getUserID(), "inbox");
-////        Email receivedEmail = new Email(dto, receiver, inboxFolder);
-////        emailRepository.save(receivedEmail);
-//        for (Receiver receiver : receivers) {
-//            User receiverUser = receiver.getUser();
-//            Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiverUser.getUserID(),"inbox");
-//            Email receivedEmail = new Email(dto, receiverUser, inboxFolder);
+//        for (String receiverEmail : dto.getReceivers()) {
+//            User receiver = userRepository.findByEmail(receiverEmail);
+//            Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiver.getUserID(), "inbox");
+//            Email receivedEmail = new Email(dto, receiver, inboxFolder);
 //            emailRepository.save(receivedEmail);
+//            Receiver received = new Receiver(receivedEmail, receiverEmail);
+//            receiverRepository.save(received);
 //        }
 //        Email sendEmail = new Email(dto, sender, sentFolder);
 //        emailRepository.save(sendEmail);
 //        return sendEmail;
 //    }
-
-    @Transactional
-    public Object send(EmailDTO dto, Long userID){
-        User sender = userRepository.findById(userID).orElseThrow();
-        dto.setSender(sender.getEmail());
-        Folder sentFolder = folderRepository.findByUserUserIDAndName(sender.getUserID(),"sent");
-        for (String receiverEmail : dto.getReceivers()) {
-            User receiver = userRepository.findByEmail(receiverEmail);
-            Folder inboxFolder = folderRepository.findByUserUserIDAndName(receiver.getUserID(), "inbox");
-            Email receivedEmail = new Email(dto, receiver, inboxFolder);
-            emailRepository.save(receivedEmail);
-            Receiver received = new Receiver(receivedEmail, receiverEmail);
-            receiverRepository.save(received);
-        }
-        Email sendEmail = new Email(dto, sender, sentFolder);
-        emailRepository.save(sendEmail);
-        return sendEmail;
-    }
 
 //    public Object getUserEmail(Long emailID) {
 //        Email email = emailRepository.findById(emailID).orElseThrow();
@@ -155,14 +135,11 @@ public class UserService {
 //    }
     @Transactional
     public Object deleteUser(Long userID) {
-        emailRepository.deleteAllByUserUserID(userID);
-        folderRepository.deleteAllByUserUserID(userID);
         userRepository.deleteById(userID);
         return "Deleted";
     }
     @Transactional
     public Object deleteFolder(Long folderID) {
-        emailRepository.deleteAllByFolderFolderID(folderID);
         folderRepository.deleteById(folderID);
         return "Deleted";
     }
@@ -183,76 +160,76 @@ public class UserService {
         return "Deleted";
     }
 
-    public Object filterEmails(FilterDTO request, Long folderID, String criteria, int pageNo) {
-        Criteria filter = CriteriaFactory.getCriteria(request, criteria);
-        ArrayList<Email> emails =  emailRepository.findByFolderFolderID(folderID);
-        ArrayList<Email> filtered = filter.meetCriteria(emails);
-        List<EmailDTO> emailDTOs = filtered.stream()
-                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime()))
-                .collect(Collectors.toList());
-
-        Pageable pageable = PageRequest.of(pageNo, 20);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), emailDTOs.size());
-
-        List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
-        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
-    }
-
-    public Object searchEmails(Long folderID, String criteria, int pageNo) {
-        Criteria filter = new OrCriteria(criteria);
-        ArrayList<Email> emails =  emailRepository.findByFolderFolderID(folderID);
-        ArrayList<Email> filtered = filter.meetCriteria(emails);
-        List<EmailDTO> emailDTOs = filtered.stream()
-                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime()))
-                .collect(Collectors.toList());
-
-        Pageable pageable = PageRequest.of(pageNo, 20);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), emailDTOs.size());
-
-        List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
-        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
-    }
-
-    public Object filterContact(ContactFilterDTO request, Long userID, String criteria, int pageNo) {
-        CriteriaContact filter = ContactFactory.getCriteria(request,criteria);
-        ArrayList<Contact> contacts = contactRepository.findByUserUserID(userID);
-        ArrayList<Contact> filtered = filter.meetCriteria(contacts);
-        List<ContactDTO> contactDTOs = filtered.stream()
-                .map(contact -> new ContactDTO(contact.getName(),contact.getContactID()))
-                .collect(Collectors.toList());
-        Pageable pageable = PageRequest.of(pageNo, 20);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), ContactDTO.size());
-        List<ContactDTO> pagedEmailDTOs = contactDTOs.subList(start, end);
-        return new PageImpl<>(pagedEmailDTOs, pageable, ContactDTO.size()).getContent();
-    }
-    public  Object sortEmail(String request, Long folderID, boolean order, int pageNo) {
-        Strategy sort = SortFactory.getSort(request);
-        if (sort == null) {
-            throw new IllegalArgumentException("Invalid sort type: " + request);
-        }
-        ArrayList<Email> emails =emailRepository.findByFolderFolderID(folderID);
-        ArrayList<Email> Sorted = sort.doOperation(emails,order);
-        List<EmailDTO> emailDTOs = Sorted.stream()
-                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime()))
-                .collect(Collectors.toList());
-        Pageable pageable = PageRequest.of(pageNo, 20);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), emailDTOs.size());
-        List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
-        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
-    }
-
-    public Object copyEmail(Long folderID) {
-        ArrayList<Email> emails = emailRepository.findByFolderFolderID(folderID);
-        List<Email> clonedEmails = new ArrayList<>();
-        for(Email email : emails){
-            clonedEmails.add(email.clone());
-        }
-        return clonedEmails;
-    }
+//    public Object filterEmails(FilterDTO request, Long folderID, String criteria, int pageNo) {
+//        Criteria filter = CriteriaFactory.getCriteria(request, criteria);
+//        List<Email> emails =  folderRepository.findById(folderID).orElseThrow().getEmails();
+//        ArrayList<Email> filtered = filter.meetCriteria(emails);
+//        List<EmailDTO> emailDTOs = filtered.stream()
+//                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime()))
+//                .collect(Collectors.toList());
+//
+//        Pageable pageable = PageRequest.of(pageNo, 20);
+//        int start = (int) pageable.getOffset();
+//        int end = Math.min((start + pageable.getPageSize()), emailDTOs.size());
+//
+//        List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
+//        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
+//    }
+//
+//    public Object searchEmails(Long folderID, String criteria, int pageNo) {
+//        Criteria filter = new OrCriteria(criteria);
+//        ArrayList<Email> emails =  emailRepository.findByFolderFolderID(folderID);
+//        ArrayList<Email> filtered = filter.meetCriteria(emails);
+//        List<EmailDTO> emailDTOs = filtered.stream()
+//                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime()))
+//                .collect(Collectors.toList());
+//
+//        Pageable pageable = PageRequest.of(pageNo, 20);
+//        int start = (int) pageable.getOffset();
+//        int end = Math.min((start + pageable.getPageSize()), emailDTOs.size());
+//
+//        List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
+//        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
+//    }
+//
+//    public Object filterContact(ContactFilterDTO request, Long userID, String criteria, int pageNo) {
+//        CriteriaContact filter = ContactFactory.getCriteria(request,criteria);
+//        ArrayList<Contact> contacts = contactRepository.findByUserUserID(userID);
+//        ArrayList<Contact> filtered = filter.meetCriteria(contacts);
+//        List<ContactDTO> contactDTOs = filtered.stream()
+//                .map(contact -> new ContactDTO(contact.getName(),contact.getContactID()))
+//                .collect(Collectors.toList());
+//        Pageable pageable = PageRequest.of(pageNo, 20);
+//        int start = (int) pageable.getOffset();
+//        int end = Math.min((start + pageable.getPageSize()), ContactDTO.size());
+//        List<ContactDTO> pagedEmailDTOs = contactDTOs.subList(start, end);
+//        return new PageImpl<>(pagedEmailDTOs, pageable, ContactDTO.size()).getContent();
+//    }
+//    public  Object sortEmail(String request, Long folderID, boolean order, int pageNo) {
+//        Strategy sort = SortFactory.getSort(request);
+//        if (sort == null) {
+//            throw new IllegalArgumentException("Invalid sort type: " + request);
+//        }
+//        ArrayList<Email> emails =emailRepository.findByFolderFolderID(folderID);
+//        ArrayList<Email> Sorted = sort.doOperation(emails,order);
+//        List<EmailDTO> emailDTOs = Sorted.stream()
+//                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime()))
+//                .collect(Collectors.toList());
+//        Pageable pageable = PageRequest.of(pageNo, 20);
+//        int start = (int) pageable.getOffset();
+//        int end = Math.min((start + pageable.getPageSize()), emailDTOs.size());
+//        List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
+//        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
+//    }
+//
+//    public Object copyEmail(Long folderID) {
+//        ArrayList<Email> emails = emailRepository.findByFolderFolderID(folderID);
+//        List<Email> clonedEmails = new ArrayList<>();
+//        for(Email email : emails){
+//            clonedEmails.add(email.clone());
+//        }
+//        return clonedEmails;
+//    }
 
 
 //    public void uploadAttachment(MultipartFile[] files) {

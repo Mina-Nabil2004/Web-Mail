@@ -1,10 +1,14 @@
 package com.MailServer.MailServer.service.Folder;
 
+import com.MailServer.MailServer.service.Email.Email;
 import com.MailServer.MailServer.service.User.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.w3c.dom.stylesheets.LinkStyle;
+
+import java.util.List;
 
 @Setter
 @Getter
@@ -16,8 +20,11 @@ public class Folder {
     private Long folderID;
 
     @ManyToOne
-    @JoinColumn(name = "userid", referencedColumnName = "userID")
+    @JoinColumn(name = "userid", referencedColumnName = "userid")
     private User user;
+
+    @ManyToMany(mappedBy = "folders", cascade = CascadeType.ALL)
+    private List<Email> emails;
 
     private String name;
 
@@ -38,5 +45,25 @@ public class Folder {
 
     public String getName() {
         return name;
+    }
+
+    public void setFolderID(Long folderID) {
+        this.folderID = folderID;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Email> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<Email> emails) {
+        this.emails = emails;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

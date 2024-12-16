@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Set;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
@@ -30,13 +31,24 @@ public class Email implements Cloneable{
     )
     private Long emailID;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "userid", referencedColumnName = "userid")
-    private User user;
+    @ManyToMany
+    @JoinTable(
+            name = "user_email",
+            joinColumns = @JoinColumn(name = "emailid"),
+            inverseJoinColumns = @JoinColumn(name = "userid")
+    )
+    private List<User> users;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "folderid", referencedColumnName = "folderid")
-    private Folder folder;
+    @ManyToMany
+    @JoinTable(
+            name = "folder_email",
+            joinColumns = @JoinColumn(name = "emailid"),
+            inverseJoinColumns = @JoinColumn(name = "folderid")
+    )
+    private List<Folder> folders;
+
+    @OneToMany(mappedBy = "email", cascade = CascadeType.ALL)
+    private List<Attachment> attachments;
 
     private String sender;
     private String subject;
@@ -54,15 +66,15 @@ public class Email implements Cloneable{
 //        this.read=builder.isRead();
     }
 
-    public Email(EmailDTO dto, User user, Folder folder){
-        this.sender= dto.getSender();
-        this.subject=dto.getSubject();
-        this.body=dto.getBody();
-        this.datetime= LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm-dd/MM/yy"));
-        this.user = user;
-        this.folder = folder;
-//        this.read=builder.isRead();
-    }
+//    public Email(EmailDTO dto, User user, Folder folder){
+//        this.sender= dto.getSender();
+//        this.subject=dto.getSubject();
+//        this.body=dto.getBody();
+//        this.datetime= LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm-dd/MM/yy"));
+//        this.user = user;
+//        this.folder = folder;
+////        this.read=builder.isRead();
+//    }
 
     public Email(Email email){
         this.sender= email.getSender();
@@ -91,20 +103,12 @@ public class Email implements Cloneable{
         this.emailID = emailID;
     }
 
-    public User getUser() {
-        return user;
+    public List<Folder> getFolders() {
+        return folders;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Folder getFolder() {
-        return folder;
-    }
-
-    public void setFolder(Folder folder) {
-        this.folder = folder;
+    public void setFolders(List<Folder> folders) {
+        this.folders= folders;
     }
 
     public String getSender() {
@@ -137,5 +141,13 @@ public class Email implements Cloneable{
 
     public void setDatetime(String datetime) {
         this.datetime = datetime;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }
