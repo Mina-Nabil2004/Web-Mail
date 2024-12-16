@@ -113,7 +113,7 @@ public class UserService {
             throw new RuntimeException("No contacts available for this user");
         }
         return user.getContacts().stream()
-                .map(contact -> new ContactDTO(contact.getName(), contact.getAddresses()))
+                .map(contact -> new ContactDTO(contact.getName(), contact.getAddresses(),contact.getContactID()))
                 .collect(Collectors.toList());
     }
 

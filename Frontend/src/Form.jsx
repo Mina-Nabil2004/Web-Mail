@@ -27,7 +27,6 @@ export default function Form({ toggleForm, setUserId }) {
     }
     }
   };
-
   return (
     <div className="form-container">
       <form className="form" onSubmit={handleSubmit}>
@@ -45,7 +44,6 @@ export default function Form({ toggleForm, setUserId }) {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
         />
-
         <label className="form-label" htmlFor="password">Password</label>
         <input
           id="password"
@@ -55,7 +53,6 @@ export default function Form({ toggleForm, setUserId }) {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter your password"
         />
-
         <button type="submit" className="form-button">Login</button>
         <button type="button" className="form-button secondary" onClick={toggleForm}>Create Account</button>
       </form>

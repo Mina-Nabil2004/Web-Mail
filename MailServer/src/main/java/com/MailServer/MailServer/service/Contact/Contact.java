@@ -30,7 +30,10 @@ public class Contact {
     public Contact(String name){
         this.name=name;
     }
-    public Contact(String name, User user, String addresses){this.name=name;this.user = user;this.addresses=addresses;}
+    public Contact(String name, User user, String addresses){
+        this.name=name;this.user = user;
+        this.addresses=addresses;
+    }
 
     public String getAddresses() {
         return addresses;

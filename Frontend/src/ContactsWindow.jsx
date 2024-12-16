@@ -23,23 +23,27 @@ const ContactsWindow = ({ onClose }) => {
     console.log("Updated contacts:", contacts);
   }, [contacts]);
   const handleAddContact = () => {
-    setSelectedContactIndex(contacts.length);
-    setContacts(contacts);
+    const newContact = { name: "", addresses: [] }; // Add a new blank contact
+    setContacts([...contacts, newContact]); // Add the new contact to the state
+    setSelectedContactIndex(contacts.length); // Set the index of the new contact
   };
   const handleContactClick = (index) => {
     setSelectedContactIndex(index);
   };
   const handleSaveContact = async (updatedContact) => {
-    console.log(contacts);
-    if (selectedContactIndex === contacts.length) {
+    console.log("hei");
+    console.log(updatedContact);
+    console.log(updatedContact.name);
+    console.log(updatedContact.addresses);
       try {
+        console.log("lo");
         const response = await axios.post(`http://localhost:8080/email/addContact/${userId}/${updatedContact.name}/${updatedContact.addresses}`);
+        console.log("lol");
         setContacts(response.data);
         console.log("Contact added successfully:", response.data);
       } catch (error) {
         console.error("Error adding contact:", error);
       }
-    }
     setSelectedContactIndex(null); 
   };
   const handleCancelEdit = () => {
@@ -48,18 +52,17 @@ const ContactsWindow = ({ onClose }) => {
   const fetchContactsss = () => {
     setContacts(); 
   };
-
-
-  // const handleDeleteContact = async (index) => {
-  //   const contactToDelete = contacts[index];
-  //   try {
-  //     await axios.delete(`http://localhost:8080/email/deleteContact/${userId}/${contactToDelete.id}`);
-  //     setContacts(contacts.filter((_, i) => i !== index));
-  //     console.log("Contact deleted successfully:", contactToDelete.id);
-  //   } catch (error) {
-  //     console.error("Error deleting contact:", error);
-  //   }
-  // };
+  const handleDeleteContact = async (index) => {
+    const contactToDelete = contacts[index];
+    console.log(contactToDelete);
+    try {
+      await axios.delete(`http://localhost:8080/email/deleteContact/${contactToDelete.contactID}`);
+      setContacts(contacts.filter((_, i) => i !== index));
+      console.log("Contact deleted successfully:", contactToDelete.id);
+    } catch (error) {
+      console.error("Error deleting contact:", error);
+    }
+  };
   return (
     <div className="contacts-window">
       {selectedContactIndex !== null ? (
@@ -92,11 +95,8 @@ const ContactsWindow = ({ onClose }) => {
   );
 };
 const EditContactWindow = ({ contact, onSave, onCancel }) => {
-  const [editedContact, setEditedContact] = useState({
-    ...contact,
-    addresses: contact.addresses || [], 
-  });
-
+  console.log(contact);
+  const [editedContact, setEditedContact] = useState({...contact,addresses: contact.addresses || [],});
   const handleNameChange = (e) => {
     setEditedContact({ ...editedContact, name: e.target.value });
   };
@@ -108,9 +108,7 @@ const EditContactWindow = ({ contact, onSave, onCancel }) => {
   };
 
   const handleAddEmailField = () => {
-    setEditedContact({
-      ...editedContact,
-      addresses: [...editedContact.addresses, ""], 
+    setEditedContact({...editedContact,addresses: [...editedContact.addresses, ""], 
     });
   };
   const handleDeleteEmail = (index) => {
