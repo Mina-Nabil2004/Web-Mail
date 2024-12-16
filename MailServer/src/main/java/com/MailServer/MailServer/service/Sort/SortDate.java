@@ -5,11 +5,12 @@ import com.MailServer.MailServer.service.Email.Email;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class SortDate implements Strategy {
 
     @Override
-    public ArrayList<Email> doOperation(ArrayList<Email> emails, boolean order) {
+    public List<Email> doOperation(List<Email> emails, boolean order) {
         if (order) {
             emails.sort(Comparator.comparing(Email::getDatetime));
         } else {

@@ -1,12 +1,7 @@
 package com.MailServer.MailServer.controller;
 
-import com.MailServer.MailServer.service.Email.Builder;
-import com.MailServer.MailServer.service.Email.Email;
 import com.MailServer.MailServer.service.Email.EmailDTO;
-import com.MailServer.MailServer.service.FilterContact.ContactFilterDTO;
-import com.MailServer.MailServer.service.FilterEmail.FilterDTO;
 import com.MailServer.MailServer.service.User.*;
-import jakarta.servlet.http.PushBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +10,6 @@ import com.MailServer.MailServer.service.User.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
 
 @RestController
 @CrossOrigin("*")
@@ -60,7 +53,7 @@ public class control {
     @GetMapping("/folder/{folderID}/{page}")
     public ResponseEntity<Object> getFolder(@PathVariable Long folderID, @PathVariable int page) {
         try {
-            return ResponseEntity.ok(userService.getUserFolder(folderID));
+            return ResponseEntity.ok(userService.getUserFolder(folderID, page));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }

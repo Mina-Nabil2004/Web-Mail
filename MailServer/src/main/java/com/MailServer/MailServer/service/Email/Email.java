@@ -48,51 +48,53 @@ public class Email implements Cloneable{
     private String subject;
     private String body;
     private String datetime;
-//    private boolean read;
+    private boolean read;
 
     public Email() {
     }
 
-    public Email(EmailDTO dto, List<User> users, List<Folder> folders){
+    public Email(EmailDTO dto, List<Folder> folders){
         this.sender= dto.getSender();
         this.subject=dto.getSubject();
         this.body=dto.getBody();
         this.datetime= LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy"));
         this.receivers = dto.getReceivers();
         this.folders = folders;
-//        this.read=builder.isRead();
-    }
-    public Email(String subject,List<String> receivers,String body,String sender){
-        this.sender=sender;
-        this.subject=subject;
-        this.body=body;
-        this.datetime= LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy"));
-        this.receivers = receivers;
-//        this.folders = folders;
-//        this.read=builder.isRead();
+        this.read = false;
     }
 
-    public Email(Email email){
-        this.sender= email.getSender();
-        this.subject=email.getSubject();
-        this.body=email.getBody();
-        this.datetime=email.getDatetime();
-//        this.read=email.isRead();
-    }
-
-
-
-    public Email clone(){
-        return new Email(this);
-    }
-
-    //    public boolean isRead() {
-//        return read;
+//    public Email(String subject,List<String> receivers,String body,String sender){
+//        this.sender=sender;
+//        this.subject=subject;
+//        this.body=body;
+//        this.datetime= LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy"));
+//        this.receivers = receivers;
+////        this.folders = folders;
+////        this.read=builder.isRead();
 //    }
 
-//    public void setRead(boolean read) {
-//        this.read = read;
+//    public Email(Email email){
+//        this.sender= email.getSender();
+//        this.subject=email.getSubject();
+//        this.body=email.getBody();
+//        this.datetime=email.getDatetime();
+////        this.read=email.isRead();
 //    }
+
+
+
+//    public Email clone(){
+//        return new Email(this);
+//    }
+
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
+    }
 
     public Long getEmailID() {
         return emailID;

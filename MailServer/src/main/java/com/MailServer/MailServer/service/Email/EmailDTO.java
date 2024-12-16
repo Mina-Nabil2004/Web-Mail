@@ -16,9 +16,11 @@ public class EmailDTO {
     private Long emailID;
     private String sender;
     private List<String> receivers;
+    private List<String> attachment;
     private String subject;
     private String body;
     private String datetime;
+    private boolean read;
 
     // Constructors
     public EmailDTO() {}
@@ -31,12 +33,16 @@ public class EmailDTO {
         }
         return body.substring(0, 50);
     }
-    public EmailDTO(Long emailID,String sender, String subject, String body, String datetime){
+
+
+    public EmailDTO(Long emailID,String sender, List<String> receivers, String subject, String body, String datetime, boolean read){
         this.emailID = emailID;
         this.sender=sender;
+        this.receivers = receivers;
         this.subject = subject;
         this.body=getBodySnippet(body);
         this.datetime=datetime;
+        this.read = read;
     }
     public EmailDTO(List<String> receivers,String sender,String subject, String body, String datetime){
         this.receivers=receivers;

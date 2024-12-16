@@ -3,31 +3,20 @@ package com.MailServer.MailServer.service.User;
 import com.MailServer.MailServer.repository.*;
 import com.MailServer.MailServer.service.Contact.*;
 import com.MailServer.MailServer.service.Email.*;
-import com.MailServer.MailServer.service.FilterContact.ContactFactory;
-import com.MailServer.MailServer.service.FilterContact.ContactFilterDTO;
-import com.MailServer.MailServer.service.FilterContact.CriteriaContact;
-import com.MailServer.MailServer.service.FilterEmail.Criteria;
-import com.MailServer.MailServer.service.FilterEmail.CriteriaFactory;
-import com.MailServer.MailServer.service.FilterEmail.FilterDTO;
-import com.MailServer.MailServer.service.FilterEmail.OrCriteria;
 import com.MailServer.MailServer.service.Folder.Folder;
 import com.MailServer.MailServer.service.Folder.FolderDTO;
-import com.MailServer.MailServer.service.Sort.SortDTO;
 import com.MailServer.MailServer.service.Sort.SortFactory;
 import com.MailServer.MailServer.service.Sort.Strategy;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,8 +25,6 @@ public class UserService {
     private final FolderRepository folderRepository;
     private final EmailRepository emailRepository;
     private final ContactRepository contactRepository;
-//    private final AddressRepository addressRepository;
-//    private final ReceiverRepository receiverRepository;
 
     @Autowired
     public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository) {
@@ -45,8 +32,6 @@ public class UserService {
         this.folderRepository = folderRepository;
         this.emailRepository = emailRepository;
         this.contactRepository = contactRepository;
-//        this.addressRepository = addressRepository;
-//        this.receiverRepository=receiverRepository;
     }
 
     @Transactional
@@ -81,15 +66,24 @@ public class UserService {
                 .map(folder -> new FolderDTO(folder.getFolderID(), folder.getName()))
                 .collect(Collectors.toList());
     }
-//    ============================================================================================
 
-    public Object getUserFolder(Long folderID){
+    public Object getUserFolder(Long folderID, int pageNo){
+
         Folder folder =folderRepository.findById(folderID).orElseThrow();
-        return folder.getEmails().stream()
-                .map(email -> new Email(email.getSubject(), email.getReceivers(),email.getBody(),email.getSender()))
+        Strategy sorter = SortFactory.getSort("date");
+        List<Email> sorterEmails = sorter.doOperation(folder.getEmails(), false);
+        List<EmailDTO> emailDTOS=sorterEmails.stream()
+                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime(), email.isRead()))
                 .collect(Collectors.toList());
 
+        Pageable pageable = PageRequest.of(pageNo, 20);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), emailDTOS.size());
+
+        List<EmailDTO> pagedEmailDTOs = emailDTOS.subList(start, end);
+        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOS.size()).getContent();
     }
+
 //    public Object getUserAllMail(Long userID, int pageNo){
 //        Pageable pageable = PageRequest.of(pageNo, 20);
 //        Page<Email> page = emailRepository.findByUserUserID(userID, pageable);
@@ -121,18 +115,15 @@ public class UserService {
 
     @Transactional
     public Object send(EmailDTO dto, Long userID){
-        List<User> users =  new ArrayList<>();
         List<Folder> folders = new ArrayList<>();
         User sender = userRepository.findById(userID).orElseThrow();
         dto.setSender(sender.getEmail());
-        users.add(sender);
         folders.add(sender.getFolders().get(1));
         for (String receiverEmail : dto.getReceivers()) {
             User receiver = userRepository.findByEmail(receiverEmail);
-            users.add(receiver);
             folders.add(receiver.getFolders().getFirst());
         }
-        Email email = new Email(dto, users, folders);
+        Email email = new Email(dto, folders);
         emailRepository.save(email);
         return email;
     }
