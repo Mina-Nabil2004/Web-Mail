@@ -2,24 +2,12 @@ package com.MailServer.MailServer.service.Contact;
 
 public class ContactDTO {
    private String name;
-   private Long contactID;
+   private String addresses;
 
-   public ContactDTO(String name,Long contactID) {
+   public ContactDTO(String name,String addresses) {
 	   this.name = name;
-       this.contactID=contactID;
+       this.addresses=addresses;
    }
-
-    public static int size() {
-       return size();
-    }
-
-    public Long getContactID() {
-        return contactID;
-    }
-
-    public void setContactID(Long contactID) {
-        this.contactID = contactID;
-    }
 
     public String getName() {
         return name;
@@ -27,5 +15,13 @@ public class ContactDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(String addresses) {
+        this.addresses = addresses;
     }
 }

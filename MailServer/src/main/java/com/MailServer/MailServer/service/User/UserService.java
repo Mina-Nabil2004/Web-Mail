@@ -104,7 +104,7 @@ public class UserService {
         User user = userRepository.findById(userID).orElseThrow();
         user.getContacts().add(new Contact(name, user, addresses));
         userRepository.save(user);
-        return user.getContacts();
+        return getContact(user.getUserID());
     }
 
     public Object getContact(Long userID) {
@@ -112,7 +112,9 @@ public class UserService {
         if (user.getContacts().isEmpty()) {
             throw new RuntimeException("No contacts available for this user");
         }
-        return user.getContacts().get(0);
+        return user.getContacts().stream()
+                .map(contact -> new ContactDTO(contact.getName(), contact.getAddresses()))
+                .collect(Collectors.toList());
     }
 
 

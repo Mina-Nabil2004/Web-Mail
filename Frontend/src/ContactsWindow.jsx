@@ -6,19 +6,13 @@ const ContactsWindow = ({ onClose }) => {
   const [contacts, setContacts] = useState([]);
   const [selectedContactIndex, setSelectedContactIndex] = useState(null);
   const userId = localStorage.getItem("userId");
+
   useEffect(() => {
     const fetchContacts = async () => {
       console.log(userId);
       try {
-        // const response = await axios.get(`http://localhost:8080/email/getContacts/${userId}`);
-        const response = {
-          data: [
-            {username: "omar", emails: "legendboudy@gmail.com"}
-        ]
-      };
+        const response = await axios.get(`http://localhost:8080/email/getContacts/${userId}`);
         setContacts(response.data);
-        // console.log(response.data);
-        // console.log(contacts);
       } catch (error) {
         console.error("Error fetching contacts:", error);
       }
@@ -29,7 +23,6 @@ const ContactsWindow = ({ onClose }) => {
     console.log("Updated contacts:", contacts);
   }, [contacts]);
   const handleAddContact = () => {
-    setContacts([...contacts, { username: "", emails: [""] }]);
     setSelectedContactIndex(contacts.length);
     setContacts(contacts);
   };
@@ -40,19 +33,13 @@ const ContactsWindow = ({ onClose }) => {
     console.log(contacts);
     if (selectedContactIndex === contacts.length) {
       try {
-        const response = await axios.post(
-          `http://localhost:8080/email/addContact/${userId}/${username}/${email}`,
-          {
-            username: updatedContact.username,
-            emails: updatedContact.emails,
-          }
-        );
-        setContacts((prevContacts) => [...prevContacts, response.data]);
+        const response = await axios.post(`http://localhost:8080/email/addContact/${userId}/${updatedContact.name}/${updatedContact.addresses}`);
+        setContacts(response.data);
         console.log("Contact added successfully:", response.data);
       } catch (error) {
         console.error("Error adding contact:", error);
       }
-    } 
+    }
     setSelectedContactIndex(null); 
   };
   const handleCancelEdit = () => {
@@ -89,9 +76,9 @@ const ContactsWindow = ({ onClose }) => {
             {contacts.map((contact, index) => (
               <div key={index} className="contact-item">
                 <p onClick={() => handleContactClick(index)}>
-                  {contact.username || "Unnamed Contact"}
+                  {contact.name || "Unnamed Contact"}
                 </p>
-                <p>{contact.emails}</p>
+                <p>{contact.addresses}</p>
                 <button onClick={() => handleDeleteContact(index)}>
                   Delete Contact
                 </button>
@@ -107,28 +94,28 @@ const ContactsWindow = ({ onClose }) => {
 const EditContactWindow = ({ contact, onSave, onCancel }) => {
   const [editedContact, setEditedContact] = useState({
     ...contact,
-    emails: contact.emails || [], 
+    addresses: contact.addresses || [], 
   });
 
   const handleNameChange = (e) => {
-    setEditedContact({ ...editedContact, username: e.target.value });
+    setEditedContact({ ...editedContact, name: e.target.value });
   };
 
   const handleEmailChange = (index, value) => {
-    const updatedEmails = [...editedContact.emails];
+    const updatedEmails = [...editedContact.addresses];
     updatedEmails[index] = value;
-    setEditedContact({ ...editedContact, emails: updatedEmails });
+    setEditedContact({ ...editedContact, addresses: updatedEmails });
   };
 
   const handleAddEmailField = () => {
     setEditedContact({
       ...editedContact,
-      emails: [...editedContact.emails, ""], 
+      addresses: [...editedContact.addresses, ""], 
     });
   };
   const handleDeleteEmail = (index) => {
-    const updatedEmails = editedContact.emails.filter((_, i) => i !== index);
-    setEditedContact({ ...editedContact, emails: updatedEmails });
+    const updatedEmails = editedContact.addresses.filter((_, i) => i !== index);
+    setEditedContact({ ...editedContact, addresses: updatedEmails });
   };
   return (
     <div className="edit-contact-window">
@@ -137,17 +124,17 @@ const EditContactWindow = ({ contact, onSave, onCancel }) => {
         <label>Name:</label>
         <input
           type="text"
-          value={editedContact.username}
+          value={editedContact.name}
           onChange={handleNameChange}
         />
       </div>
       <div>
         <label>Emails:</label>
-        {editedContact.emails.map((email, index) => (
+        {editedContact.addresses.map((address, index) => (
           <div key={index}>
             <input
               type="email"
-              value={email}
+              value={address}
               onChange={(e) => handleEmailChange(index, e.target.value)}
             />
             <button onClick={() => handleDeleteEmail(index)}>Delete Email</button>
