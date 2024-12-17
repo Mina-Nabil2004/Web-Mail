@@ -3,6 +3,7 @@ package com.MailServer.MailServer.service.FilterEmail;
 import com.MailServer.MailServer.service.Email.Email;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AndCriteria implements Criteria {
     private final Criteria criteria1;
@@ -20,8 +21,8 @@ public class AndCriteria implements Criteria {
     }
 
     @Override
-    public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
-        ArrayList<Email> finalizer =new ArrayList<Email>(emails);
+    public List<Email> meetCriteria(List<Email> emails) {
+        List<Email> finalizer =new ArrayList<Email>(emails);
         if(this.criteria1.get() != null){
             finalizer =this.criteria1.meetCriteria(finalizer);
         }

@@ -3,6 +3,7 @@ package com.MailServer.MailServer.service.FilterEmail;
 import com.MailServer.MailServer.service.Email.Email;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class OrCriteria implements Criteria{
     private Criteria criteria1;
@@ -20,10 +21,10 @@ public class OrCriteria implements Criteria{
     }
 
     @Override
-    public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
-        ArrayList<Email> criteriaFilters = new ArrayList<>();
+    public List<Email> meetCriteria(List<Email> emails) {
+        List<Email> criteriaFilters = new ArrayList<>();
         if(this.criteria1.get() != null){
-            ArrayList<Email> criteria1filters =this.criteria1.meetCriteria(emails);
+            List<Email> criteria1filters =this.criteria1.meetCriteria(emails);
             for (Email email:criteria1filters){
                 if(!criteriaFilters.contains(email)){
                     criteriaFilters.add(email);
@@ -31,7 +32,7 @@ public class OrCriteria implements Criteria{
             }
         }
         if(this.criteria2.get()!= null){
-            ArrayList<Email> criteria2filters =this.criteria2.meetCriteria(emails);
+            List<Email> criteria2filters =this.criteria2.meetCriteria(emails);
             for (Email email:criteria2filters){
                 if(!criteriaFilters.contains(email)){
                     criteriaFilters.add(email);
@@ -39,7 +40,7 @@ public class OrCriteria implements Criteria{
             }
         }
         if(this.criteria3.get()!=null){
-            ArrayList<Email> criteria3filters =this.criteria3.meetCriteria(emails);
+            List<Email> criteria3filters =this.criteria3.meetCriteria(emails);
             for (Email email:criteria3filters){
                 if(!criteriaFilters.contains(email)){
                     criteriaFilters.add(email);
@@ -47,7 +48,7 @@ public class OrCriteria implements Criteria{
             }
         }
         if(this.criteria4.get()!=null){
-            ArrayList<Email> criteria4filters =this.criteria4.meetCriteria(emails);
+            List<Email> criteria4filters =this.criteria4.meetCriteria(emails);
             for (Email email:criteria4filters){
                 if(!criteriaFilters.contains(email)){
                     criteriaFilters.add(email);

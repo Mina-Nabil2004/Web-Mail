@@ -3,6 +3,7 @@ package com.MailServer.MailServer.service.FilterContact;
 import com.MailServer.MailServer.service.Contact.Contact;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CriteriaName implements CriteriaContact{
     private String name;
@@ -11,14 +12,14 @@ public class CriteriaName implements CriteriaContact{
     }
 
     @Override
-    public ArrayList<Contact> meetCriteria(ArrayList<Contact> contacts) {
-        ArrayList<Contact> nemeContacts=new ArrayList<>();
+    public List<Contact> meetCriteria(List<Contact> contacts) {
+        List<Contact> nameContacts=new ArrayList<>();
         for(Contact contact:contacts){
             if(contact.getName().contains(this.name)){
-                nemeContacts.add(contact);
+                nameContacts.add(contact);
             }
         }
-        return nemeContacts;
+        return nameContacts;
     }
     public String get(){
         return this.name;

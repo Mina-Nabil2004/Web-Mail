@@ -3,6 +3,7 @@ package com.MailServer.MailServer.service.FilterEmail;
 import com.MailServer.MailServer.service.Email.Email;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CriteriaSender implements Criteria{
     private final String sender;
@@ -13,8 +14,8 @@ public class CriteriaSender implements Criteria{
         this.sender= criteria;
     }
     @Override
-    public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
-        ArrayList<Email> sender = new ArrayList<Email>();
+    public List<Email> meetCriteria(List<Email> emails) {
+        List<Email> sender = new ArrayList<Email>();
         for (Email email : emails) {
             if (email.getSender().contains(this.sender)) {
                 sender.add(email);

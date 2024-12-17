@@ -3,6 +3,7 @@ package com.MailServer.MailServer.service.FilterContact;
 import com.MailServer.MailServer.service.Contact.Contact;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class OrCriteria implements CriteriaContact{
 //        private final CriteriaContact criteria1;
@@ -16,8 +17,8 @@ public class OrCriteria implements CriteriaContact{
 
 
     @Override
-    public ArrayList<Contact> meetCriteria(ArrayList<Contact> contacts) {
-        ArrayList<Contact> finalizer = new ArrayList<Contact>();
+    public List<Contact> meetCriteria(List<Contact> contacts) {
+        List<Contact> finalizer = new ArrayList<Contact>();
 //        if (this.criteria1.get() != null) {
 //            finalizer = this.criteria1.meetCriteria(finalizer);
 //        }
