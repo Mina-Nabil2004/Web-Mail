@@ -1,5 +1,7 @@
 package com.MailServer.MailServer.controller;
 
+import com.MailServer.MailServer.service.Contact.Contact;
+import com.MailServer.MailServer.service.Contact.ContactDTO;
 import com.MailServer.MailServer.service.Email.EmailDTO;
 import com.MailServer.MailServer.service.FilterContact.ContactFilterDTO;
 import com.MailServer.MailServer.service.FilterEmail.FilterDTO;
@@ -191,12 +193,24 @@ public class control {
         }
     }
     @PostMapping("/move/{sourceFolderID}/{destinationFolderID}/{maxPageSize}/{pageNo}")
-    public ResponseEntity<Object> moveEmail(@PathVariable EmailDTO Dto, @PathVariable Long sourceFolderID, @PathVariable Long destinationFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
+    public ResponseEntity<Object> moveEmail(@RequestBody EmailDTO Dto, @PathVariable Long sourceFolderID, @PathVariable Long destinationFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
         try {
             return ResponseEntity.ok(userService.MoveEmail(Dto.getEmailIds(),sourceFolderID,destinationFolderID,page,maxPageSize));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
         }
     }
+    @PostMapping("/editContact/{contactID}")
+    public ResponseEntity<Object> editContact(@RequestBody ContactDTO dto, @PathVariable Long contactID) {
+        try {
+            Contact editedContact = new Contact();
+            editedContact.setName(dto.getName());
+            editedContact.setAddresses(dto.getAddresses());
+            return ResponseEntity.ok(userService.EditContact(contactID, editedContact));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to edit contact: " + e.getMessage());
+        }
+    }
+
 
 }

@@ -213,4 +213,11 @@ public class UserService {
         folderRepository.save(sourceFolder);
         return getUserFolder(sourceFolderID,pageNo,maxPageSize);
     }
+    public Object EditContact(Long contactID,Contact EditedContact){
+        Contact contact = contactRepository.findById(contactID).orElseThrow();
+        contact.setName(EditedContact.getName());
+        contact.setAddresses(EditedContact.getAddresses());
+        contactRepository.save(contact);
+        return contact;
+    }
 }
