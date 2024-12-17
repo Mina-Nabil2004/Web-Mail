@@ -37,22 +37,25 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
   };
   const handleAttachmentChange = (e) => {
     const files = Array.from(e.target.files); // Convert FileList to an array
-    const newAttachments = [...attachments]; // Copy the existing attachments array
-
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        newAttachments.push({
-          name: file.name,
-          type: file.type,
-          size: file.size,
-          data: reader.result, //  base64 string
-        });
-        setAttachments(newAttachments);
-      };
-      reader.readAsDataURL(file);
+    const newAttachments = files.map((file) => ({
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        data: null, // Placeholder for base64 data
+    }));
+    // Read files and update base64 data
+    files.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            newAttachments[index].data = reader.result; // Update the base64 data
+            setAttachments(newAttachments); // Update local state
+            builder.setAttachments(newAttachments); // Update builder's attachments
+        };
+        reader.readAsDataURL(file);
+        console.log(newAttachments);
     });
-  };
+    setAttachments(newAttachments);
+};
   return (
     <div className="compose-modal">
       <div className="modal-content">
