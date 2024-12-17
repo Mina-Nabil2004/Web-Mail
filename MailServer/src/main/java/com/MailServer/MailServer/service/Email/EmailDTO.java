@@ -7,20 +7,20 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
 @Data
 public class EmailDTO {
-    // Getters and Setters
     private Long emailID;
     private String sender;
     private List<String> receivers;
-    private List<String> attachment;
+    private List<AttachmentDTO> attachments;
     private String subject;
     private String body;
     private String datetime;
-    private boolean read;
+    private int priority;
 
     // Constructors
     public EmailDTO() {}
@@ -35,21 +35,25 @@ public class EmailDTO {
     }
 
 
-    public EmailDTO(Long emailID,String sender, List<String> receivers, String subject, String body, String datetime){
+    public EmailDTO(Long emailID,String sender, List<String> receivers, String subject, String body, String datetime, int priority){
         this.emailID = emailID;
         this.sender=sender;
         this.receivers = receivers;
         this.subject = subject;
         this.body=getBodySnippet(body);
+        this.priority = priority;
         this.datetime=datetime;
-//        this.read = read;
     }
-    public EmailDTO(List<String> receivers,String sender,String subject, String body, String datetime){
+    public EmailDTO(List<String> receivers,String sender,String subject, String body, String datetime, List<Attachment> attachments, int priority){
         this.receivers=receivers;
         this.sender=sender;
         this.subject = subject;
-        this.body=getBodySnippet(body);
-        this.datetime=datetime;
+        this.body = body;
+        this.datetime = datetime;
+        this.priority = priority;
+        this.attachments = attachments.stream()
+                .map(attachment -> new AttachmentDTO(attachment.getAttachmentID(), attachment.getName(), attachment.getType(), attachment.getSize()))
+                .collect(Collectors.toList());
     }
     public String getSender() {
         return sender;
@@ -90,11 +94,28 @@ public class EmailDTO {
     public void setDatetime(String datetime) {
         this.datetime = datetime;
     }
+
     public Long getEmailID() {
         return emailID;
     }
 
     public void setEmailID(Long emailID) {
         this.emailID = emailID;
+    }
+
+    public List<AttachmentDTO> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<AttachmentDTO> attachments) {
+        this.attachments = attachments;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }

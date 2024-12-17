@@ -1,59 +1,28 @@
 package com.MailServer.MailServer.service.Email;
 
-import com.MailServer.MailServer.service.User.User;
 import jakarta.persistence.*;
-import lombok.Data;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
-@Data
-@Entity
-public class Attachment {
-    @Id
-    @SequenceGenerator(
-            name = "attachment_sequence",
-            sequenceName = "attachment_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = SEQUENCE,
-            generator = "attachment_sequence"
-    )
+public class AttachmentDTO {
     private Long attachmentID;
-
-    @ManyToOne
-    @JoinColumn(name = "emailid", referencedColumnName = "emailid")
-    private Email email;
-
     private String name;
     private String type;
     private int size;
-
-    @Column(columnDefinition = "LONGTEXT")
     private String data;
 
-    public Attachment(AttachmentDTO dto) {
-        this.name = dto.getName();
-        this.type = dto.getType();
-        this.size = dto.getSize();
-        this.data = dto.getData();
+    public AttachmentDTO(Long attachmentID,String name,String type, int size){
+        this.name=name;
+        this.type=type;
+        this.attachmentID = attachmentID;
+        this.size = size;
     }
-    public Attachment(){}
-
     public Long getAttachmentID() {
         return attachmentID;
     }
 
     public void setAttachmentID(Long attachmentID) {
         this.attachmentID = attachmentID;
-    }
-
-    public Email getEmail() {
-        return email;
-    }
-
-    public void setEmail(Email email) {
-        this.email = email;
     }
 
     public String getName() {

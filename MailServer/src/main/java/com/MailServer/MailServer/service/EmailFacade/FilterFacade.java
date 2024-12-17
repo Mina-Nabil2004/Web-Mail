@@ -14,7 +14,7 @@ public class FilterFacade {
         Criteria filter = CriteriaFactory.getCriteria(filterOn, criteria);
         List<Email> filtered = filter.meetCriteria(emails);
         List<EmailDTO> emailDTOS = filtered.stream()
-                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime()))
+                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime(), email.getPriority()))
                 .collect(Collectors.toList());
         return Pager.page(pageNo,maxPageSize,emailDTOS);
     }

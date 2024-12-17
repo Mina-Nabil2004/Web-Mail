@@ -6,14 +6,13 @@ public class UserLoginRequest {
     private String email;
     private String password;
 
-    public void UserLoginRequest(String email, String password){
+    public UserLoginRequest(String email, String password){
         this.email = email;
 //        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //        this.password = passwordEncoder.encode(password);
         this.password = password;
     }
 
-    // Getters and setters
     public String getEmail() {
         return email;
     }

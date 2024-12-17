@@ -109,26 +109,29 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-
     @Transactional
-    public Object send(EmailDTO dto, Long userID){
+    public Object send(EmailDTO emailDTO, Long userID){
         List<Folder> folders = new ArrayList<>();
         User sender = userRepository.findById(userID).orElseThrow();
-        dto.setSender(sender.getEmail());
+        emailDTO.setSender(sender.getEmail());
         folders.add(sender.getFolders().get(1));
-        for (String receiverEmail : dto.getReceivers()) {
+        for (String receiverEmail : emailDTO.getReceivers()) {
             User receiver = userRepository.findByEmail(receiverEmail);
             folders.add(receiver.getFolders().getFirst());
         }
-        Email email = new Email(dto, folders);
+        List<Attachment> attachments = new ArrayList<>();
+        for(AttachmentDTO attachment : emailDTO.getAttachments()){
+            attachments.add(new Attachment(attachment));
+        }
+        Email email = new Email(emailDTO, attachments, folders);
         emailRepository.save(email);
-        return new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime());
+        return new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime(), email.getPriority());
     }
 
-//    public Object getUserEmail(Long emailID) {
-//        Email email = emailRepository.findById(emailID).orElseThrow();
-//        return new EmailDTO(email.getReceivers(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime());
-//    }
+    public Object getUserEmail(Long emailID) {
+        Email email = emailRepository.findById(emailID).orElseThrow();
+        return new EmailDTO(email.getReceivers(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime(), email.getAttachments(), email.getPriority());
+    }
 
     @Transactional
     public Object deleteUser(Long userID) {
@@ -145,6 +148,7 @@ public class UserService {
         userRepository.deleteById(userID);
         return "Deleted";
     }
+
     @Transactional
     public Object deleteFolder(Long folderID) {
         Folder folder = folderRepository.findById(folderID).orElseThrow();
@@ -152,6 +156,7 @@ public class UserService {
         folderRepository.delete(folder);
         return "Deleted";
     }
+
     @Transactional
     public Object deleteEmail(Long emailID) {
         emailRepository.deleteById(emailID);
@@ -188,25 +193,9 @@ public class UserService {
         List<ContactDTO> pagedEmailDTOs = contactDTOs.subList(start, end);
         return new PageImpl<>(pagedEmailDTOs, pageable, contactDTOs.size()).getContent();
     }
+
     public  Object sortEmail(String criteria, Long folderID, boolean order, int pageNo, int maxPageSize) {
         Folder folder =folderRepository.findById(folderID).orElseThrow();
         return SortFacade.sort(folder.getEmails(), criteria, order, pageNo, maxPageSize);
     }
-
-//    public Object copyEmail(Long folderID) {
-//        ArrayList<Email> emails = emailRepository.findByFolderFolderID(folderID);
-//        List<Email> clonedEmails = new ArrayList<>();
-//        for(Email email : emails){
-//            clonedEmails.add(email.clone());
-//        }
-//        return clonedEmails;
-//    }
-
-
-//    public void uploadAttachment(MultipartFile[] files) {
-//        for (MultipartFile file : files) {
-//            // Process each file (e.g., save to database or file system)
-//        }
-//    }
-
 }
