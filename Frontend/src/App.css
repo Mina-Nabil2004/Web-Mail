@@ -1,7 +1,8 @@
+/* Layout Styling */
 .app-layout {
   display: flex;
-  margin-top: 80px; /* Assuming this is for spacing below the header */
-  justify-content: space-between; /* Ensures content is between left and right sidebars */
+  margin-top: 80px; /* Spacing below the header */
+  justify-content: space-between; /* Space between left sidebar and content */
 }
 
 .content {
@@ -10,16 +11,24 @@
   margin-left: 50px;
 }
 
+.left-sidebar {
+  flex: 0 0 250px; /* Fixed width for the left sidebar */
+  background-color: #f4f4f4;
+  border-right: 1px solid #ddd;
+  padding: 15px;
+}
+
+/* Email Item Styling */
 .email-item {
   border: 1px solid #ddd;
-  padding: 20px; /* Increased padding for better spacing */
+  padding: 20px;
   border-radius: 8px;
   background-color: #f9f9f9;
   transition: box-shadow 0.3s, background-color 0.3s;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
-  width: 100%; /* Make email items fill the available width */
-  max-width: 800px; /* Set a maximum width for better readability */
-  margin: 0 auto; /* Center email items within the parent container */
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .email-item:hover {
@@ -43,76 +52,94 @@
   color: #000;
 }
 
-/* Button styling for actions inside email items */
-.read-button {
-  background-color: #28a745;
-  color: white;
-  border: none;
+.email-item button {
+  margin-top: 10px;
+  margin-right: 10px;
   padding: 8px 12px;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
-  margin-top: 10px;
+  transition: background-color 0.3s;
 }
 
-.read-button:hover {
-  background-color: #218838;
-}
-
-.move-button {
+.read-button, .move-button {
   background-color: #28a745;
   color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  margin-top: 10px;
 }
 
-.move-button:hover {
+.read-button:hover, .move-button:hover {
   background-color: #218838;
 }
 
-.left-sidebar {
-  flex: 0 0 250px; /* Fixed width for the left sidebar (Menu) */
+.Delete-button {
+  background-color: #dc3545;
+  color: white;
 }
 
-.right-sidebar {
-  flex: 0 0 250px; /* Fixed width for the right sidebar (Sidebar2) */
+.Delete-button:hover {
+  background-color: #c82333;
 }
 
-/* Optional: Handle responsiveness */
-@media (max-width: 768px) {
-  .app-layout {
-    flex-direction: column; /* Stack the layout vertically on small screens */
-  }
-
-  .content {
-    margin-right: 0; /* Remove right margin for smaller screens */
-  }
-
-  .left-sidebar,
-  .right-sidebar {
-    flex: 0 0 100%; /* Make both sidebars full width */
-  }
+.Started-button {
+  background-color: #ffc107;
+  color: black;
 }
 
-/* Center the email list and add spacing */
+.Started-button:hover {
+  background-color: #e0a800;
+}
+
+/* Pagination Buttons */
+.pages-button {
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pages-button:hover {
+  background-color: #0056b3;
+}
+
+.pages-button:disabled {
+  background-color: #d3d3d3;
+  cursor: not-allowed;
+}
+
+/* Email List */
 .email-list {
   height: 700px;
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Increase gap between email items */
-  align-items: center; /* Center email items horizontally */
+  gap: 20px;
+  align-items: center;
 }
 
-.pages-button{
-  height: 40px;
-  border-radius: 20px;
+.bulk-actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
-/* Styles for Move Email Modal */
+.bulk-actions button {
+  margin-right: 10px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.bulk-actions button:hover {
+  background-color: #0056b3;
+}
+
+/* Move Email Modal */
 .move-folder-modal {
   position: fixed;
   top: 0;
@@ -158,13 +185,60 @@
   background-color: #0056b3;
 }
 
-.move-folder-content button:disabled {
-  background-color: #d3d3d3;
-  cursor: not-allowed;
+/* Contact Form Modal */
+.contact-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
+.contact-form-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
+.contact-form-content form div {
+  margin-bottom: 15px;
+}
 
+.contact-form-content label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.contact-form-content input,
+.contact-form-content textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.contact-form-content button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.contact-form-content button:hover {
+  background-color: #0056b3;
+}
+
+/* Dark Mode */
 body.dark-mode {
   background-color: #121212;
   color: #f9f9f9;
@@ -180,6 +254,36 @@ body.dark-mode {
   color: #f9f9f9;
 }
 
+.theme-toggle {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .theme-toggle:hover {
   background-color: #0056b3;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .content {
+    margin: 0;
+    padding: 15px;
+  }
+
+  .left-sidebar {
+    flex: 0 0 100%;
+    padding: 10px;
+  }
+
+  .pages-button {
+    height: 35px;
+    font-size: 12px;
+  }
 }

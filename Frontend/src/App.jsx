@@ -22,7 +22,7 @@ function App() {
   // const [emails, setEmails] = useState(initialEmails);
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
   const [isContacting, setIsContacting] = useState(false); // State for showing contact form
-  const [maxPageSize, setMaxPageSize] = useState(10);
+  const [maxPageSize, setMaxPageSize] = useState(5);
   const [page, setPage] = useState(0); // State for managing page number
   const [searchQuery, setSearchQuery] = useState("");
   const[folders, setFolders] = useState([]);
@@ -150,8 +150,15 @@ function App() {
     setIsContacting((prev) => !prev); // Toggles visibility of contact form
   };
 
-  const handlePageChange = (direction) => {
-    setPage((prevPage) => Math.max(0, prevPage + direction));
+  const handlePageChange = async (direction) => {
+    if(maxPageSize == activeFolder.length && direction == 1){
+      setPage(page + 1);
+      setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${response.data[0].folderID}/${maxPageSize}/${page}`)).data);
+    }
+    else if(page != 0 && direction == -1){
+      setPage(page - 1);
+      setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${response.data[0].folderID}/${maxPageSize}/${page}`)).data);
+    }
   };
 
   const handleFolderChange = (menu) => {
