@@ -12,7 +12,8 @@ public class CriteriaFactory {
 //        }
             case "datetime" -> new CriteriaDate(dto);
             case "and" -> new AndCriteria(dto);
-            default -> null;
+            case "or" -> new OrCriteria(criteria);
+            default -> throw new IllegalStateException("Unexpected value: " + criteria);
         };
     }
 }

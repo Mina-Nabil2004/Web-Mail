@@ -60,10 +60,10 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
     }
-    @GetMapping("/allMail/{userID}/{page}")
-    public ResponseEntity<Object> getAllMail(@PathVariable Long userID, @PathVariable int page) {
+    @GetMapping("/allMail/{userID}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> getAllMail(@PathVariable Long userID, @PathVariable int maxPageSize, @PathVariable int page) {
         try {
-            return ResponseEntity.ok(userService.getUserAllMail(userID, page));
+            return ResponseEntity.ok(userService.getUserAllMail(userID, page, maxPageSize));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
@@ -127,18 +127,18 @@ public class control {
         }
     }
 
-    @GetMapping("/filterEmails/{folderID}/{criteria}/{page}")
-    public ResponseEntity<Object> filterEmails(@RequestBody FilterDTO request, @PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page) {
+    @GetMapping("/filterEmails/{folderID}/{criteria}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> filterEmails(@RequestBody FilterDTO request, @PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page, @PathVariable int maxPageSize) {
         try {
-            return ResponseEntity.ok(userService.filterEmails(request, folderID, criteria, page));
+            return ResponseEntity.ok(userService.filterEmails(request, folderID, criteria, page, maxPageSize));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
         }
     }
-    @GetMapping("/searchEmails/{folderID}/{criteria}/{page}")
-    public ResponseEntity<Object> searchEmails(@PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page) {
+    @GetMapping("/searchEmails/{folderID}/{criteria}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> searchEmails(@PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page, @PathVariable int maxPageSize) {
         try {
-            return ResponseEntity.ok(userService.searchEmails(folderID, criteria, page));
+            return ResponseEntity.ok(userService.searchEmails(folderID, criteria, page, maxPageSize));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
         }

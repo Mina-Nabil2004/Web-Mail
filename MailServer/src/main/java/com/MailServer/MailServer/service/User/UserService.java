@@ -3,6 +3,8 @@ package com.MailServer.MailServer.service.User;
 import com.MailServer.MailServer.repository.*;
 import com.MailServer.MailServer.service.Contact.*;
 import com.MailServer.MailServer.service.Email.*;
+import com.MailServer.MailServer.service.EmailFacade.FilterFacade;
+import com.MailServer.MailServer.service.EmailFacade.SortFacade;
 import com.MailServer.MailServer.service.FilterContact.ContactFactory;
 import com.MailServer.MailServer.service.FilterContact.ContactFilterDTO;
 import com.MailServer.MailServer.service.FilterContact.CriteriaContact;
@@ -90,24 +92,13 @@ public class UserService {
         return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOS.size()).getContent();
     }
 
-    public Object getUserAllMail(Long userID, int pageNo){
+    public Object getUserAllMail(Long userID, int pageNo, int maxPageSize){
         List<Folder> folders = userRepository.findById(userID).orElseThrow().getFolders();
         List<Email> emails = new ArrayList<>();
         for (Folder folder : folders) {
             emails.addAll(folder.getEmails());
         }
-        Strategy sorter = SortFactory.getSort("date");
-        List<Email> sorterEmails = sorter.doOperation(emails, false);
-        List<EmailDTO> emailDTOS=sorterEmails.stream()
-                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime()))
-                .collect(Collectors.toList());
-
-        Pageable pageable = PageRequest.of(pageNo, 20);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), emailDTOS.size());
-
-        List<EmailDTO> pagedEmailDTOs = emailDTOS.subList(start, end);
-        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOS.size()).getContent();
+        return SortFacade.sort(emails, "date", false, pageNo, maxPageSize);
     }
 
     public User getUserDetails(Long userID) {
@@ -187,36 +178,15 @@ public class UserService {
         return "Deleted";
     }
 
-    public Object filterEmails(FilterDTO request, Long folderID, String criteria, int pageNo) {
-        Criteria filter = CriteriaFactory.getCriteria(request, criteria);
+    public Object filterEmails(FilterDTO request, Long folderID, String criteria, int pageNo, int maxPageSize) {
         List<Email> emails =  folderRepository.findById(folderID).orElseThrow().getEmails();
-        List<Email> filtered = filter.meetCriteria(emails);
-        List<EmailDTO> emailDTOs = filtered.stream()
-                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime()))
-                .collect(Collectors.toList());
-
-        Pageable pageable = PageRequest.of(pageNo, 20);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), emailDTOs.size());
-
-        List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
-        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
+        return FilterFacade.filter(request, emails, criteria, pageNo, maxPageSize);
     }
 
-    public Object searchEmails(Long folderID, String criteria, int pageNo) {
+    public Object searchEmails(Long folderID, String criteria, int pageNo, int maxPageSize) {
         Criteria filter = new OrCriteria(criteria);
         List<Email> emails =  folderRepository.findById(folderID).orElseThrow().getEmails();
-        List<Email> filtered = filter.meetCriteria(emails);
-        List<EmailDTO> emailDTOs = filtered.stream()
-                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime()))
-                .collect(Collectors.toList());
-
-        Pageable pageable = PageRequest.of(pageNo, 20);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), emailDTOs.size());
-
-        List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
-        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
+        return FilterFacade.filter(new FilterDTO() ,emails, criteria, pageNo, maxPageSize);
     }
 
     public Object filterContact(ContactFilterDTO request, Long userID, String criteria, int pageNo) {
