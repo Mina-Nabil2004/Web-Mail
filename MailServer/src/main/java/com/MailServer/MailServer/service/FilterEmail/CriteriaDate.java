@@ -3,6 +3,7 @@ package com.MailServer.MailServer.service.FilterEmail;
 import com.MailServer.MailServer.service.Email.Email;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CriteriaDate implements Criteria{
     private final String date;
@@ -13,8 +14,8 @@ public class CriteriaDate implements Criteria{
         this.date = criteria;
     }
     @Override
-    public ArrayList<Email> meetCriteria(ArrayList<Email> emails) {
-        ArrayList<Email> Date = new ArrayList<Email>();
+    public List<Email> meetCriteria(List<Email> emails) {
+        List<Email> Date = new ArrayList<Email>();
 
         for(Email email:emails){
             if (email.getDatetime().contains(this.date)){
