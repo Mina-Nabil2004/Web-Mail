@@ -198,4 +198,19 @@ public class UserService {
         Folder folder =folderRepository.findById(folderID).orElseThrow();
         return SortFacade.sort(folder.getEmails(), criteria, order, pageNo, maxPageSize);
     }
+    public Object MoveEmail(List<Long>emailIDs,Long sourceFolderID,Long destinationFolderID,int pageNo,int maxPageSize) {
+        Folder sourceFolder = folderRepository.findById(sourceFolderID).orElseThrow();
+        Folder destinationFolder = folderRepository.findById(destinationFolderID).orElseThrow();
+        for (Long emailID : emailIDs) {
+            Email email = emailRepository.findById(emailID).orElseThrow();
+            sourceFolder.getEmails().remove(email);
+            email.getFolders().remove(sourceFolder);
+            email.getFolders().add(destinationFolder);
+            destinationFolder.getEmails().add(email);
+            emailRepository.save(email);
+        }
+        folderRepository.save(destinationFolder);
+        folderRepository.save(sourceFolder);
+        return getUserFolder(sourceFolderID,pageNo,maxPageSize);
+    }
 }
