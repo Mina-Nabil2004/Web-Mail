@@ -5,49 +5,78 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.4); /* Dark background */
+  background-color: rgba(0, 0, 0, 0.5); /* Darker background */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  margin-top: 50px;  /* Adjust for appearance */
+  backdrop-filter: blur(5px); /* Adds a slight blur effect */
+  animation: fadeIn 0.3s ease-in-out;
+  
+}
+
+/* Modal Appearance Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Modal Content */
 .modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 600px;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa); /* Soft gradient */
+  padding: 25px;
+  border-radius: 15px;
+  width: 500px; /* Reduced width */
   max-width: 90%;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+
+  max-height: 80vh; /* Limits the height to 80% of the viewport */
+  overflow-y: auto; /* Adds scrolling if content exceeds height */
+  
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
   position: relative;
+  transform: scale(0.95);
+  animation: scaleUp 0.3s ease-in-out forwards;
+}
+
+/* Scale-Up Animation */
+@keyframes scaleUp {
+  to {
+    transform: scale(1);
+  }
 }
 
 /* Close Button */
 .close-btn {
   font-size: 24px;
-  color: #aaa;
+  color: #777;
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 15px;
   cursor: pointer;
+  transition: color 0.2s ease;
 }
 
 .close-btn:hover {
-  color: black;
+  color: #333;
 }
 
 /* Heading */
 h2 {
   margin-top: 0;
-  font-size: 24px;
-  color: #333;
+  font-size: 22px;
+  color: #444;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 /* Input Group */
 .input-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   padding-right: 25px;
 }
 
@@ -56,32 +85,40 @@ h2 {
   color: #555;
   margin-bottom: 5px;
   display: block;
+  font-weight: 500;
 }
 
 .input-group input,
 .input-group textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   font-size: 14px;
   margin-top: 5px;
+  background-color: #fafafa;
+  transition: border-color 0.2s;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #007bff;
+  outline: none;
 }
 
 .input-group textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 120px;
 }
 
 /* Attachment Input Styling */
 .input-group #attachment {
   padding: 10px 15px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
-  margin-top: 5px;
 }
 
 .input-group #attachment:hover {
@@ -98,21 +135,35 @@ h2 {
 }
 
 .input-group li {
-  margin-bottom: 8px;
-  line-height: 1.5;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.input-group li p {
-  margin: 0;
+/* Action buttons for each attachment */
+.attachment-actions {
+  display: flex;
+  gap: 8px;
 }
 
-.input-group li p:first-child {
-  font-weight: bold;
-}
-
-.input-group li p:nth-child(2) {
+.attachment-actions button {
+  padding: 6px 12px;
   font-size: 12px;
-  color: #888;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: white;
+  background-color: #007bff;
+}
+
+.attachment-actions button:hover {
+  background-color: #0056b3;
 }
 
 /* Modal Actions */
@@ -127,40 +178,44 @@ h2 {
   padding: 10px 20px;
   font-size: 14px;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
 }
 
 .send-btn {
-  background-color: #007bff;
+  background: linear-gradient(135deg, #007bff, #0056b3);
   color: white;
 }
 
 .send-btn:hover {
-  background-color: #0056b3;
+  background: #0056b3;
+  transform: translateY(-2px);
 }
 
 .draft-btn {
-  background-color: #f44336;
+  background: linear-gradient(135deg, #f44336, #d32f2f);
   color: white;
 }
 
 .draft-btn:hover {
-  background-color: #d32f2f;
+  background: #d32f2f;
+  transform: translateY(-2px);
 }
 
 /* Radio Button Group */
 .radio-group {
-  display: flex; /* Arrange items in a row */
-  gap: 15px; /* Add spacing between items */
-  align-items: center; /* Vertically center the content */
+  display: flex;
+  gap: 15px;
+  align-items: center;
   margin-top: 5px;
 }
 
 .radio-group label {
   display: flex;
   align-items: center;
-  gap: 5px; /* Spacing between the radio button and text */
+  gap: 5px;
   font-size: 14px;
   color: #555;
   cursor: pointer;
@@ -168,5 +223,56 @@ h2 {
 
 .radio-group input[type="radio"] {
   cursor: pointer;
-  margin: 0; /* Remove default spacing */
+  margin: 0;
+}
+
+/* Attachment Slider */
+.attachment-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 10px;
+  white-space: nowrap;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: #f9f9f9;
+  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.attachment-slider {
+  display: flex;
+  gap: 15px;
+}
+
+.attachment-item {
+  display: inline-block;
+  min-width: 150px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.attachment-item:hover {
+  transform: translateY(-5px);
+}
+
+.attachment-item button {
+  display: block;
+  margin: 5px auto;
+  padding: 6px 10px;
+  font-size: 12px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.attachment-item button:hover {
+  background-color: #0056b3;
 }

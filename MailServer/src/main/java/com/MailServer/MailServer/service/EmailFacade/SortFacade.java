@@ -12,7 +12,7 @@ public class SortFacade {
         Strategy sorter = SortFactory.getSort(criteria);
         List<Email> sortedEmails = sorter.doOperation(emails, order);
         List<EmailDTO> emailDTOS=sortedEmails.stream()
-                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime()))
+                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime(), email.getPriority()))
                 .collect(Collectors.toList());
         return Pager.page(pageNo,maxPageSize,emailDTOS);
     }

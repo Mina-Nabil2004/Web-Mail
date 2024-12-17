@@ -38,24 +38,89 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
   const handleAttachmentChange = (e) => {
     const files = Array.from(e.target.files); // Convert FileList to an array
     const newAttachments = files.map((file) => ({
-        name: file.name,
-        type: file.type,
-        size: file.size,
-        data: null, // Placeholder for base64 data
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      data: null, // Placeholder for base64 data
     }));
+  
     // Read files and update base64 data
-    files.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            newAttachments[index].data = reader.result; // Update the base64 data
-            setAttachments(newAttachments); // Update local state
-            builder.setAttachments(newAttachments); // Update builder's attachments
-        };
-        reader.readAsDataURL(file);
-        console.log(newAttachments);
+    newAttachments.forEach((file, index) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        file.data = reader.result; // Set the base64 data
+        setAttachments((prevAttachments) => {
+          const updatedAttachments = [...prevAttachments, file]; // Append new file
+          builder.setAttachments(updatedAttachments); // Update builder's attachments
+          return updatedAttachments; // Update local state
+        });
+      };
+      reader.readAsDataURL(files[index]); // Read the file data
     });
-    setAttachments(newAttachments);
+  };
+  
+
+const handleRemoveAttachment = (index) => {
+  const newAttachments = attachments.filter((_, i) => i !== index);
+  setAttachments(newAttachments);
+  builder.setAttachments(newAttachments);
 };
+const handleOpenAttachment = (attachment) => {
+  try {
+    // Extract base64 data after the comma (e.g., "data:application/pdf;base64,....")
+    const base64Data = attachment.data.split(",")[1];
+    
+    // Decode base64 data into binary
+    const byteCharacters = atob(base64Data);
+    const byteArrays = [];
+    
+    for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+      const slice = byteCharacters.slice(offset, offset + 1024);
+      const byteNumbers = new Array(slice.length);
+      
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      
+      byteArrays.push(new Uint8Array(byteNumbers));
+    }
+    
+    // Create a blob with the appropriate file type
+    const blob = new Blob(byteArrays, { type: attachment.type });
+    const url = URL.createObjectURL(blob);
+
+    // Open the file in a new tab/window
+    window.open(url, "_blank");
+  } catch (error) {
+    console.error("Error opening attachment:", error);
+    alert("Failed to open the attachment.");
+  }
+};
+
+
+const handleDownloadAttachment = (attachment) => {
+  // Decode the base64 data into binary
+  const byteCharacters = atob(attachment.data.split(',')[1]); // Remove the "data:image/png;base64," part
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+    const slice = byteCharacters.slice(offset, offset + 1024);
+    const byteNumbers = new Array(slice.length);
+
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    byteArrays.push(new Uint8Array(byteNumbers));
+  }
+
+  const blob = new Blob(byteArrays, { type: attachment.type });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = attachment.name;
+  link.click();
+};
+
   return (
     <div className="compose-modal">
       <div className="modal-content">
@@ -157,14 +222,20 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
             {attachments.length > 0 && (
               <div>
                 <p>Attachments:</p>
-                <ul>
-                  {attachments.map((attachment, index) => (
-                    <li key={index}>
-                      <p>{attachment.name}</p>
-                      <p>Size: {attachment.size} bytes</p>
-                    </li>
-                  ))}
-                </ul>
+                <div className="attachment-container">
+  <div className="attachment-slider">
+    {attachments.map((attachment, index) => (
+      <div key={index} className="attachment-item">
+        <p>{attachment.name}</p>
+        <p>Size: {attachment.size} bytes</p>
+        <button type="button" onClick={() => handleOpenAttachment(attachment)}>Open</button>
+        <button type="button" onClick={() => handleDownloadAttachment(attachment)}>Download</button>
+        <button type="button" onClick={() => handleRemoveAttachment(index)}>Remove</button>
+      </div>
+    ))}
+  </div>
+</div>
+
               </div>
             )}
           </div>

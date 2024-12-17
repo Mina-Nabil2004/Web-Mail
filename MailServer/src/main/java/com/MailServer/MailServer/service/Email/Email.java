@@ -48,19 +48,20 @@ public class Email implements Cloneable{
     private String subject;
     private String body;
     private String datetime;
-//    private boolean read;
+    private int priority;
 
     public Email() {
     }
 
-    public Email(EmailDTO dto, List<Folder> folders){
+    public Email(EmailDTO dto, List<Attachment> attachments, List<Folder> folders){
         this.sender= dto.getSender();
         this.subject=dto.getSubject();
         this.body=dto.getBody();
         this.datetime= LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy"));
         this.receivers = dto.getReceivers();
         this.folders = folders;
-//        this.read = false;
+        this.priority = dto.getPriority();
+        this.attachments= attachments;
     }
 
 //    public Email(String subject,List<String> receivers,String body,String sender){
@@ -150,5 +151,13 @@ public class Email implements Cloneable{
 
     public void setReceivers(List<String> receivers) {
         this.receivers = receivers;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }
