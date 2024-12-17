@@ -59,6 +59,21 @@
   background-color: #218838;
 }
 
+.move-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.move-button:hover {
+  background-color: #218838;
+}
+
 .left-sidebar {
   flex: 0 0 250px; /* Fixed width for the left sidebar (Menu) */
 }
@@ -95,4 +110,76 @@
 .pages-button{
   height: 40px;
   border-radius: 20px;
+}
+
+/* Styles for Move Email Modal */
+.move-folder-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.move-folder-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.move-folder-content h3 {
+  margin-bottom: 20px;
+  font-size: 1.2em;
+}
+
+.move-folder-content label {
+  display: block;
+  margin: 10px 0;
+}
+
+.move-folder-content button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.move-folder-content button:hover {
+  background-color: #0056b3;
+}
+
+.move-folder-content button:disabled {
+  background-color: #d3d3d3;
+  cursor: not-allowed;
+}
+
+
+
+body.dark-mode {
+  background-color: #121212;
+  color: #f9f9f9;
+}
+
+.app.dark .left-sidebar {
+  background-color: #333;
+  color: #f9f9f9;
+}
+
+.app.dark .content {
+  background-color: #222;
+  color: #f9f9f9;
+}
+
+.theme-toggle:hover {
+  background-color: #0056b3;
 }

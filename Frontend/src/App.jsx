@@ -6,10 +6,9 @@ import Sidebar2 from "./Sidebar2";
 import Form from "./Form";
 import CreateAccount from "./CreateAccount";
 import ComposeModal from "./ComposeModal";
-import { Inbox, Sent, Drafts, Trash, Starred } from "./folders";
-import { FolderFactory } from "./folders";
 import "./App.css";
 import axios from "axios";
+import EmailModal from './EmailModal';
 
 // Initializing folders as an empty object, we'll fill them after login
 // const initialEmails = { inbox: [], sent: [], drafts: [], trash: [], starred: [] };
@@ -22,9 +21,54 @@ function App() {
   // const [emails, setEmails] = useState(initialEmails);
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
   const [isContacting, setIsContacting] = useState(false); // State for showing contact form
+  const [maxPageSize, setMaxPageSize] = useState(10);
   const [page, setPage] = useState(0); // State for managing page number
   const [searchQuery, setSearchQuery] = useState("");
   const[folders, setFolders] = useState([]);
+
+  const [selectedEmails, setSelectedEmails] = useState([]); // Track selected emails
+  const [selectedEmail, setSelectedEmail] = useState(null); // State for the selected email
+  const [isModalOpen, setIsModalOpen] = useState(false);   // State for modal visibility
+
+  const [isMoveModalOpen, setIsMoveModalOpen] = useState(false); // State for move folder modal visibility
+  const [selectedFolder, setSelectedFolder] = useState(null); // State for the selected folder
+  const handleMoveEmail = () => {
+    if (selectedFolder) {
+      // Logic for moving the email to the selected folder
+      console.log(`Email moved to: ${selectedFolder}`);
+      setIsMoveModalOpen(false); // Close the modal after moving
+    }
+  };
+
+  const handleReadEmail = async (emailID) => {
+
+    // const response = await axios.get(`http://localhost:8080/email/folder/${emailID}`);
+    const response = {
+      data: {
+              emailID: 2,
+              sender: "minanabil2004@gmail.com",
+              receivers: [
+                  "abdo@gmail.com"
+              ],
+              subject: "mina nabil",
+              attachments: [{
+                attachmentID: 5,
+                attachmentType: "mp3",
+                attachmentName: "hello",
+                attachmentSize: 35
+              }],
+              body: "Hi mina nabil youssef,\n\nJust a reminder about our ",
+              datetime: "02:01-17/12/2024"
+      }
+    } 
+    setSelectedEmail(response.data);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedEmail(null);
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     if (userId) {
@@ -43,7 +87,7 @@ function App() {
       const response = await axios.get(`http://localhost:8080/email/folders/${userId}`);
       console.log(response);
       setFolders(response.data);
-      setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${response.data[0].folderID}/${page}`)).data);
+      setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${response.data[0].folderID}/${maxPageSize}/${page}`)).data);
     } catch (error) {
       console.error("Error fetching folders:", error);
     }
@@ -56,7 +100,7 @@ function App() {
     try {
       console.log(activeFolder.folderID);
       const response = await axios.get(
-        `http://localhost:8080/searchEmails/${activeFolder.folderID}/${searchQuery}/${page}`
+        `http://localhost:8080/searchEmails/${activeFolder.folderID}/${searchQuery}/${maxPageSize}/${page}`
       );
       console.log("Search results:", response.data);
     } catch (error) {
@@ -66,9 +110,9 @@ function App() {
 
   const handleAllMail = async (page = 0) => {
     try{
-      console.log("mian");
-      const response = await axios.get(`http://localhost:8080/email/allMail/${userId}/${page}`)
-      console.log(response.data)
+      console.log("main");
+      const response = await axios.get(`http://localhost:8080/email/allMail/${userId}/${maxPageSize}/${page}`);
+      console.log(response.data);
     }catch (error) {
       console.error("Error fetching all mail:", error);
     }
@@ -109,6 +153,41 @@ function App() {
     setPage(0); // Reset page to 0 when switching folders
   };
 
+
+  const handleMoveButtonClick = () => {
+    setIsMoveModalOpen(true); // Show the folder selection modal
+  };
+
+
+
+
+  const handleEmailSelect = (emailID) => {
+    setSelectedEmails((prevSelectedEmails) => {
+      if (prevSelectedEmails.includes(emailID)) {
+        return prevSelectedEmails.filter((id) => id !== emailID); // Deselect email
+      } else {
+        return [...prevSelectedEmails, emailID]; // Select email
+      }
+    });
+  };
+  const handleBulkMove = () => {
+    if (selectedEmails.length > 0 && selectedFolder) {
+      // Logic to move the selected emails to the selected folder
+      console.log("Moving emails to:", selectedFolder);
+      // Meow API call to delete the selected emails
+    }
+  };
+  
+  const handleBulkDelete = () => {
+    if (selectedEmails.length > 0) {
+      // Logic to delete the selected emails
+      console.log("Deleting emails:", selectedEmails);
+      // Meow API call to delete the selected emails
+    }
+  };
+  
+  
+
   return (
     <div className="app">
       {!loggedIn ? (
@@ -139,13 +218,16 @@ function App() {
                 handleLoginSuccess={handleLoginSuccess}
                 handleAllMail={handleAllMail}
                 folders ={folders}
+                maxPageSize={maxPageSize}
                 page={page}
               />
               <button className="contact-btn" onClick={toggleContactForm}>
                 Contact
               </button>
             </div>
+
             <div className="content">
+
               <div style={{ display: "flex" }}>
                 <h2 style={{width: "90px"}}>{activeMenu}</h2>
                 <div style={{ display: "flex", marginLeft: "100px" }}>
@@ -157,10 +239,23 @@ function App() {
                   </button>
                 </div>
               </div>
+
+              {selectedEmails.length > 0 && (
+                <div className="bulk-actions">
+                  <button onClick={handleBulkMove}>Move Selected</button>
+                  <button onClick={handleBulkDelete}>Delete Selected</button>
+                </div>
+              )}
+
               <div className="email-list">
                 {activeFolder && activeFolder.length > 0 ? (
                   activeFolder.map((email) => (
                     <div key={email.emailID} className="email-item">
+                      <input
+                              type="checkbox"
+                              checked={selectedEmails.includes(email.emailID)}
+                              onChange={() => handleEmailSelect(email.emailID)} // Toggle email selection
+                      />
                       <h3>{email.subject}</h3>
                       <p>
                         <strong>From:</strong> {email.sender}
@@ -169,7 +264,10 @@ function App() {
                         <strong>Received:</strong> {email.received}
                       </p>
                       <p>{email.body}</p>
-                      <button className="read-button">Read</button>
+                      <button className="read-button" onClick={() => handleReadEmail(email.emailID)}>Read</button>
+                      <button className="move-button" onClick={handleMoveButtonClick}>Move</button>
+                      <button className="read-button" >Delete</button>
+                      <button className="read-button" >Started</button>
                     </div>
                   ))
                 ) : (
@@ -183,6 +281,29 @@ function App() {
             {/* <div className="right-sidebar"> <Sidebar2 /> </div> */}
           </div>
         </>
+      )}
+      {/* Move Email Modal */}
+      {isMoveModalOpen && (
+        <div className="move-folder-modal">
+          <div className="move-folder-content">
+            <h3>Select a Folder</h3>
+            <div>
+              {["inbox", "sent", "drafts", "trash", "starred"].map((folderName) => (
+                <label key={folderName}>
+                  <input
+                    type="radio"
+                    name="folder"
+                    value={folderName}
+                    onChange={() => setSelectedFolder(folderName)}
+                  />
+                  {folderName.charAt(0).toUpperCase() + folderName.slice(1)}
+                </label>
+              ))}
+            </div>
+            <button onClick={handleMoveEmail}>Move</button>
+            <button onClick={() => setIsMoveModalOpen(false)}>Cancel</button>
+          </div>
+        </div>
       )}
 
       {/* Contact Form Modal */}
@@ -210,6 +331,9 @@ function App() {
             </form>
           </div>
         </div>
+      )}
+      {isModalOpen && selectedEmail && (
+        <EmailModal email={selectedEmail} onClose={handleCloseModal} />
       )}
     </div>
   );
