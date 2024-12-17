@@ -1,40 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./ComposeModal.css";
 import axios from "axios";
-import { Builder } from "./EmailBuilder.jsx";
+import {Builder} from "./EmailBuilder.jsx"
 
 const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
   if (!isOpen) return null; 
-  const [builder, setBuilder] = useState(new Builder());
+  const [receivers, setReceivers] = useState("");
+  const builder = new Builder();
   const userId = localStorage.getItem("userId");
 
   const handleSend = async (e) => {
     console.log(userId);
     e.preventDefault();
-    try {
-      const response = await axios.post(
-        `http://localhost:8080/email/send/${userId}`,
-        builder.build()
-      );
-      console.log(response.data);
-    } catch (err) {
-      console.error("Error sending email:", err);
-    }
+      try{
+        const response = await axios.post(`http://localhost:8080/email/send/${userId}`,builder.build())
+        console.log(response.data);
+      }catch(err){
+       }
+  };
+  const handleDraft = () => {
+    // const draft = new Builder()
+    //   .setSubject(subject)
+    //   .setBody(body)
+    //   .setSender(to)
+    //   .build();
+    // onDraft(draft);
+    onClose();
   };
 
-  const handleDraft = () => {
-    const draft = builder.build(); 
-    onDraft(draft); 
-    onClose(); 
-  };
-  const handleChange = (field, value) => {
-    setBuilder((prevBuilder) => {
-      const newBuilder = new Builder();
-      Object.assign(newBuilder, prevBuilder); // Clone the current builder
-      newBuilder[field](value); // Dynamically call the correct setter method
-      return newBuilder;
-    });
-  };
+  useEffect(() => {
+    setReceivers(builder.getReceivers());
+  }, [builder.receivers]);
   return (
     <div className="compose-modal">
       <div className="modal-content">
@@ -47,11 +43,11 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
             <label htmlFor="received">To</label>
             <input
               className="compose-input"
-              type="text"
+              type="email"
               id="received"
-              placeholder="Receivers (comma-separated)"
-              value={builder.receivers.join(", ")} 
-              onChange={(e) => handleChange("setReceivers", e.target.value)} 
+              placeholder="receivers"
+              value={receivers}
+              onChange={(e) => builder.setReceivers(e.target.value)}
             />
           </div>
           <div className="input-group">

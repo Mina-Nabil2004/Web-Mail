@@ -48,7 +48,7 @@ public class Email implements Cloneable{
     private String subject;
     private String body;
     private String datetime;
-    private boolean read;
+//    private boolean read;
 
     public Email() {
     }
@@ -60,7 +60,7 @@ public class Email implements Cloneable{
         this.datetime= LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy"));
         this.receivers = dto.getReceivers();
         this.folders = folders;
-        this.read = false;
+//        this.read = false;
     }
 
 //    public Email(String subject,List<String> receivers,String body,String sender){
@@ -87,14 +87,6 @@ public class Email implements Cloneable{
 //        return new Email(this);
 //    }
 
-
-    public boolean isRead() {
-        return read;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
-    }
 
     public Long getEmailID() {
         return emailID;

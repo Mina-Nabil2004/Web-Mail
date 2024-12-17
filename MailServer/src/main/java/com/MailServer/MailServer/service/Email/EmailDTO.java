@@ -35,14 +35,14 @@ public class EmailDTO {
     }
 
 
-    public EmailDTO(Long emailID,String sender, List<String> receivers, String subject, String body, String datetime, boolean read){
+    public EmailDTO(Long emailID,String sender, List<String> receivers, String subject, String body, String datetime){
         this.emailID = emailID;
         this.sender=sender;
         this.receivers = receivers;
         this.subject = subject;
         this.body=getBodySnippet(body);
         this.datetime=datetime;
-        this.read = read;
+//        this.read = read;
     }
     public EmailDTO(List<String> receivers,String sender,String subject, String body, String datetime){
         this.receivers=receivers;

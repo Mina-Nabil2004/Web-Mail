@@ -13,10 +13,16 @@ export class Builder {
     }
     setReceivers(receivers) {
         console.log(receivers);
-        this.receivers = typeof receivers === "string" 
-            ? receivers.split(",").map(receiver => receiver.trim()) 
-            : receivers;
+        if (receivers.includes(",")) {
+            this.receivers = receivers.split(",").map(receiver => receiver.trim());
+        } else {
+            this.receivers = [receivers.trim()];
+        }
         return this;
+    }
+    getReceivers(){
+        console.log(this.receivers.join(", "));
+        return this.receivers.join(", ");
     }
     setBody(body) {
         console.log(body);
@@ -41,9 +47,6 @@ export class Builder {
         else{
             return false;
         }
-    }
-    getReceiversAsString(delimiter = ", ") {
-        return this.receivers.join(delimiter);
     }
     build() {
         return {

@@ -68,12 +68,11 @@ public class UserService {
     }
 
     public Object getUserFolder(Long folderID, int pageNo){
-
         Folder folder =folderRepository.findById(folderID).orElseThrow();
         Strategy sorter = SortFactory.getSort("date");
         List<Email> sorterEmails = sorter.doOperation(folder.getEmails(), false);
         List<EmailDTO> emailDTOS=sorterEmails.stream()
-                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime(), email.isRead()))
+                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime()))
                 .collect(Collectors.toList());
 
         Pageable pageable = PageRequest.of(pageNo, 20);
@@ -84,12 +83,26 @@ public class UserService {
         return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOS.size()).getContent();
     }
 
-//    public Object getUserAllMail(Long userID, int pageNo){
-//        Pageable pageable = PageRequest.of(pageNo, 20);
-//        Page<Email> page = emailRepository.findByUserUserID(userID, pageable);
-//        return page.map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime())).getContent();
-//    }
-//    ==========================================================================================
+    public Object getUserAllMail(Long userID, int pageNo){
+        List<Folder> folders = userRepository.findById(userID).orElseThrow().getFolders();
+        List<Email> emails = new ArrayList<>();
+        for (Folder folder : folders) {
+            emails.addAll(folder.getEmails());
+        }
+        Strategy sorter = SortFactory.getSort("date");
+        List<Email> sorterEmails = sorter.doOperation(emails, false);
+        List<EmailDTO> emailDTOS=sorterEmails.stream()
+                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime()))
+                .collect(Collectors.toList());
+
+        Pageable pageable = PageRequest.of(pageNo, 20);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), emailDTOS.size());
+
+        List<EmailDTO> pagedEmailDTOs = emailDTOS.subList(start, end);
+        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOS.size()).getContent();
+    }
+
     public User getUserDetails(Long userID) {
         return userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
     }
@@ -125,7 +138,7 @@ public class UserService {
         }
         Email email = new Email(dto, folders);
         emailRepository.save(email);
-        return email;
+        return new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime());
     }
 
 //    public Object getUserEmail(Long emailID) {
