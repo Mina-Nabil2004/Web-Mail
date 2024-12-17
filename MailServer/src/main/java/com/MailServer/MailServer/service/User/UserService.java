@@ -3,6 +3,9 @@ package com.MailServer.MailServer.service.User;
 import com.MailServer.MailServer.repository.*;
 import com.MailServer.MailServer.service.Contact.*;
 import com.MailServer.MailServer.service.Email.*;
+import com.MailServer.MailServer.service.FilterContact.ContactFactory;
+import com.MailServer.MailServer.service.FilterContact.ContactFilterDTO;
+import com.MailServer.MailServer.service.FilterContact.CriteriaContact;
 import com.MailServer.MailServer.service.FilterEmail.Criteria;
 import com.MailServer.MailServer.service.FilterEmail.CriteriaFactory;
 import com.MailServer.MailServer.service.FilterEmail.FilterDTO;
@@ -215,20 +218,20 @@ public class UserService {
         List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
         return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
     }
-//
-//    public Object filterContact(ContactFilterDTO request, Long userID, String criteria, int pageNo) {
-//        CriteriaContact filter = ContactFactory.getCriteria(request,criteria);
-//        ArrayList<Contact> contacts = contactRepository.findByUserUserID(userID);
-//        ArrayList<Contact> filtered = filter.meetCriteria(contacts);
-//        List<ContactDTO> contactDTOs = filtered.stream()
-//                .map(contact -> new ContactDTO(contact.getName(),contact.getContactID()))
-//                .collect(Collectors.toList());
-//        Pageable pageable = PageRequest.of(pageNo, 20);
-//        int start = (int) pageable.getOffset();
-//        int end = Math.min((start + pageable.getPageSize()), ContactDTO.size());
-//        List<ContactDTO> pagedEmailDTOs = contactDTOs.subList(start, end);
-//        return new PageImpl<>(pagedEmailDTOs, pageable, ContactDTO.size()).getContent();
-//    }
+
+    public Object filterContact(ContactFilterDTO request, Long userID, String criteria, int pageNo) {
+        CriteriaContact filter = ContactFactory.getCriteria(request,criteria);
+        List<Contact> contacts = userRepository.findById(userID).orElseThrow().getContacts();
+        List<Contact> filtered = filter.meetCriteria(contacts);
+        List<ContactDTO> contactDTOs = filtered.stream()
+                .map(contact -> new ContactDTO(contact.getName(), contact.getAddresses(), contact.getContactID()))
+                .collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(pageNo, 20);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), contactDTOs.size());
+        List<ContactDTO> pagedEmailDTOs = contactDTOs.subList(start, end);
+        return new PageImpl<>(pagedEmailDTOs, pageable, contactDTOs.size()).getContent();
+    }
 //    public  Object sortEmail(String request, Long folderID, boolean order, int pageNo) {
 //        Strategy sort = SortFactory.getSort(request);
 //        if (sort == null) {
