@@ -1,6 +1,5 @@
 package com.MailServer.MailServer.service.Email;
 
-import com.MailServer.MailServer.service.User.User;
 import jakarta.persistence.*;
 import lombok.Data;
 

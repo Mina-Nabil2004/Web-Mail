@@ -9,6 +9,7 @@ import ComposeModal from "./ComposeModal";
 import "./App.css";
 import axios from "axios";
 import EmailModal from './EmailModal';
+import { FaStar , FaTrashAlt} from "react-icons/fa";
 
 // Initializing folders as an empty object, we'll fill them after login
 // const initialEmails = { inbox: [], sent: [], drafts: [], trash: [], starred: [] };
@@ -41,29 +42,34 @@ function App() {
   };
 
   const handleReadEmail = async (emailID) => {
-
     // const response = await axios.get(`http://localhost:8080/email/folder/${emailID}`);
+
+    //swap that example with backend fetch reqqqq
+    
     const response = {
       data: {
-              emailID: 2,
-              sender: "minanabil2004@gmail.com",
-              receivers: [
-                  "abdo@gmail.com"
-              ],
-              subject: "mina nabil",
-              attachments: [{
-                attachmentID: 5,
-                attachmentType: "mp3",
-                attachmentName: "hello",
-                attachmentSize: 35
-              }],
-              body: "Hi mina nabil youssef,\n\nJust a reminder about our ",
-              datetime: "02:01-17/12/2024"
+        emailID: 2,
+        sender: "minanabil2004@gmail.com",
+        receivers: ["abdo@gmail.com"],
+        subject: "mina nabil",
+        attachments: [
+          {
+            attachmentID: 1632532718000,
+            attachmentType: "image/jpeg",
+            attachmentName: "OIP.jpeg",
+            attachmentSize: 204800, // Size in bytes
+            data: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAAAAD/..."
+          }
+        ],
+        
+        body: "Hi mina nabil youssef,\n\nJust a reminder about our meeting.",
+        datetime: "02:01-17/12/2024"
       }
-    } 
+    };
     setSelectedEmail(response.data);
     setIsModalOpen(true);
   };
+  
 
   const handleCloseModal = () => {
     setSelectedEmail(null);
@@ -185,6 +191,9 @@ function App() {
       // Meow API call to delete the selected emails
     }
   };
+
+
+  
   
   
 
@@ -266,8 +275,8 @@ function App() {
                       <p>{email.body}</p>
                       <button className="read-button" onClick={() => handleReadEmail(email.emailID)}>Read</button>
                       <button className="move-button" onClick={handleMoveButtonClick}>Move</button>
-                      <button className="read-button" >Delete</button>
-                      <button className="read-button" >Started</button>
+                      <button className="Delete-button" >< FaTrashAlt /> </button>
+                      <button className="Started-button"><FaStar /> </button>
                     </div>
                   ))
                 ) : (
