@@ -23,6 +23,7 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
     try {
       console.log(builder.build());
       const response = await axios.post(`http://localhost:8080/email/send/${userId}`,builder.build());
+      
       builder.reset();
       console.log("Email sent:", response.data);
     } catch (err) {

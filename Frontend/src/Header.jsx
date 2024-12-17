@@ -92,12 +92,12 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch}) => {
         />
       )}
       <div className="header-right">
-        <button className="icon-button">
+        {/* <button className="icon-button">
           <i className="material-icons">apps</i>
         </button>
         <button className="icon-button">
           <i className="material-icons">notifications</i>
-        </button>
+        </button> */}
 
         <div className="user-profile" onClick={toggleProfileMenu}>
           {/* <img

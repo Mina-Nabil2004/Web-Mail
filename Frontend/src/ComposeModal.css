@@ -30,8 +30,7 @@
   background: linear-gradient(135deg, #ffffff, #f8f9fa); /* Soft gradient */
   padding: 25px;
   border-radius: 15px;
-  width: 500px; /* Reduced width */
-  max-width: 90%;
+  width: 1500px; /* Reduced width */
 
   max-height: 80vh; /* Limits the height to 80% of the viewport */
   overflow-y: auto; /* Adds scrolling if content exceeds height */

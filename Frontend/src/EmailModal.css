@@ -1,108 +1,129 @@
-/* Modal container styles */
+/* Modal overlay with enhanced background effect */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Keeps it above other content */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6); /* Darker semi-transparent background */
+  backdrop-filter: blur(5px); /* Adds a blur effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: overlayFadeIn 0.5s ease;
+}
+
+/* Modal container with gradient and box shadow */
+.modal-content {
+  background: linear-gradient(135deg, #ffffff, #f9f9f9); /* Soft gradient */
+  padding: 25px;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25); /* Deeper shadow */
+  animation: slideUp 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Modal header with a decorative bottom border */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: #222; /* Slightly darker text */
+  letter-spacing: 0.5px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #aaa;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.modal-close:hover {
+  color: #e63946;
+  transform: rotate(90deg); /* Rotate effect on hover */
+}
+
+/* Modal body with cleaner spacing */
+.modal-body {
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  padding: 10px 0;
+}
+
+/* Modal footer with enhanced button styling */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-footer button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.modal-footer .close-btn {
+  background: #f0f0f0;
+  color: #333;
+  box-shadow: inset 0 0 0 1px #ccc;
+}
+
+.modal-footer .close-btn:hover {
+  background: #ddd;
+  color: #000;
+}
+
+.modal-footer .action-btn {
+  background: linear-gradient(to right, #007bff, #0056b3);
+  color: #fff;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  transform: scale(1);
+}
+
+.modal-footer .action-btn:hover {
+  background: linear-gradient(to right, #0056b3, #004085);
+  transform: scale(1.05); /* Slight zoom on hover */
+}
+
+/* Overlay fade-in animation */
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
   }
-  
-  .modal-content {
-    background-color: #fff; /* White background for the modal */
-    padding: 20px;
-    width: 90%; /* Responsive width */
-    max-width: 500px; /* Maximum width */
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow */
-    animation: fadeIn 0.3s ease; /* Smooth fade-in animation */
-    position: relative;
+  to {
+    opacity: 1;
   }
-  
-  /* Modal header styles */
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #ddd; /* Separator line */
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+}
+
+/* Slide-up animation for the modal */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  .modal-header h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: #333; /* Darker text */
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .modal-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #888; /* Subtle close button */
-    transition: color 0.3s ease;
-  }
-  
-  .modal-close:hover {
-    color: #333; /* Darker on hover */
-  }
-  
-  /* Modal body styles */
-  .modal-body {
-    font-size: 1rem;
-    color: #555; /* Standard text color */
-    line-height: 1.5;
-    margin-bottom: 20px;
-  }
-  
-  /* Modal footer styles */
-  .modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  
-  .modal-footer button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .modal-footer .close-btn {
-    background-color: #f5f5f5;
-    color: #333;
-  }
-  
-  .modal-footer .close-btn:hover {
-    background-color: #ddd;
-  }
-  
-  .modal-footer .action-btn {
-    background-color: #007bff;
-    color: #fff;
-  }
-  
-  .modal-footer .action-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Fade-in animation for the modal */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  
+}
