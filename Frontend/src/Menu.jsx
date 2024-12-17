@@ -42,11 +42,8 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft ,handleAllMail,
     for(let i=0 ;i<folders.length ;i++) {
       if(folders[i].name === menu) {
        try {
-        console.log(folders.folderID);
         const response = await axios.get(`http://localhost:8080/email/folder/${folders[i].folderID}/${page}`)
         setActiveFolder(response.data);
-        console.log("hi");
-        console.log(response.data);
        } catch (error) {
         console.error("Error fetching folder:", error);
        }

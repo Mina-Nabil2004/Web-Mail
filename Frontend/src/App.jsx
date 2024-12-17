@@ -33,54 +33,22 @@ function App() {
   }, [userId]);
 
   useEffect(() => {
-    if (activeFolder) {
-      // fetchEmailsForActiveFolder(page);
-      console.log(activeFolder);
-    }
-  }, [activeFolder, page]);
-
-  useEffect(() => {
     if (searchQuery) {
       handleSearch();
     }
   }, [activeFolder, searchQuery]);
 
   const handleLoginSuccess = async () => {
-    console.log(userId);
     try {
       const response = await axios.get(`http://localhost:8080/email/folders/${userId}`);
       console.log(response);
       setFolders(response.data);
-      setActiveFolder(response.data[0]);
-      // response.data.forEach(async (folderData) => {
-      //   const folder = FolderFactory.createFolder(folderData.name.toLowerCase(), folderData.folderID);
-      //   console.log(`Created folder: ${folderData.name} with ID: ${folderData.folderID}`);
-      //   if (folderData.name.toLowerCase() === activeMenu.toLowerCase()) {
-      //     setActiveFolder(folder);
-      //   }
-      // });
+      setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${response.data[0].folderID}/${page}`)).data);
     } catch (error) {
       console.error("Error fetching folders:", error);
     }
     setLoggedIn(true);
   };
-
-  // const fetchEmailsForActiveFolder = async (page) => {
-  //   try {
-  //     console.log(activeFolder.folderID);
-  //     const folderEmails = await axios.get(
-  //       `http://localhost:8080/email/folder/${activeFolder.folderID}/${page}`
-  //     );
-  //     activeFolder.addEmails(folderEmails.data);
-  //     // setEmails((prevEmails) => ({
-  //     //   ...prevEmails,
-  //     //   [activeMenu.toLowerCase()]: folderEmails.data,
-  //     // }));
-  //     console.log(`Fetched emails for ${activeMenu}, page ${page}:`, folderEmails.data);
-  //   } catch (emailError) {
-  //     console.error(`Error fetching emails for ${activeMenu}, page ${page}:`, emailError);
-  //   }
-  // };
 
   const handleSearch = async (page = 0) => {
     console.log("Active folder:", activeFolder);
