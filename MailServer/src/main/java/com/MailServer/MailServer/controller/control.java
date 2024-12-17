@@ -52,10 +52,10 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
     }
-    @GetMapping("/folder/{folderID}/{page}")
-    public ResponseEntity<Object> getFolder(@PathVariable Long folderID, @PathVariable int page) {
+    @GetMapping("/folder/{folderID}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> getFolder(@PathVariable Long folderID, @PathVariable int page, @PathVariable int maxPageSize) {
         try {
-            return ResponseEntity.ok(userService.getUserFolder(folderID, page));
+            return ResponseEntity.ok(userService.getUserFolder(folderID, page, maxPageSize));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
@@ -167,14 +167,14 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
         }
     }
-//    @GetMapping("/sort/{request}/{folderID}/{order}/{page}")
-//    public ResponseEntity<Object> sortEmails(@PathVariable String request,@PathVariable Long folderID,@PathVariable boolean order, @PathVariable int page) {
-//        try {
-//            return ResponseEntity.ok(userService.sortEmail(request,folderID,order,page));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
-//        }
-//    }
+    @GetMapping("/sort/{criteria}/{folderID}/{order}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> sortEmails(@PathVariable String criteria,@PathVariable Long folderID,@PathVariable boolean order, @PathVariable int page, @PathVariable int maxPageSize) {
+        try {
+            return ResponseEntity.ok(userService.sortEmail(criteria,folderID,order,page, maxPageSize));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
+        }
+    }
 //    @GetMapping("/copy/{folderID}")
 //    public ResponseEntity<Object> copy(@PathVariable Long folderID) {
 //        try {

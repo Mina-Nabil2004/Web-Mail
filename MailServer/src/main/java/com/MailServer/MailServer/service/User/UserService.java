@@ -76,20 +76,9 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public Object getUserFolder(Long folderID, int pageNo){
+    public Object getUserFolder(Long folderID, int pageNo, int maxPageSize){
         Folder folder =folderRepository.findById(folderID).orElseThrow();
-        Strategy sorter = SortFactory.getSort("date");
-        List<Email> sorterEmails = sorter.doOperation(folder.getEmails(), false);
-        List<EmailDTO> emailDTOS=sorterEmails.stream()
-                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime()))
-                .collect(Collectors.toList());
-
-        Pageable pageable = PageRequest.of(pageNo, 20);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), emailDTOS.size());
-
-        List<EmailDTO> pagedEmailDTOs = emailDTOS.subList(start, end);
-        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOS.size()).getContent();
+        return SortFacade.sort(folder.getEmails(), "date", false, pageNo, maxPageSize);
     }
 
     public Object getUserAllMail(Long userID, int pageNo, int maxPageSize){
@@ -202,23 +191,11 @@ public class UserService {
         List<ContactDTO> pagedEmailDTOs = contactDTOs.subList(start, end);
         return new PageImpl<>(pagedEmailDTOs, pageable, contactDTOs.size()).getContent();
     }
-//    public  Object sortEmail(String request, Long folderID, boolean order, int pageNo) {
-//        Strategy sort = SortFactory.getSort(request);
-//        if (sort == null) {
-//            throw new IllegalArgumentException("Invalid sort type: " + request);
-//        }
-//        ArrayList<Email> emails =emailRepository.findByFolderFolderID(folderID);
-//        ArrayList<Email> Sorted = sort.doOperation(emails,order);
-//        List<EmailDTO> emailDTOs = Sorted.stream()
-//                .map(email -> new EmailDTO(email.getEmailID(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime()))
-//                .collect(Collectors.toList());
-//        Pageable pageable = PageRequest.of(pageNo, 20);
-//        int start = (int) pageable.getOffset();
-//        int end = Math.min((start + pageable.getPageSize()), emailDTOs.size());
-//        List<EmailDTO> pagedEmailDTOs = emailDTOs.subList(start, end);
-//        return new PageImpl<>(pagedEmailDTOs, pageable, emailDTOs.size()).getContent();
-//    }
-//
+    public  Object sortEmail(String criteria, Long folderID, boolean order, int pageNo, int maxPageSize) {
+        Folder folder =folderRepository.findById(folderID).orElseThrow();
+        return SortFacade.sort(folder.getEmails(), criteria, order, pageNo, maxPageSize);
+    }
+
 //    public Object copyEmail(Long folderID) {
 //        ArrayList<Email> emails = emailRepository.findByFolderFolderID(folderID);
 //        List<Email> clonedEmails = new ArrayList<>();
