@@ -5,19 +5,43 @@ import {Builder} from "./EmailBuilder.jsx"
 
 const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
   if (!isOpen) return null; 
-  const [receivers, setReceivers] = useState("");
+  const [receivers, setReceivers] = useState([]);
+  const [priority, setPriority] = useState(null);
   const builder = new Builder();
   const userId = localStorage.getItem("userId");
+  // const [rank, setRank] = useState(null);
+  const [attachments, setAttachments] = useState([]); // Changed to array for multiple attachments
 
-  const handleSend = async (e) => {
-    console.log(userId);
-    e.preventDefault();
-      try{
-        const response = await axios.post(`http://localhost:8080/email/send/${userId}`,builder.build())
-        console.log(response.data);
-      }catch(err){
-       }
+  const handleReceiversChange = (e) => {
+    const input = e.target.value;
+    const emailArray = input.split(",").map((email) => email.trim());
+    setReceivers(emailArray); 
+    builder.setReceivers(emailArray); 
   };
+  const handleSend = async (e) => {
+    e.preventDefault();
+    builder.setSubject(subject).setBody(body).setReceivers(receivers).setAttachments(attachments).setPriority(priority);
+    try {
+      const response = await axios.post(`http://localhost:8080/email/send/${userId}`,builder.build() // Send the built object
+      );
+      console.log("Email sent:", response.data);
+    } catch (err) {
+      console.error("Error sending email:", err);
+    }
+  };
+
+  // const handleSend = async (e) => {
+  //   console.log(userId);
+  //   e.preventDefault();
+  //     try{
+  //       const response = await axios.post(`http://localhost:8080/email/send/${userId}`,
+  //       receivers : []
+  //       builder.build()
+  //     )
+  //       console.log(response.data);
+  //     }catch(err){
+  //      }
+  // };
   const handleDraft = () => {
     // const draft = new Builder()
     //   .setSubject(subject)
@@ -27,10 +51,24 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
     // onDraft(draft);
     onClose();
   };
+  const handleAttachmentChange = (e) => {
+    const files = Array.from(e.target.files); // Convert FileList to an array
+    const newAttachments = [...attachments]; // Copy the existing attachments array
 
-  useEffect(() => {
-    setReceivers(builder.getReceivers());
-  }, [builder.receivers]);
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        newAttachments.push({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          data: reader.result, //  base64 string
+        });
+        setAttachments(newAttachments);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
   return (
     <div className="compose-modal">
       <div className="modal-content">
@@ -46,8 +84,8 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
               type="email"
               id="received"
               placeholder="receivers"
-              value={receivers}
-              onChange={(e) => builder.setReceivers(e.target.value)}
+              value={receivers.join(", ")}
+              onChange={handleReceiversChange}
             />
           </div>
           <div className="input-group">
@@ -73,6 +111,78 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
               required
             />
           </div>
+          <div className="input-group">
+            <label>Rank:</label>
+            <div className="radio-group">
+              <label>
+                <input
+                  type="radio"
+                  name="rank"
+                  value="1"
+                  // checked={priority == '1'}
+                  onChange={(e) => builder.setPriority(1)}
+                />
+                1
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="rank"
+                  value="2"
+                  // checked={priority === 2}
+                  onChange={(e) => builder.setPriority(2)}
+                />
+                2
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="rank"
+                  value="3"
+                  //  checked={priority === 3}
+                  onChange={(e) => builder.setPriority(3)}
+                />
+                3
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="rank"
+                  value="4"
+                  // checked={priority === 4}
+                  onChange={(e) =>builder.setPriority(4)}
+                />
+                4
+              </label>
+            </div>
+          </div>
+
+
+           {/* Attachment input */}
+           <div className="input-group">
+            <label htmlFor="attachment">Attachment</label>
+            <input
+              type="file"
+              id="attachment"
+              onChange={handleAttachmentChange}
+              multiple // Allow multiple files
+            />
+            {attachments.length > 0 && (
+              <div>
+                <p>Attachments:</p>
+                <ul>
+                  {attachments.map((attachment, index) => (
+                    <li key={index}>
+                      <p>{attachment.name}</p>
+                      <p>Size: {attachment.size} bytes</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+
+
           <div className="modal-actions">
             <button type="submit" className="send-btn">
               Send

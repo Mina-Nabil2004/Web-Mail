@@ -12,17 +12,17 @@ export class Builder {
         return this;
     }
     setReceivers(receivers) {
-        console.log(receivers);
-        if (receivers.includes(",")) {
-            this.receivers = receivers.split(",").map(receiver => receiver.trim());
+        if (Array.isArray(receivers)) {
+            this.receivers = receivers;
+            console.log(receivers); 
+
+        } else if (typeof receivers === "string") {
+            this.receivers = receivers.split(",").map((email) => email.trim());
+            console.log(receivers); 
         } else {
-            this.receivers = [receivers.trim()];
+            throw new Error("Receivers should be an array or a comma-separated string");
         }
         return this;
-    }
-    getReceivers(){
-        console.log(this.receivers.join(", "));
-        return this.receivers.join(", ");
     }
     setBody(body) {
         console.log(body);
@@ -31,6 +31,7 @@ export class Builder {
     }
 
     setAttachments(attachments) {
+        console.log(attachments);
         this.attachments = attachments;
         return this;
     }

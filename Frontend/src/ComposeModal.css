@@ -10,7 +10,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  margin-top: 50px;  
+  margin-top: 50px;  /* Adjust for appearance */
 }
 
 /* Modal Content */
@@ -71,7 +71,48 @@ h2 {
 .input-group textarea {
   resize: vertical;
   min-height: 100px;
-  
+}
+
+/* Attachment Input Styling */
+.input-group #attachment {
+  padding: 10px 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.input-group #attachment:hover {
+  background-color: #f1f1f1;
+}
+
+/* Attachment List Styling */
+.input-group ul {
+  padding-left: 20px;
+  margin-top: 10px;
+  list-style-type: none;
+  font-size: 14px;
+  color: #555;
+}
+
+.input-group li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.input-group li p {
+  margin: 0;
+}
+
+.input-group li p:first-child {
+  font-weight: bold;
+}
+
+.input-group li p:nth-child(2) {
+  font-size: 12px;
+  color: #888;
 }
 
 /* Modal Actions */
@@ -82,7 +123,7 @@ h2 {
 }
 
 .send-btn,
-.discard-btn {
+.draft-btn {
   padding: 10px 20px;
   font-size: 14px;
   border: none;
@@ -99,11 +140,33 @@ h2 {
   background-color: #0056b3;
 }
 
-.discard-btn {
+.draft-btn {
   background-color: #f44336;
   color: white;
 }
 
-.discard-btn:hover {
+.draft-btn:hover {
   background-color: #d32f2f;
+}
+
+/* Radio Button Group */
+.radio-group {
+  display: flex; /* Arrange items in a row */
+  gap: 15px; /* Add spacing between items */
+  align-items: center; /* Vertically center the content */
+  margin-top: 5px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Spacing between the radio button and text */
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+  cursor: pointer;
+  margin: 0; /* Remove default spacing */
 }
