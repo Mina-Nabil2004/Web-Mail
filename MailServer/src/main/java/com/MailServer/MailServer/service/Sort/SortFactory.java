@@ -7,6 +7,7 @@ public class SortFactory {
             case "sender" -> new SortSender();
             case "subject" -> new SortSubject();
             case "body" -> new SortBody();
+            case  "priority" -> new SortPriority();
             default -> throw new IllegalStateException("Unexpected value: " + request.toLowerCase());
         };
     }
