@@ -12,18 +12,19 @@ import "./App.css";
 import axios from "axios";
 
 // Initializing folders as an empty object, we'll fill them after login
-const initialEmails = { inbox: [], sent: [], drafts: [], trash: [], starred: [] };
+// const initialEmails = { inbox: [], sent: [], drafts: [], trash: [], starred: [] };
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [activeMenu, setActiveMenu] = useState("Inbox");
   const [activeFolder, setActiveFolder] = useState(null);
-  const [emails, setEmails] = useState(initialEmails);
+  // const [emails, setEmails] = useState(initialEmails);
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
   const [isContacting, setIsContacting] = useState(false); // State for showing contact form
   const [page, setPage] = useState(0); // State for managing page number
   const [searchQuery, setSearchQuery] = useState("");
+  const[folders, setFolders] = useState([]);
 
   useEffect(() => {
     if (userId) {
@@ -33,7 +34,8 @@ function App() {
 
   useEffect(() => {
     if (activeFolder) {
-      fetchEmailsForActiveFolder(page);
+      // fetchEmailsForActiveFolder(page);
+      console.log(activeFolder);
     }
   }, [activeFolder, page]);
 
@@ -48,35 +50,37 @@ function App() {
     try {
       const response = await axios.get(`http://localhost:8080/email/folders/${userId}`);
       console.log(response);
-
-      response.data.forEach(async (folderData) => {
-        const folder = FolderFactory.createFolder(folderData.name.toLowerCase(), folderData.folderID);
-        console.log(`Created folder: ${folderData.name} with ID: ${folderData.folderID}`);
-        if (folderData.name.toLowerCase() === activeMenu.toLowerCase()) {
-          setActiveFolder(folder);
-        }
-      });
+      setFolders(response.data);
+      setActiveFolder(response.data[0]);
+      // response.data.forEach(async (folderData) => {
+      //   const folder = FolderFactory.createFolder(folderData.name.toLowerCase(), folderData.folderID);
+      //   console.log(`Created folder: ${folderData.name} with ID: ${folderData.folderID}`);
+      //   if (folderData.name.toLowerCase() === activeMenu.toLowerCase()) {
+      //     setActiveFolder(folder);
+      //   }
+      // });
     } catch (error) {
       console.error("Error fetching folders:", error);
     }
     setLoggedIn(true);
   };
 
-  const fetchEmailsForActiveFolder = async (page) => {
-    try {
-      const folderEmails = await axios.get(
-        `http://localhost:8080/email/folder/${activeFolder.folderID}/${page}`
-      );
-      activeFolder.addEmails(folderEmails.data);
-      setEmails((prevEmails) => ({
-        ...prevEmails,
-        [activeMenu.toLowerCase()]: folderEmails.data,
-      }));
-      console.log(`Fetched emails for ${activeMenu}, page ${page}:`, folderEmails.data);
-    } catch (emailError) {
-      console.error(`Error fetching emails for ${activeMenu}, page ${page}:`, emailError);
-    }
-  };
+  // const fetchEmailsForActiveFolder = async (page) => {
+  //   try {
+  //     console.log(activeFolder.folderID);
+  //     const folderEmails = await axios.get(
+  //       `http://localhost:8080/email/folder/${activeFolder.folderID}/${page}`
+  //     );
+  //     activeFolder.addEmails(folderEmails.data);
+  //     // setEmails((prevEmails) => ({
+  //     //   ...prevEmails,
+  //     //   [activeMenu.toLowerCase()]: folderEmails.data,
+  //     // }));
+  //     console.log(`Fetched emails for ${activeMenu}, page ${page}:`, folderEmails.data);
+  //   } catch (emailError) {
+  //     console.error(`Error fetching emails for ${activeMenu}, page ${page}:`, emailError);
+  //   }
+  // };
 
   const handleSearch = async (page = 0) => {
     console.log("Active folder:", activeFolder);
@@ -89,6 +93,16 @@ function App() {
       console.log("Search results:", response.data);
     } catch (error) {
       console.error("Error performing search:", error);
+    }
+  };
+
+  const handleAllMail = async (page = 0) => {
+    try{
+      console.log("mian");
+      const response = await axios.get(`http://localhost:8080/email/allMail/${userId}/${page}`)
+      console.log(response.data)
+    }catch (error) {
+      console.error("Error fetching all mail:", error);
     }
   };
 
@@ -155,6 +169,9 @@ function App() {
                 onSend={handleSend}
                 onDraft={handleDraft}
                 handleLoginSuccess={handleLoginSuccess}
+                handleAllMail={handleAllMail}
+                folders ={folders}
+                page={page}
               />
               <button className="contact-btn" onClick={toggleContactForm}>
                 Contact
@@ -173,8 +190,8 @@ function App() {
                 </div>
               </div>
               <div className="email-list">
-                {activeFolder && activeFolder.getEmails().length > 0 ? (
-                  activeFolder.getEmails().map((email) => (
+                {activeFolder && activeFolder.length > 0 ? (
+                  activeFolder.map((email) => (
                     <div key={email.emailID} className="email-item">
                       <h3>{email.subject}</h3>
                       <p>

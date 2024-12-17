@@ -8,8 +8,9 @@ import ContactsWindow from "./ContactsWindow";
 import AddFolderModal from "./AddFolderModal";
 
 import "./Menu.css";
+import axios from "axios";
 
-const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuccess }) => {
+const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft ,handleAllMail,folders,setActiveFolder,page}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isContactsOpen, setContactsOpen] = useState(false);
   const [isAddFolderModalOpen, setAddFolderModalOpen] = useState(false); 
@@ -37,9 +38,25 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
     setContactsOpen(false);
   };
 
-  const handleMenuClick = (menu) => {
+  const handleMenuClick = async (menu) => {
+    for(let i=0 ;i<folders.length ;i++) {
+      if(folders[i].name === menu) {
+       try {
+        console.log(folders.folderID);
+        const response = await axios.get(`http://localhost:8080/email/folder/${folders[i].folderID}/${page}`)
+        setActiveFolder(response.data);
+        console.log("hi");
+        console.log(response.data);
+       } catch (error) {
+        console.error("Error fetching folder:", error);
+       }
+      }
+    }
     setActiveMenu(menu);
-    handleLoginSuccess();
+  };
+  const handleMenuClicks = (menu) => {
+    setActiveMenu(menu);
+    handleAllMail();
   };
 
   const openAddFolderModal = () => {
@@ -66,42 +83,42 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft, handleLoginSuc
       <div className="menu-items">
         <div
           className={`menu-item ${activeMenu === "Inbox" ? "active" : ""}`}
-          onClick={() => handleMenuClick("Inbox")}
+          onClick={() => handleMenuClick("inbox")}
         >
           <FaInbox className="menu-icon" />
           <span>Inbox</span>
         </div>
         <div
           className={`menu-item ${activeMenu === "Starred" ? "active" : ""}`}
-          onClick={() => handleMenuClick("Starred")}
+          onClick={() => handleMenuClick("starred")}
         >
           <FaStar className="menu-icon" />
           <span>Starred</span>
         </div>
         <div
           className={`menu-item ${activeMenu === "Sent" ? "active" : ""}`}
-          onClick={() => handleMenuClick("Sent")}
+          onClick={() => handleMenuClick("sent")}
         >
           <FaPaperPlane className="menu-icon" />
           <span>Sent</span>
         </div>
         <div
-          className={`menu-item ${activeMenu === "Drafts" ? "active" : ""}`}
-          onClick={() => handleMenuClick("Drafts")}
+          className={`menu-item ${activeMenu === "Draft" ? "active" : ""}`}
+          onClick={() => handleMenuClick("draft")}
         >
           <FaFileAlt className="menu-icon" />
           <span>Drafts</span>
         </div>
         <div
           className={`menu-item ${activeMenu === "Trash" ? "active" : ""}`}
-          onClick={() => handleMenuClick("Bin")}
+          onClick={() => handleMenuClick("trash")}
         >
           <FaTrashAlt className="menu-icon" />
           <span>Trash</span>
         </div>
         <div
           className={`menu-item ${activeMenu === "All Mail" ? "active" : ""}`}
-          onClick={() => handleMenuClick("All Mail")}
+          onClick={() => handleMenuClicks("All Mail")}
         >
           <MailIcon className="menu-icon" />
           <span>All Mail</span>
