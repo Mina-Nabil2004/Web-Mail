@@ -7,7 +7,7 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
   if (!isOpen) return null; 
   const [receivers, setReceivers] = useState([]);
   const [priority, setPriority] = useState(null);
-  const builder = new Builder();
+  const builder = Builder.getInstance();
   const userId = localStorage.getItem("userId");
   // const [rank, setRank] = useState(null);
   const [attachments, setAttachments] = useState([]); // Changed to array for multiple attachments
@@ -20,35 +20,19 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
   };
   const handleSend = async (e) => {
     e.preventDefault();
-    builder.setSubject(subject).setBody(body).setReceivers(receivers).setAttachments(attachments).setPriority(priority);
     try {
-      const response = await axios.post(`http://localhost:8080/email/send/${userId}`,builder.build() // Send the built object
-      );
+      console.log(builder.build());
+      const response = await axios.post(`http://localhost:8080/email/send/${userId}`,builder.build());
+      builder.reset();
       console.log("Email sent:", response.data);
     } catch (err) {
       console.error("Error sending email:", err);
     }
   };
 
-  // const handleSend = async (e) => {
-  //   console.log(userId);
-  //   e.preventDefault();
-  //     try{
-  //       const response = await axios.post(`http://localhost:8080/email/send/${userId}`,
-  //       receivers : []
-  //       builder.build()
-  //     )
-  //       console.log(response.data);
-  //     }catch(err){
-  //      }
-  // };
-  const handleDraft = () => {
-    // const draft = new Builder()
-    //   .setSubject(subject)
-    //   .setBody(body)
-    //   .setSender(to)
-    //   .build();
-    // onDraft(draft);
+  const handleDraft = async () => {
+    const response = await axios.post(`http://localhost:8080/email/send/${userId}`,builder.build());
+    builder.reset();
     onClose();
   };
   const handleAttachmentChange = (e) => {
@@ -184,7 +168,7 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
 
 
           <div className="modal-actions">
-            <button type="submit" className="send-btn">
+            <button type="submit" className="send-btn" onClick={handleSend}>
               Send
             </button>
             <button type="button" className="draft-btn" onClick={handleDraft}>
