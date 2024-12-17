@@ -193,9 +193,9 @@ public class control {
         }
     }
     @PostMapping("/move/{sourceFolderID}/{destinationFolderID}/{maxPageSize}/{pageNo}")
-    public ResponseEntity<Object> moveEmail(@RequestBody EmailDTO Dto, @PathVariable Long sourceFolderID, @PathVariable Long destinationFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
+    public ResponseEntity<Object> moveEmail(@PathVariable EmailDTO Dto, @PathVariable Long sourceFolderID, @PathVariable Long destinationFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
         try {
-            return ResponseEntity.ok(userService.MoveEmail(Dto.getEmailIds(),sourceFolderID,destinationFolderID,page,maxPageSize));
+            return ResponseEntity.ok(userService.MoveEmail(Dto.getEmailIDs(),sourceFolderID,destinationFolderID,page,maxPageSize));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
         }
@@ -211,6 +211,4 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to edit contact: " + e.getMessage());
         }
     }
-
-
 }
