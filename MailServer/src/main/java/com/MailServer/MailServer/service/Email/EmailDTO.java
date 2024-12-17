@@ -21,6 +21,7 @@ public class EmailDTO {
     private String body;
     private String datetime;
     private int priority;
+    private List<Long> emailIds;
 
     // Constructors
     public EmailDTO() {}
@@ -117,5 +118,13 @@ public class EmailDTO {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public List<Long> getEmailIds() {
+        return emailIds;
+    }
+
+    public void setEmailIds(List<Long> emailIds) {
+        this.emailIds = emailIds;
     }
 }
