@@ -7,11 +7,12 @@ import TuneIcon from '@mui/icons-material/Tune';
 import ProfileMenu from "./ProfileMenu";
 import axios from "axios";
 
-const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch, activeFolderID, maxPageSize, page, setActiveFolder}) => {
+const Header = ({ userId, onLogout, activeFolderID, maxPageSize, page, setActiveFolder}) => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [user, setUser] = useState({ });
   const [initial, setInitial] = useState();
   const [filterWindowOpen, setFilterWindowOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [filterOptions, setFilterOptions] = useState({
     datetime: '',
     sender: '',
@@ -43,10 +44,11 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch, activ
     fetchUserDetails();
   }, [userId]); // Dependency on userId
 
-  const handleSearchClick = () => {
-    if (onSearch) {
-      onSearch(searchQuery,1);
-    }
+  const handleSearchClick = async () => {
+    const response = await axios.get(
+      `http://localhost:8080/email/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page}`
+    );
+    setActiveFolder(response.data);
   };
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);

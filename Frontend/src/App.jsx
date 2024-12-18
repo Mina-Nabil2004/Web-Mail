@@ -25,7 +25,7 @@ function App() {
   const [isContacting, setIsContacting] = useState(false); // State for showing contact form
   const [maxPageSize, setMaxPageSize] = useState(5);
   const [page, setPage] = useState(0); // State for managing page number
-  const [searchQuery, setSearchQuery] = useState("");
+
   const [folders, setFolders] = useState([]);
 
   const [selectedEmails, setSelectedEmails] = useState([]); // Track selected emails
@@ -59,12 +59,6 @@ function App() {
     }
   }, [userId]);
 
-  useEffect(() => {
-    if (searchQuery) {
-      handleSearch();
-    }
-  }, [activeFolder, searchQuery]);
-
   const handleLoginSuccess = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/email/folders/${userId}`);
@@ -76,20 +70,6 @@ function App() {
       console.error("Error fetching folders:", error);
     }
     setLoggedIn(true);
-  };
-
-  const handleSearch = async (page = 0) => {
-    console.log("Active folder:", activeFolder);
-    console.log("Search query:", searchQuery);
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/email/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page}`
-      );
-      setActiveFolder(response.data);
-      console.log("Search results:", response.data);
-    } catch (error) {
-      console.error("Error performing search:", error);
-    }
   };
 
   const handleAllMail = async (page = 0) => {
@@ -214,8 +194,6 @@ function App() {
         <>
           <Header userId={userId} 
                   onLogout={handleLogout} 
-                  onSearch={handleSearch} 
-                  setSearchQuery={setSearchQuery}
                   activeFolderID={activeFolderID} 
                   maxPageSize={maxPageSize} 
                   page={page} 
@@ -229,8 +207,6 @@ function App() {
                 activeFolderID={activeFolderID}
                 setActiveFolderID={setActiveFolderID}
                 setActiveMenu={handleFolderChange}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
                 onSend={handleSend}
                 onDraft={handleDraft}
                 handleLoginSuccess={handleLoginSuccess}
@@ -238,6 +214,7 @@ function App() {
                 folders ={folders}
                 maxPageSize={maxPageSize}
                 page={page}
+                setPage={setPage}
               />
               <button className="contact-btn" onClick={toggleContactForm}>
                 Contact

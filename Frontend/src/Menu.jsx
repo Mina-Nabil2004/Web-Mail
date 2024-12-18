@@ -10,7 +10,7 @@ import AddFolderModal from "./AddFolderModal";
 import "./Menu.css";
 import axios from "axios";
 
-const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handleAllMail, folders, setActiveFolder, setActiveFolderID, activeFolderID, maxPageSize,page}) => {
+const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handleAllMail, folders, setActiveFolder, setActiveFolderID, activeFolderID, maxPageSize,page, setPage}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isContactsOpen, setContactsOpen] = useState(false);
   const [isAddFolderModalOpen, setAddFolderModalOpen] = useState(false); 
@@ -40,10 +40,11 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
   };
 
   const handleMenuClick = async (menu) => {
+    setPage(0);
     for(let i=0 ;i<folders.length ;i++) {
       if(folders[i].name === menu) {
        try {
-        const response = await axios.get(`http://localhost:8080/email/folder/${folders[i].folderID}/${maxPageSize}/${page}`)
+        const response = await axios.get(`http://localhost:8080/email/folder/${folders[i].folderID}/${maxPageSize}/${0}`)
         setActiveFolder(response.data);
         setActiveFolderID(folders[i].folderID);
        } catch (error) {
