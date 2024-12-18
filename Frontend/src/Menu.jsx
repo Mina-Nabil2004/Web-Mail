@@ -60,6 +60,17 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
      }
      setActiveMenu("All Mails");
   };
+  const handleCatgoryClick = async (category) =>{
+    setPage(0);
+    try {
+      const response = await axios.get(`http://localhost:8080/email/folder/${category.folderID}/${maxPageSize}/${0}`)
+      setActiveFolder(response.data);
+      setActiveFolderID(category.folderID);
+     } catch (error) {
+      console.error("Error fetching folder:", error);
+     }
+     setActiveMenu(category.name);
+  };
 
   const openAddFolderModal = () => {
     setAddFolderModalOpen(true);
@@ -139,7 +150,7 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
           <span style={{ width: '50px' }}>Categories</span>
           <div className="submenu">
             {categories.map((category, index) => (
-              <div key={index} className="submenu-item">
+              <div key={index} className="submenu-item" onClick={() => handleCatgoryClick(category)}>
                 {category.name}
               </div>
             ))}
