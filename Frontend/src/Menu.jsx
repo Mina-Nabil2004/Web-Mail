@@ -10,18 +10,12 @@ import AddFolderModal from "./AddFolderModal";
 import "./Menu.css";
 import axios from "axios";
 
-const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handleAllMail, folders, setActiveFolder, setActiveFolderID, activeFolderID, maxPageSize,page, setPage}) => {
+const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handleAllMail, folders, setActiveFolder, setActiveFolderID, activeFolderID, maxPageSize,page, setPage,categories,setCategories}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isContactsOpen, setContactsOpen] = useState(false);
   const [isAddFolderModalOpen, setAddFolderModalOpen] = useState(false); 
-  const [categories, setCategories] = useState([
-    'Less',
-    'Important',
-    'Chats',
-    'Scheduled',
-    'Spam',
-  ]);
   console.log(activeFolderID);
+  console.log(categories);
 
   const openModal = () => {
     setModalOpen(true);
@@ -75,8 +69,15 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
     setAddFolderModalOpen(false);
   };
 
-  const addNewFolder = (folderName) => {
-    setCategories((prevCategories) => [...prevCategories, folderName]);
+  const addNewFolder = async (folderName) => {
+    try{
+      console.log();
+      const response = await axios.post(`http://localhost:8080/email/addFolder/${userId}/${folderName}/${activeFolderID}/${maxPageSize}/${page}`)
+      setCategories(response.data);
+     } catch (error) {
+      console.error("Error adding folder:", error);
+    }
+    // setCategories((prevCategories) => [...prevCategories, folderName]);
     closeAddFolderModal();
   };
 
@@ -139,7 +140,7 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
           <div className="submenu">
             {categories.map((category, index) => (
               <div key={index} className="submenu-item">
-                {category}
+                {category.name}
               </div>
             ))}
           </div>

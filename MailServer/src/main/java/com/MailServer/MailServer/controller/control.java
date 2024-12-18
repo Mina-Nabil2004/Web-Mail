@@ -246,8 +246,8 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
         }
     }
-    @PostMapping("/addEmail/{userID}/{name}/{activeFolderID}/{maxPageSize}/{page}")
-    public ResponseEntity<Object> addemail(@PathVariable Long userID,@PathVariable String name,@PathVariable Long activeFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
+    @PostMapping("/addFolder/{userID}/{name}/{activeFolderID}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> addfolder(@PathVariable Long userID,@PathVariable String name,@PathVariable Long activeFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
         try {
             return ResponseEntity.ok(userService.AddFolder(userID,activeFolderID,name,page,maxPageSize));
         } catch (Exception e) {

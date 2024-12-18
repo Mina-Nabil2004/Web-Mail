@@ -312,7 +312,9 @@ public class UserService {
         folderRepository.save(folder);
         user.getFolders().add(folder);
         userRepository.save(user);
-        return "folders added successfully";
+        return user.getFolders().subList(5,user.getFolders().size()).stream()
+                .map(category -> new FolderDTO(category.getFolderID(), category.getName()))
+                .collect(Collectors.toList());
     }
     @Transactional
     public Object EditFolder(Long activeFolderID,Folder EditedFolder){

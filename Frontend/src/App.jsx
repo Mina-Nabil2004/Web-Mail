@@ -27,6 +27,7 @@ function App() {
   const [page, setPage] = useState(0); // State for managing page number
 
   const [folders, setFolders] = useState([]);
+  const [Categories, setCategories] = useState([]);
 
   const [selectedEmails, setSelectedEmails] = useState([]); // Track selected emails
   const [selectedEmail, setSelectedEmail] = useState(null); // State for the selected email
@@ -63,7 +64,9 @@ function App() {
     try {
       const response = await axios.get(`http://localhost:8080/email/folders/${userId}`);
       console.log(response);
-      setFolders(response.data);
+      const allFolders = response.data;
+      setFolders(allFolders.slice(0,5));
+      setCategories(allFolders.slice(5));
       setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${response.data[0].folderID}/${maxPageSize}/${page}`)).data);
       setActiveFolderID(response.data[0].folderID);
     } catch (error) {
@@ -215,6 +218,8 @@ function App() {
                 handleLoginSuccess={handleLoginSuccess}
                 handleAllMail={handleAllMail}
                 folders ={folders}
+                categories={Categories}
+                setCategories={setCategories}
                 maxPageSize={maxPageSize}
                 page={page}
                 setPage={setPage}
