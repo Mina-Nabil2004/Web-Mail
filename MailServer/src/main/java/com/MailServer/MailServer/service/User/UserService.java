@@ -81,8 +81,8 @@ public class UserService {
     public Object getUserAllMail(Long userID, int pageNo, int maxPageSize){
         List<Folder> folders = userRepository.findById(userID).orElseThrow().getFolders();
         List<Email> emails = new ArrayList<>();
-        for (Folder folder : folders) {
-            emails.addAll(folder.getEmails());
+        for(int i=0;i<3;i++){
+            emails.addAll(folders.get(i).getEmails());
         }
         return SortFacade.sort(emails, "date", false, pageNo, maxPageSize);
     }
@@ -287,5 +287,15 @@ public class UserService {
         }
         folderRepository.save(TrashFolder);
         return getUserFolder(TrashFolderID,pageNo,maxPageSize);
+    }
+    @Transactional
+    public Object draftedEmail(Long emailID,Long draftID,Long activeFolderID,int pageNo,int maxPageSize){
+        Email email = emailRepository.findById(emailID).orElseThrow();
+        Folder draftfolder=folderRepository.findById(draftID).orElseThrow();
+        email.getFolders().add(draftfolder);
+        draftfolder.getEmails().add(email);
+        emailRepository.save(email);
+        folderRepository.save(draftfolder);
+        return getUserFolder(activeFolderID,pageNo,maxPageSize);
     }
 }

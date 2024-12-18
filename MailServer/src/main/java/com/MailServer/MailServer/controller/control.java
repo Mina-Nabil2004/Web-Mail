@@ -236,6 +236,15 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
         }
     }
+    @PostMapping("/draftemail/{emailID}/{draftID}/{activeFolderID}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> draftemail(@PathVariable Long emailID,@PathVariable Long draftID,@PathVariable Long activeFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
+        try {
+            return ResponseEntity.ok(userService.draftedEmail(emailID,draftID,activeFolderID,page,maxPageSize));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
+        }
+    }
+
 
 
 
