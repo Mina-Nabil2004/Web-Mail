@@ -4,6 +4,7 @@ import FilterWindow from './FilterWindow';
 import logoMail from "/src/assets/logoMAIL.jpg";
 import SearchIcon from '@mui/icons-material/Search';
 import TuneIcon from '@mui/icons-material/Tune';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import ProfileMenu from "./ProfileMenu";
 import axios from "axios";
 
@@ -50,6 +51,11 @@ const Header = ({ userId, onLogout, activeFolderID, maxPageSize, page, setActive
     );
     setActiveFolder(response.data);
   };
+  const handleRefreashClick = async () => {
+    const response = await axios.get(
+      `http://localhost:8080/email/folders/${activeFolderID}/${maxPageSize}/${page}`);
+    setActiveFolder(response.data);
+  };
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
@@ -72,6 +78,9 @@ const Header = ({ userId, onLogout, activeFolderID, maxPageSize, page, setActive
       <div className="header-left">
         <img src={logoMail} alt="Logo" className="logo" />
         <h2>Mail Website</h2>
+        <button className="refreash-button" onClick={handleRefreashClick}>
+          <RefreshIcon />
+        </button>
       </div>
       <div className="header-center">
         <button className="search-button" onClick={handleSearchClick}>
