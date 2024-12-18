@@ -148,6 +148,15 @@ public class control {
         }
     }
 
+    @PostMapping("/star/{emailID}/{starredID}/{activeFolderID}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> emailStar(@PathVariable Long emailID, @PathVariable Long starredID, @PathVariable Long activeFolderID, @PathVariable int page, @PathVariable int maxPageSize) {
+        try {
+            return ResponseEntity.ok(userService.starredEmail(emailID, starredID, activeFolderID, page, maxPageSize));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch user details.");
+        }
+    }
+
     @GetMapping("/searchEmails/{folderID}/{criteria}/{maxPageSize}/{page}")
     public ResponseEntity<Object> searchEmails(@PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page, @PathVariable int maxPageSize) {
         try {

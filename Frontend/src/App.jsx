@@ -26,7 +26,7 @@ function App() {
   const [maxPageSize, setMaxPageSize] = useState(5);
   const [page, setPage] = useState(0); // State for managing page number
   const [searchQuery, setSearchQuery] = useState("");
-  const[folders, setFolders] = useState([]);
+  const [folders, setFolders] = useState([]);
 
   const [selectedEmails, setSelectedEmails] = useState([]); // Track selected emails
   const [selectedEmail, setSelectedEmail] = useState(null); // State for the selected email
@@ -157,19 +157,18 @@ function App() {
       }
     }
     const response = await axios.delete(`http://localhost:8080/email/deleteEmail/${emailID}/${activeFolderID}/${trashID}/${maxPageSize}/${page}`);
-    console.log(activeFolder);
     setActiveFolder(response.data);
-    console.log(activeFolder);
   }
 
   const handleStarred = async (emailID) =>{
-    let folderID;
+    let starredID;
     for(let i=0 ;i<folders.length ;i++) {
       if(folders[i].name === "starred") {
-        folderID = folders[i].folderID;
+        starredID = folders[i].folderID;
       }
     }
-    await axios.post(`http://localhost:8080/email/star/${emailID}/${folderID}`);
+    const response = await axios.post(`http://localhost:8080/email/star/${emailID}/${starredID}/${activeFolderID}/${maxPageSize}/${page}`);
+    setActiveFolder(response.data);
   }
 
   const handleEmailSelect = (emailID) => {
@@ -290,7 +289,9 @@ function App() {
                         <button className="read-button" onClick={() => handleReadEmail(email.emailID)}>Read</button>
                         <button className="move-button" onClick={handleMoveButtonClick}>Move</button>
                         <button className="Delete-button" onClick={() => handleDelete(email.emailID)}>< FaTrashAlt /> </button>
-                        <button className="Started-button" onClick={() => handleStarred(email.emailID)}><FaStar /> </button>
+                        {folders[3].folderID != activeFolderID &&
+                          (<button className="Started-button" onClick={() => handleStarred(email.emailID)}><FaStar /> </button>)
+                        }
                       </div>
                     </div>
                   ))

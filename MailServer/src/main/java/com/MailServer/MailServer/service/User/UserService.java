@@ -181,13 +181,34 @@ public class UserService {
             folderRepository.save(activeFolder);
             folderRepository.save(trash);
         }
-        return activeFolder.getEmails();
+        return getUserFolder(activeFolderID,pageNo,maxPageSize);
     }
 
     @Transactional
     public Object deleteContact(Long contactID) {
         contactRepository.deleteById(contactID);
         return "Deleted";
+    }
+
+    @Transactional
+    public Object starredEmail(Long emailID, Long starredID, Long activeFolderID, int pageNo, int maxPageSize) {
+        Email email = emailRepository.findById(emailID).orElseThrow();
+        Folder activeFolder = folderRepository.findById(activeFolderID).orElseThrow();
+        if (activeFolderID.equals(starredID)) {
+            email.getFolders().remove(activeFolder);
+            emailRepository.save(email);
+            activeFolder.getEmails().remove(email);
+            folderRepository.save(activeFolder);
+        } else {
+            Folder starredFolder = folderRepository.findById(starredID).orElseThrow();
+            if(!email.getFolders().contains(starredFolder)){
+                email.getFolders().add(starredFolder);
+                starredFolder.getEmails().add(email);
+                emailRepository.save(email);
+                folderRepository.save(starredFolder);
+            }
+        }
+        return getUserFolder(activeFolderID,pageNo,maxPageSize);
     }
 
     public Object filterEmails(FilterDTO request, Long folderID, String criteria, int pageNo, int maxPageSize) {
