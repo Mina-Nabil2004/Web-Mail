@@ -224,12 +224,12 @@ function App() {
               </button>
             </div>
 
-            <div className="content">
+            <div className="content" style={{ padding: "0px" }}>
 
-              <div style={{ display: "flex" }}>
-                <h2 style={{width: "90px"}}>{activeMenu}</h2>
+              <div style={{ display: "flex" , marginTop: "-50px", position:"fixed"}}>
+                <h2 style={{width: "100px", marginLeft: "-35px"}}>{activeMenu}</h2>
                 <div style={{ display: "flex", marginLeft: "100px" }}>
-                  <button className="pages-button" style={{ marginLeft: "1250px", marginRight: "10px" }} onClick={() => handlePageChange(-1)} disabled={page === 0}>
+                  <button className="pages-button" style={{ marginLeft: "1300px", marginRight: "10px" }} onClick={() => handlePageChange(-1)} disabled={page === 0}>
                     <FaArrowLeft />
                   </button>
                   <button className="pages-button" onClick={() => handlePageChange(1)}>
@@ -245,7 +245,7 @@ function App() {
                 </div>
               )}
 
-              <div className="email-list">
+              <div className="email-list" style={{width:"1550px"}}>
                 {activeFolder && activeFolder.length > 0 ? (
                   activeFolder.map((email) => (
                     <div key={email.emailID} className="email-item">
