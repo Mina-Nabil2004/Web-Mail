@@ -54,9 +54,17 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
     }
     setActiveMenu(menu);
   };
-  const handleMenuClicks = (menu) => {
-    setActiveMenu(menu);
-    handleAllMail();
+
+  const handleAllMailClick = async () =>{
+    setPage(0);
+    try {
+      const response = await axios.get(`http://localhost:8080/email/allMail/${userId}/${maxPageSize}/${0}`)
+      setActiveFolder(response.data);
+      setActiveFolderID("All");
+     } catch (error) {
+      console.error("Error fetching folder:", error);
+     }
+     setActiveMenu("All Mails");
   };
 
   const openAddFolderModal = () => {
@@ -118,7 +126,7 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
         </div>
         <div
           className={`menu-item ${activeMenu === "All Mail" ? "active" : ""}`}
-          onClick={() => handleMenuClicks("All Mail")}
+          onClick={handleAllMailClick}
         >
           <MailIcon className="menu-icon" />
           <span>All Mail</span>
