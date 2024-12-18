@@ -305,3 +305,21 @@ body.dark-mode {
     font-size: 12px;
   }
 }
+.pagination-controls {
+  position: fixed;
+  bottom: 10px;
+  left: 300px; 
+  padding: 10px;
+}
+.folderName{
+  position: fixed;
+  bottom: 10px;
+  left: 300px; 
+  padding: 10px;
+}
+.pageing{
+  bottom: 10px;
+  right: 100px;
+  display: flex; 
+  margin-left: 100px;
+}
