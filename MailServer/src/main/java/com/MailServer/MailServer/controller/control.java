@@ -211,6 +211,23 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to edit contact: " + e.getMessage());
         }
     }
+    @PostMapping("/movetoTrash/{sourceFolderID}/{TrashFolderID}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> movetoTrash(@RequestBody EmailDTO dto,@PathVariable Long sourceFolderID,@PathVariable Long TrashFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
+        try {
+            return ResponseEntity.ok(userService.moveToTrash(dto.getEmailIDs(),sourceFolderID,TrashFolderID,page,maxPageSize));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
+        }
+    }
+    @PostMapping("/deletetromtrash/{TrashFolderID}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> deleteFromTrash(@RequestBody EmailDTO dto,@PathVariable Long TrashFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
+        try {
+            return ResponseEntity.ok(userService.deleteFromTrash(dto.getEmailIDs(),TrashFolderID,page,maxPageSize));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
+        }
+    }
+
 
 
 }
