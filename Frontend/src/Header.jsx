@@ -77,14 +77,10 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch}) => {
         value={searchQuery}
         onChange={handleSearchInputChange} 
         />
-        {/* <button className="search-button" onClick={handleSearchClick}>
-          <i className="material-icons">search</i>
-        </button> */}
         <button className="filter-button" onClick={handleFilterClick}>
           <TuneIcon />
         </button>
       </div>
-      {/* Filter Modal */}
       {filterWindowOpen && (
         <FilterWindow
           onClose={handleCloseFilterWindow}

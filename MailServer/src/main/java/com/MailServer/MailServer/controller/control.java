@@ -75,9 +75,9 @@ public class control {
     }
 
     @PostMapping("/send/{userID}/{activeFolderID}/{maxPageSize}/{page}")
-    public ResponseEntity<Object> compose(@RequestBody EmailDTO request, @PathVariable Long userID,@PathVariable Long folderID, @PathVariable int maxPageSize, @PathVariable int page) {
+    public ResponseEntity<Object> compose(@RequestBody EmailDTO request, @PathVariable Long userID,@PathVariable Long activeFolderID, @PathVariable int maxPageSize, @PathVariable int page) {
         try {
-            return ResponseEntity.ok(userService.send(request,userID,folderID,maxPageSize,page));
+            return ResponseEntity.ok(userService.send(request,userID,activeFolderID,maxPageSize,page));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }

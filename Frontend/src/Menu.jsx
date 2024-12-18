@@ -10,7 +10,7 @@ import AddFolderModal from "./AddFolderModal";
 import "./Menu.css";
 import axios from "axios";
 
-const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft ,handleAllMail,folders,setActiveFolder, setActiveFolderID, maxPageSize,page}) => {
+const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handleAllMail, folders, setActiveFolder, setActiveFolderID, activeFolderID, maxPageSize,page}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isContactsOpen, setContactsOpen] = useState(false);
   const [isAddFolderModalOpen, setAddFolderModalOpen] = useState(false); 
@@ -21,6 +21,7 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft ,handleAllMail,
     'Scheduled',
     'Spam',
   ]);
+  console.log(activeFolderID);
 
   const openModal = () => {
     setModalOpen(true);
@@ -150,6 +151,10 @@ const Menu = ({ user, activeMenu, setActiveMenu, onSend, onDraft ,handleAllMail,
 
       {/* Compose Modal */}
       <ComposeModal
+        activeFolderID={activeFolderID}
+        maxPageSize={maxPageSize}
+        page={page}
+        userId={userId}
         user={user}
         isOpen={isModalOpen}
         onClose={closeModal}

@@ -82,10 +82,10 @@ function App() {
     console.log("Active folder:", activeFolder);
     console.log("Search query:", searchQuery); // Check search query
     try {
-      console.log(activeFolder.folderID);
       const response = await axios.get(
-        `http://localhost:8080/searchEmails/${activeFolder.folderID}/${searchQuery}/${maxPageSize}/${page}`
+        `http://localhost:8080/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page}`
       );
+      setActiveFolder(response.data);
       console.log("Search results:", response.data);
     } catch (error) {
       console.error("Error performing search:", error);
@@ -196,11 +196,6 @@ function App() {
     }
   };
 
-
-  
-  
-  
-
   return (
     <div className="app">
       {!loggedIn ? (
@@ -221,8 +216,10 @@ function App() {
           <div className="app-layout">
             <div className="left-sidebar">
               <Menu
+                userId = {userId}
                 activeMenu={activeMenu}
                 setActiveFolder={setActiveFolder}
+                activeFolderID={activeFolderID}
                 setActiveFolderID={setActiveFolderID}
                 setActiveMenu={handleFolderChange}
                 searchQuery={searchQuery}

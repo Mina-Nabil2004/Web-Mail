@@ -3,14 +3,14 @@ import "./ComposeModal.css";
 import axios from "axios";
 import {Builder} from "./EmailBuilder.jsx"
 
-const ComposeModal = ({ isOpen, onClose, setActiveFolder, activeFolderID, maxPageSize, page, onSend, onDraft }) => {
+const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID, maxPageSize, page, onSend, onDraft }) => {
   if (!isOpen) return null; 
   const [receivers, setReceivers] = useState([]);
   const [priority, setPriority] = useState(null);
   const builder = Builder.getInstance();
-  const userId = localStorage.getItem("userId");
   // const [rank, setRank] = useState(null);
   const [attachments, setAttachments] = useState([]); // Changed to array for multiple attachments
+  console.log(activeFolderID);
 
   const handleReceiversChange = (e) => {
     const input = e.target.value;
