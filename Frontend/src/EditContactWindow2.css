@@ -1,0 +1,84 @@
+/* EditContactForm.css */
+
+.edit-contact-form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 20px auto;
+  }
+  
+  .edit-contact-form h3 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .edit-contact-form div {
+    margin-bottom: 15px;
+  }
+  
+  .edit-contact-form label {
+    font-weight: bold;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .edit-contact-form input[type="text"],
+  .edit-contact-form input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .edit-contact-form button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  
+  .edit-contact-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .edit-contact-form .delete-email-button {
+    background-color: #dc3545;
+    margin-top: 5px;
+  }
+  
+  .edit-contact-form .delete-email-button:hover {
+    background-color: #c82333;
+  }
+  
+  .edit-contact-form .add-email-button {
+    background-color: #28a745;
+    margin-top: 10px;
+  }
+  
+  .edit-contact-form .add-email-button:hover {
+    background-color: #218838;
+  }
+  
+  .edit-contact-form .cancel-button {
+    background-color: #6c757d;
+    margin-top: 10px;
+  }
+  
+  .edit-contact-form .cancel-button:hover {
+    background-color: #5a6268;
+  }
+  
+  .edit-contact-form button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  

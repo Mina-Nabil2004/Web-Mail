@@ -300,4 +300,20 @@ public class UserService {
         folderRepository.save(draftfolder);
         return getUserFolder(activeFolderID,pageNo,maxPageSize);
     }
+    @Transactional
+    public Object AddFolder(Long userID,Long activeFolderID,String name,int pageNo,int maxPageSize){
+        User user =userRepository.findById(userID).orElseThrow();
+        Folder folder =new Folder(name,user);
+        folderRepository.save(folder);
+        user.getFolders().add(folder);
+        userRepository.save(user);
+        return "folders added successfully";
+    }
+    @Transactional
+    public Object EditFolder(Long activeFolderID,Folder EditedFolder){
+        Folder folder = folderRepository.findById(activeFolderID).orElseThrow();
+        folder.setName(EditedFolder.getName());
+        folderRepository.save(folder);
+        return folder;
+    }
 }
