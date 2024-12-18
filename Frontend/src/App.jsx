@@ -19,6 +19,7 @@ function App() {
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [activeMenu, setActiveMenu] = useState("Inbox");
   const [activeFolder, setActiveFolder] = useState(null);
+  const [activeFolderID, setActiveFolderID] = useState(null);
   // const [emails, setEmails] = useState(initialEmails);
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
   const [isContacting, setIsContacting] = useState(false); // State for showing contact form
@@ -94,6 +95,7 @@ function App() {
       console.log(response);
       setFolders(response.data);
       setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${response.data[0].folderID}/${maxPageSize}/${page}`)).data);
+      setActiveFolderID(response.data[0].folderID);
     } catch (error) {
       console.error("Error fetching folders:", error);
     }
@@ -152,12 +154,12 @@ function App() {
 
   const handlePageChange = async (direction) => {
     if(maxPageSize == activeFolder.length && direction == 1){
+      setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page+1}`)).data);
       setPage(page + 1);
-      setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${response.data[0].folderID}/${maxPageSize}/${page}`)).data);
     }
     else if(page != 0 && direction == -1){
+      setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page-1}`)).data);
       setPage(page - 1);
-      setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${response.data[0].folderID}/${maxPageSize}/${page}`)).data);
     }
   };
 
