@@ -60,8 +60,8 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch, activ
   };
 
   const handleApplyFilter = async (filterOptions) => {
-    console.log("Applied filters:", filterOptions);
-    const response = await axios.get(`http://localhost:8080/email/filterEmails/${activeFolderID}/${"and"}/${maxPageSize}/${page}`,filterOptions);
+    console.log(filterOptions);
+    const response = await axios.post(`http://localhost:8080/email/filterEmails/${activeFolderID}/${"and"}/${maxPageSize}/${page}`,filterOptions);
     setActiveFolder(response.data);
     setFilterWindowOpen(false);
   };

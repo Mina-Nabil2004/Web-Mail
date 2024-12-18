@@ -139,7 +139,7 @@ public class control {
         }
     }
 
-    @GetMapping("/filterEmails/{folderID}/{criteria}/{maxPageSize}/{page}")
+    @PostMapping("/filterEmails/{folderID}/{criteria}/{maxPageSize}/{page}")
     public ResponseEntity<Object> filterEmails(@RequestBody FilterDTO request, @PathVariable Long folderID, @PathVariable String criteria, @PathVariable int page, @PathVariable int maxPageSize) {
         try {
             return ResponseEntity.ok(userService.filterEmails(request, folderID, criteria, page, maxPageSize));
