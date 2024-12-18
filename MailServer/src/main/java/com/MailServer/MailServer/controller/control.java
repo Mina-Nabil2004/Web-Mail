@@ -5,6 +5,8 @@ import com.MailServer.MailServer.service.Contact.ContactDTO;
 import com.MailServer.MailServer.service.Email.EmailDTO;
 import com.MailServer.MailServer.service.FilterContact.ContactFilterDTO;
 import com.MailServer.MailServer.service.FilterEmail.FilterDTO;
+import com.MailServer.MailServer.service.Folder.Folder;
+import com.MailServer.MailServer.service.Folder.FolderDTO;
 import com.MailServer.MailServer.service.User.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -244,8 +246,23 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
         }
     }
-
-
-
+    @PostMapping("/addEmail/{userID}/{name}/{activeFolderID}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> addemail(@PathVariable Long userID,@PathVariable String name,@PathVariable Long activeFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
+        try {
+            return ResponseEntity.ok(userService.AddFolder(userID,activeFolderID,name,page,maxPageSize));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
+        }
+    }
+    @PostMapping("/editFolder/{activeFolderID}")
+    public ResponseEntity<Object> editfolder(@RequestBody FolderDTO dto, @PathVariable Long activeFolderID) {
+        try {
+            Folder editedFolder =new Folder();
+            editedFolder.setName(dto.getName());
+            return ResponseEntity.ok(userService.EditFolder(activeFolderID, editedFolder));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to edit contact: " + e.getMessage());
+        }
+    }
 
 }

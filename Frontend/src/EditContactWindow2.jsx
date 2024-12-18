@@ -1,8 +1,11 @@
-import React, { useState } from "react";
-import "./EditContactWindow.css";
-
-const EditContactWindow = ({ contact, onSave, onCancel }) => {
+import React, { useState, useEffect } from "react";
+import "./EditContactWindow2.css";
+const EditContactWindow2 = ({ contact, onSave, onCancel }) => {
   const [editedContact, setEditedContact] = useState({ ...contact, addresses: contact.addresses || [] });
+
+  useEffect(() => {
+    setEditedContact({ ...contact, addresses: contact.addresses || [] });
+  }, [contact]);
 
   const handleNameChange = (e) => {
     setEditedContact({ ...editedContact, name: e.target.value });
@@ -50,4 +53,4 @@ const EditContactWindow = ({ contact, onSave, onCancel }) => {
   );
 };
 
-export default EditContactWindow;
+export default EditContactWindow2;
