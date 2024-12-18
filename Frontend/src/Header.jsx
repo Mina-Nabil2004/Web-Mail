@@ -7,12 +7,17 @@ import TuneIcon from '@mui/icons-material/Tune';
 import ProfileMenu from "./ProfileMenu";
 import axios from "axios";
 
-const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch}) => {
+const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch, activeFolderID, maxPageSize, page, setActiveFolder}) => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [user, setUser] = useState({ });
   const [initial, setInitial] = useState();
   const [filterWindowOpen, setFilterWindowOpen] = useState(false);
-  const [filterOptions, setFilterOptions] = useState({ date: '', sender: '' });
+  const [filterOptions, setFilterOptions] = useState({
+    date: '',
+    sender: '',
+    reciver : '',
+    subject : ''
+  });
 
   const toggleProfileMenu = () => {
     setProfileMenuOpen((prevState) => !prevState);
@@ -27,9 +32,7 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch}) => {
       if (userId) {
         try {
           const response = await axios.get(`http://localhost:8080/email/user/${userId}`);
-          console.log(response.data);
-          setUser(response.data); // Assuming response.data contains { username, email }
-          console.log(response.data.username.charAt(0).toUpperCase());
+          setUser(response.data);
           setInitial(response.data.username.charAt(0).toUpperCase());
         } catch (error) {
           console.error("Error fetching user details:", error);
@@ -55,9 +58,10 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch}) => {
     setFilterWindowOpen(false);
   };
 
-  const handleApplyFilter = (filterOptions) => {
+  const handleApplyFilter = async (filterOptions) => {
     console.log("Applied filters:", filterOptions);
-    // Apply the filter logic here
+    const response = await axios.get(`http://localhost:8080/filterEmails/${activeFolderID}/${"and"}/${maxPageSize}/${page}`, filterOptions);
+    setActiveFolder(response.data);
     setFilterWindowOpen(false);
   };
   return (
@@ -83,6 +87,8 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch}) => {
       </div>
       {filterWindowOpen && (
         <FilterWindow
+          filterOptions={filterOptions}
+          setFilterOptions={setFilterOptions}
           onClose={handleCloseFilterWindow}
           onApplyFilter={handleApplyFilter}
         />

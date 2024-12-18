@@ -80,7 +80,7 @@ function App() {
 
   const handleSearch = async (page = 0) => {
     console.log("Active folder:", activeFolder);
-    console.log("Search query:", searchQuery); // Check search query
+    console.log("Search query:", searchQuery);
     try {
       const response = await axios.get(
         `http://localhost:8080/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page}`
@@ -212,7 +212,14 @@ function App() {
         )
       ) : (
         <>
-          <Header userId={userId} onLogout={handleLogout} onSearch={handleSearch} setSearchQuery={setSearchQuery} />
+          <Header userId={userId} 
+                  onLogout={handleLogout} 
+                  onSearch={handleSearch} 
+                  setSearchQuery={setSearchQuery}
+                  activeFolderID={activeFolderID} 
+                  maxPageSize={maxPageSize} 
+                  page={page} 
+                  setActiveFolder={setActiveFolder} />
           <div className="app-layout">
             <div className="left-sidebar">
               <Menu

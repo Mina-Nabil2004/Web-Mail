@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import './FilterWindow.css';
 
-const FilterWindow = ({ onClose, onApplyFilter }) => {
-  const [filterOptions, setFilterOptions] = useState({
-    date: '',
-    sender: '',
-    reciver : '',
-    subject : ''
-  });
+const FilterWindow = ({ filterOptions, setFilterOptions, onClose, onApplyFilter }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFilterOptions((prevOptions) => ({
