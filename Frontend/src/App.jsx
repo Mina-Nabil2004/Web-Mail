@@ -269,23 +269,32 @@ function App() {
                 {activeFolder && activeFolder.length > 0 ? (
                   activeFolder.map((email) => (
                     <div key={email.emailID} className="email-item">
-                      <input
-                              type="checkbox"
-                              checked={selectedEmails.includes(email.emailID)}
-                              onChange={() => handleEmailSelect(email.emailID)} // Toggle email selection
-                      />
-                      <h3>{email.subject}</h3>
-                      <p>
-                        <strong>From:</strong> {email.sender}
-                      </p>
-                      <p>
-                        <strong>Received:</strong> {email.received}
-                      </p>
-                      <p>{email.body}</p>
-                      <button className="read-button" onClick={() => handleReadEmail(email.emailID)}>Read</button>
-                      <button className="move-button" onClick={handleMoveButtonClick}>Move</button>
-                      <button className="Delete-button" >< FaTrashAlt /> </button>
-                      <button className="Started-button"><FaStar /> </button>
+                      <div className="email-left">
+                        <input
+                                type="checkbox"
+                                checked={selectedEmails.includes(email.emailID)}
+                                onChange={() => handleEmailSelect(email.emailID)}
+                        />
+                        <div className="email-content">
+                          <h3>{email.subject}</h3>
+                          <p>
+                            <strong>From: </strong> {email.sender}
+                          </p>
+                          <p>
+                            <strong>To: </strong> {email.receivers}
+                          </p>
+                          <p>{email.body}</p>
+                          <p>
+                            <strong>Date: </strong> {email.datetime}
+                            </p>
+                        </div>
+                      </div>
+                      <div className="email-right">
+                        <button className="read-button" onClick={() => handleReadEmail(email.emailID)}>Read</button>
+                        <button className="move-button" onClick={handleMoveButtonClick}>Move</button>
+                        <button className="Delete-button" >< FaTrashAlt /> </button>
+                        <button className="Started-button"><FaStar /> </button>
+                      </div>
                     </div>
                   ))
                 ) : (
