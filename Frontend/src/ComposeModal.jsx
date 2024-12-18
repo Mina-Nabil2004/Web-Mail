@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./ComposeModal.css";
 import axios from "axios";
 import {Builder} from "./EmailBuilder.jsx"
+import { red } from "@mui/material/colors";
 
 const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID, maxPageSize, page, onSend, onDraft }) => {
   if (!isOpen) return null; 
@@ -166,10 +167,10 @@ const handleDownloadAttachment = (attachment) => {
               required
             />
           </div>
-          <div className="input-group">
+          <div className="input-group" style={{display: "flex", alignItems: "center"}}>
             <label>Priority:</label>
             <div className="radio-group">
-              <label>
+              <label style={{marginLeft: "10px"}}>
                 <input
                   type="radio"
                   name="rank"
@@ -226,17 +227,17 @@ const handleDownloadAttachment = (attachment) => {
               <div>
                 <p>Attachments:</p>
                 <div className="attachment-container">
-                  <div className="attachment-slider">
                     {attachments.map((attachment, index) => (
                       <div key={index} className="attachment-item">
                         <p>{attachment.name}</p>
                         <p>Size: {attachment.size} bytes</p>
-                        <button type="button" onClick={() => handleOpenAttachment(attachment)}>Open</button>
-                        <button type="button" onClick={() => handleDownloadAttachment(attachment)}>Download</button>
-                        <button type="button" onClick={() => handleRemoveAttachment(index)}>Remove</button>
+                        <div style={{display: "flex"}}>
+                          <button type="button" onClick={() => handleOpenAttachment(attachment)}>Open</button>
+                          <button type="button" onClick={() => handleDownloadAttachment(attachment)}>Download</button>
+                          <button style={{backgroundColor: "rgb(211, 47, 47)"}} type="button" onClick={() => handleRemoveAttachment(index)}>Remove</button>
+                        </div>
                       </div>
                     ))}
-                  </div>
                 </div>
               </div>
             )}

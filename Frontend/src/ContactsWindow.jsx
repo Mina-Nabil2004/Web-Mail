@@ -7,6 +7,7 @@ import EditContactWindow2 from "./EditContactWindow2"; // For editing an existin
 const ContactsWindow = ({ onClose }) => {
   const [contacts, setContacts] = useState([]);
   const [selectedContactIndex, setSelectedContactIndex] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(null);
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
@@ -56,11 +57,19 @@ const ContactsWindow = ({ onClose }) => {
   };
 
   const handleEditContact = (index) => {
-    setSelectedContactIndex(index); // Set selected contact for editing
+    const newContact = { name: "", addresses: [] }; // Add a new blank contact
+    setContacts([...contacts, newContact]); // Add the new contact to the state
+    setSelectedIndex(index); // Set selected contact for editing
   };
 
   return (
     <div className="contacts-window">
+      {selectedIndex !== null && (
+        <EditContactWindow
+          contact={contacts[selectedIndex]}
+          onSave={handleSaveContact}
+          onCancel={handleCancelEdit}
+        />)}
       {selectedContactIndex !== null ? (
         <EditContactWindow2
           contact={contacts[selectedContactIndex]}
