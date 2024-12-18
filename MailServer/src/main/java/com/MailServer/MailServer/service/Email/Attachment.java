@@ -31,11 +31,12 @@ public class Attachment {
     @Column(columnDefinition = "LONGTEXT")
     private String data;
 
-    public Attachment(AttachmentDTO dto) {
+    public Attachment(AttachmentDTO dto, Email email) {
         this.name = dto.getName();
         this.type = dto.getType();
         this.size = dto.getSize();
         this.data = dto.getData();
+        this.email = email;
     }
     public Attachment(){}
 

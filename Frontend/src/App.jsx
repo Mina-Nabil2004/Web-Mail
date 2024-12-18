@@ -45,6 +45,8 @@ function App() {
 
   const handleReadEmail = async (emailID) => {
     const response = await axios.get(`http://localhost:8080/email/email/${emailID}`);
+    console.log(emailID);
+    console.log(response.data);
     setSelectedEmail(response.data);
     setIsModalOpen(true);
   };

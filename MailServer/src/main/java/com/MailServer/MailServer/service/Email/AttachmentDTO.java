@@ -1,9 +1,5 @@
 package com.MailServer.MailServer.service.Email;
 
-import jakarta.persistence.*;
-
-import static jakarta.persistence.GenerationType.SEQUENCE;
-
 public class AttachmentDTO {
     private Long attachmentID;
     private String name;
@@ -11,11 +7,17 @@ public class AttachmentDTO {
     private int size;
     private String data;
 
+    public AttachmentDTO(){}
+    
     public AttachmentDTO(Long attachmentID,String name,String type, int size){
         this.name=name;
         this.type=type;
         this.attachmentID = attachmentID;
         this.size = size;
+    }
+    public AttachmentDTO(Long attachmentID,String data){
+        this.attachmentID = attachmentID;
+        this.data = data;
     }
     public Long getAttachmentID() {
         return attachmentID;

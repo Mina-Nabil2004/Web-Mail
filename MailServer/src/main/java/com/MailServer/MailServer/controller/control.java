@@ -94,6 +94,15 @@ public class control {
         }
     }
 
+    @GetMapping("/attachment/{attachmentID}")
+    public ResponseEntity<Object> getAttachment(@PathVariable Long attachmentID) {
+        try {
+            return ResponseEntity.ok(userService.getUserAttachment(attachmentID));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
+
     @DeleteMapping("/deleteUser/{userID}")
     public ResponseEntity<Object> deleteUser(@PathVariable Long userID) {
         try {

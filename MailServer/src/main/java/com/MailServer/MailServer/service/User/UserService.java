@@ -35,14 +35,16 @@ public class UserService {
     private final EmailRepository emailRepository;
     private final ContactRepository contactRepository;
     private final UserEmailStatusRepository userEmailStatusRepository;
+    private final AttachmentRepository attachmentRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository, UserEmailStatusRepository userEmailStatusRepository) {
+    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository, UserEmailStatusRepository userEmailStatusRepository, AttachmentRepository attachmentRepository) {
         this.userRepository = userRepository;
         this.folderRepository = folderRepository;
         this.emailRepository = emailRepository;
         this.contactRepository = contactRepository;
         this.userEmailStatusRepository = userEmailStatusRepository;
+        this.attachmentRepository = attachmentRepository;
     }
 
     @Transactional
@@ -159,10 +161,11 @@ public class UserService {
             folders.add(receiver.getFolders().getFirst());
         }
         List<Attachment> attachments = new ArrayList<>();
-        for(AttachmentDTO attachment : emailDTO.getAttachments()){
-            attachments.add(new Attachment(attachment));
-        }
         Email email = new Email(emailDTO, attachments, folders);
+        for(AttachmentDTO attachment : emailDTO.getAttachments()){
+            attachments.add(new Attachment(attachment,email));
+        }
+        email.setAttachments(attachments);
         emailRepository.save(email);
         return getUserFolder(folderID,pageNo,maxPageSize);
     }
@@ -170,6 +173,10 @@ public class UserService {
     public Object getUserEmail(Long emailID) {
         Email email = emailRepository.findById(emailID).orElseThrow();
         return new EmailDTO(email.getReceivers(), email.getSender(), email.getSubject(), email.getBody(), email.getDatetime(), email.getAttachments(), email.getPriority());
+    }
+    public Object getUserAttachment(Long attachmentID) {
+        Attachment attachment = attachmentRepository.findById(attachmentID).orElseThrow();
+        return new AttachmentDTO(attachment.getAttachmentID(),attachment.getData());
     }
 
     @Transactional

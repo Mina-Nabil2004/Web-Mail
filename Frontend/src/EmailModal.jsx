@@ -13,11 +13,11 @@ const EmailModal = ({ email, onClose, builder }) => {
   };
 
   // Open Attachment in a New Tab
-  const handleOpenAttachment = (attachment) => {
+  const handleOpenAttachment = async (attachment) => {
     try {
       // Extract base64 data after the comma (e.g., "data:image/jpeg;base64,...")
-      const base64Data = attachment.data.split(",")[1];
-
+      const response = await axios.get(`http://localhost:8080/email/attachment/${attachment.attachmentID}`)
+      const base64Data = response.data.data.split(",")[1];
       // Decode base64 data into binary
       const byteCharacters = atob(base64Data);
       const byteArrays = [];
@@ -85,7 +85,7 @@ const EmailModal = ({ email, onClose, builder }) => {
             attachments.map((att, index) => (
               <div key={att.attachmentID} className="attachment-item">
                 <p>
-                  {att.attachmentName} ({(att.attachmentSize / 1024).toFixed(2)} KB)
+                  {att.name} ({(att.size / 1024).toFixed(2)} KB)
                 </p>
                 <button onClick={() => handleOpenAttachment(att)}>Open</button>
                 <button onClick={() => handleDownloadAttachment(att)}>Download</button>
