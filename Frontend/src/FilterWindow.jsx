@@ -20,8 +20,8 @@ const FilterWindow = ({ filterOptions, setFilterOptions, onClose, onApplyFilter 
         <label>Date:</label>
         <input
           type="text"
-          name="date"
-          value={filterOptions.date}
+          name="datetime"
+          value={filterOptions.datetime}
           onChange={handleInputChange}
           placeholder=" "
         />
@@ -40,8 +40,8 @@ const FilterWindow = ({ filterOptions, setFilterOptions, onClose, onApplyFilter 
         <label>Reciver:</label>
         <input
           type="text"
-          name="reciver"
-          value={filterOptions.reciver}
+          name="receiver"
+          value={filterOptions.receiver}
           onChange={handleInputChange}
           placeholder=" "
         />

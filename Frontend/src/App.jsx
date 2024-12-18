@@ -83,7 +83,7 @@ function App() {
     console.log("Search query:", searchQuery);
     try {
       const response = await axios.get(
-        `http://localhost:8080/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page}`
+        `http://localhost:8080/email/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page}`
       );
       setActiveFolder(response.data);
       console.log("Search results:", response.data);

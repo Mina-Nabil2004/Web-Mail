@@ -217,7 +217,6 @@ public class UserService {
     }
 
     public Object searchEmails(Long folderID, String criteria, int pageNo, int maxPageSize) {
-        Criteria filter = new OrCriteria(criteria);
         List<Email> emails =  folderRepository.findById(folderID).orElseThrow().getEmails();
         return FilterFacade.filter(new FilterDTO() ,emails, criteria, pageNo, maxPageSize);
     }

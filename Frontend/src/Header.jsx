@@ -13,9 +13,9 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch, activ
   const [initial, setInitial] = useState();
   const [filterWindowOpen, setFilterWindowOpen] = useState(false);
   const [filterOptions, setFilterOptions] = useState({
-    date: '',
+    datetime: '',
     sender: '',
-    reciver : '',
+    receiver : '',
     subject : '',
     body : ''
   });
@@ -61,7 +61,7 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch, activ
 
   const handleApplyFilter = async (filterOptions) => {
     console.log("Applied filters:", filterOptions);
-    const response = await axios.get(`http://localhost:8080/filterEmails/${activeFolderID}/${"and"}/${maxPageSize}/${page}`, filterOptions);
+    const response = await axios.get(`http://localhost:8080/email/filterEmails/${activeFolderID}/${"and"}/${maxPageSize}/${page}`,filterOptions);
     setActiveFolder(response.data);
     setFilterWindowOpen(false);
   };
