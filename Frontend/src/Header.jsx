@@ -16,7 +16,8 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch, activ
     date: '',
     sender: '',
     reciver : '',
-    subject : ''
+    subject : '',
+    body : ''
   });
 
   const toggleProfileMenu = () => {

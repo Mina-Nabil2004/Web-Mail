@@ -41,7 +41,7 @@ const FilterWindow = ({ filterOptions, setFilterOptions, onClose, onApplyFilter 
         <input
           type="text"
           name="reciver"
-          value={filterOptions.sender}
+          value={filterOptions.reciver}
           onChange={handleInputChange}
           placeholder=" "
         />
@@ -51,7 +51,17 @@ const FilterWindow = ({ filterOptions, setFilterOptions, onClose, onApplyFilter 
         <input
           type="text"
           name="subject"
-          value={filterOptions.sender}
+          value={filterOptions.subject}
+          onChange={handleInputChange}
+          placeholder=" "
+        />
+      </div>
+      <div className="filter-item">
+        <label>Body:</label>
+        <input
+          type="text"
+          name="body"
+          value={filterOptions.body}
           onChange={handleInputChange}
           placeholder=" "
         />
