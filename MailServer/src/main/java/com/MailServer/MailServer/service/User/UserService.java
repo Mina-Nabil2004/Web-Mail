@@ -94,11 +94,16 @@ public class UserService {
     @Transactional
     public Object addContact(Long userID, String name, String addresses) {
         User user = userRepository.findById(userID).orElseThrow();
+        List<String> emails = Arrays.stream(addresses.split(",")).map(String::trim).toList();
+        for(String email : emails){
+            if(userRepository.findByEmail(email)==null){
+                return "contact doesnt exist";
+            }
+        }
         user.getContacts().add(new Contact(name, user, addresses));
         userRepository.save(user);
-        return getContact(user.getUserID());
+        return getContact(userID);
     }
-
     public Object getContact(Long userID) {
         User user = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
         if (user.getContacts().isEmpty()) {
