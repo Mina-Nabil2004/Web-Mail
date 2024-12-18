@@ -67,7 +67,7 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch}) => {
         <h2>Mail Website</h2>
       </div>
       <div className="header-center">
-      <button className="search-button" onClick={handleSearchClick}>
+        <button className="search-button" onClick={handleSearchClick}>
           <SearchIcon />
         </button>
        <input
@@ -80,7 +80,7 @@ const Header = ({ userId, onLogout, searchQuery, setSearchQuery, onSearch}) => {
         {/* <button className="search-button" onClick={handleSearchClick}>
           <i className="material-icons">search</i>
         </button> */}
-        <button className="search-button" onClick={handleFilterClick}>
+        <button className="filter-button" onClick={handleFilterClick}>
           <TuneIcon />
         </button>
       </div>

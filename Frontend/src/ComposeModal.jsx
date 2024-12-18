@@ -3,7 +3,7 @@ import "./ComposeModal.css";
 import axios from "axios";
 import {Builder} from "./EmailBuilder.jsx"
 
-const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
+const ComposeModal = ({ isOpen, onClose, setActiveFolder, activeFolderID, maxPageSize, page, onSend, onDraft }) => {
   if (!isOpen) return null; 
   const [receivers, setReceivers] = useState([]);
   const [priority, setPriority] = useState(null);
@@ -22,9 +22,9 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
     e.preventDefault();
     try {
       console.log(builder.build());
-      const response = await axios.post(`http://localhost:8080/email/send/${userId}`,builder.build());
-      
+      const response = await axios.post(`http://localhost:8080/email/send/${userId}/${activeFolderID}/${maxPageSize}/${page}`,builder.build());
       builder.reset();
+      setActiveFolder(response.data);
       console.log("Email sent:", response.data);
     } catch (err) {
       console.error("Error sending email:", err);
@@ -33,6 +33,7 @@ const ComposeModal = ({ isOpen, onClose, onSend, onDraft }) => {
 
   const handleDraft = async () => {
     const response = await axios.post(`http://localhost:8080/email/send/${userId}`,builder.build());
+    setActiveFolder(response.data);
     builder.reset();
     onClose();
   };

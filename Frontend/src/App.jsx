@@ -358,7 +358,12 @@ function App() {
         </div>
       )}
       {isModalOpen && selectedEmail && (
-        <EmailModal email={selectedEmail} onClose={handleCloseModal} />
+        <EmailModal email={selectedEmail} 
+                    setActiveFolder={setActiveFolder}
+                    activeFolderID={activeFolderID}
+                    maxPageSize={maxPageSize}
+                    page = {page}
+                    onClose={handleCloseModal} />
       )}
     </div>
   );

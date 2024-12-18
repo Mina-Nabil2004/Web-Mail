@@ -110,7 +110,7 @@ public class UserService {
     }
 
     @Transactional
-    public Object send(EmailDTO emailDTO, Long userID){
+    public Object send(EmailDTO emailDTO, Long userID, Long folderID, int maxPageSize, int pageNo){
         List<Folder> folders = new ArrayList<>();
         User sender = userRepository.findById(userID).orElseThrow();
         emailDTO.setSender(sender.getEmail());
@@ -125,7 +125,7 @@ public class UserService {
         }
         Email email = new Email(emailDTO, attachments, folders);
         emailRepository.save(email);
-        return new EmailDTO(email.getEmailID(), email.getSender(), email.getReceivers(), email.getSubject(), email.getBody(), email.getDatetime(), email.getPriority());
+        return getUserFolder(folderID,pageNo,maxPageSize);
     }
 
     public Object getUserEmail(Long emailID) {
