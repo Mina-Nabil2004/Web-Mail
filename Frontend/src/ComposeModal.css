@@ -5,14 +5,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Darker background */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  backdrop-filter: blur(5px); /* Adds a slight blur effect */
+  /* backdrop-filter: blur(5px); */
   animation: fadeIn 0.3s ease-in-out;
-  
+  overflow: auto;
 }
 
 /* Modal Appearance Animation */
@@ -31,12 +30,12 @@
   padding: 25px;
   border-radius: 15px;
   width: 1500px; /* Reduced width */
-
-  max-height: 80vh; /* Limits the height to 80% of the viewport */
-  overflow-y: auto; /* Adds scrolling if content exceeds height */
-  
+  margin-top: 75px;
+  max-height: 85vh; /* Limits the height to 80% of the viewport */
+  overflow-y:auto;  /* Adds scrolling if content exceeds height */
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
   position: relative;
+  z-index: 1001;
   transform: scale(0.95);
   animation: scaleUp 0.3s ease-in-out forwards;
 }
@@ -225,10 +224,14 @@ h2 {
   margin: 0;
 }
 
-/* Attachment Slider */
 .attachment-container {
+  padding-top: 5px;
+  padding-bottom: 5px;
   width: 100%;
-  overflow-x: auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  max-height: 100px;
   margin-top: 10px;
   white-space: nowrap;
   border: 1px solid #ddd;
@@ -238,14 +241,13 @@ h2 {
   box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.attachment-slider {
-  display: flex;
-  gap: 15px;
-}
-
 .attachment-item {
-  display: inline-block;
-  min-width: 150px;
+  display: flex;
+  justify-content: space-between;
+  height: 50px;
+  align-items: center;
+  margin-bottom: 5px;
+  max-width: 555px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -255,14 +257,11 @@ h2 {
   transition: transform 0.2s ease-in-out;
 }
 
-.attachment-item:hover {
-  transform: translateY(-5px);
-}
-
 .attachment-item button {
   display: block;
-  margin: 5px auto;
+  margin: 5px;
   padding: 6px 10px;
+  height: 35px;
   font-size: 12px;
   border: none;
   border-radius: 5px;
@@ -270,8 +269,4 @@ h2 {
   color: white;
   cursor: pointer;
   transition: background-color 0.2s ease;
-}
-
-.attachment-item button:hover {
-  background-color: #0056b3;
 }

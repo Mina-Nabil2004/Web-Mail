@@ -231,7 +231,7 @@ function App() {
 
             <div className="content" style={{ padding: "0px" }}>
 
-              <div style={{ display: "flex" , marginTop: "-50px", position:"fixed"}}>
+              <div style={{ display: "flex" , marginTop: "-50px", position:"fixed", zIndex: "3"}}>
                 <h2 style={{width: "100px", marginLeft: "-35px"}}>{activeMenu}</h2>
                 <div style={{ display: "flex", marginLeft: "100px" }}>
                   <button className="pages-button" style={{ marginLeft: "1300px", marginRight: "10px" }} onClick={() => handlePageChange(-1)} disabled={page === 0}>
