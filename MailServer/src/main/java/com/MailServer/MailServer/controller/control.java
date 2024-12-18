@@ -211,13 +211,13 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
         }
     }
-    @PostMapping("/editContact/{contactID}")
-    public ResponseEntity<Object> editContact(@RequestBody ContactDTO dto, @PathVariable Long contactID) {
+    @PostMapping("/editContact/{contactID}/{userID}")
+    public ResponseEntity<Object> editContact(@RequestBody ContactDTO dto, @PathVariable Long contactID,@PathVariable Long userID) {
         try {
             Contact editedContact = new Contact();
             editedContact.setName(dto.getName());
             editedContact.setAddresses(dto.getAddresses());
-            return ResponseEntity.ok(userService.EditContact(contactID, editedContact));
+            return ResponseEntity.ok(userService.EditContact(contactID, editedContact,userID));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to edit contact: " + e.getMessage());
         }

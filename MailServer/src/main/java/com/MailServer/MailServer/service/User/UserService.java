@@ -137,6 +137,16 @@ public class UserService {
                 .map(contact -> new ContactDTO(contact.getName(), contact.getAddresses(),contact.getContactID()))
                 .collect(Collectors.toList());
     }
+    public Object EditContact(Long contactID,Contact EditedContact,Long userID ){
+        User user = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User not found"));
+        Contact contact = contactRepository.findById(contactID).orElseThrow();
+        contact.setName(EditedContact.getName());
+        contact.setAddresses(EditedContact.getAddresses());
+        contactRepository.save(contact);
+        return user.getContacts().stream()
+                .map(contacts -> new ContactDTO(contacts.getName(), contacts.getAddresses(),contacts.getContactID()))
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public Object send(EmailDTO emailDTO, Long userID, Long folderID, int maxPageSize, int pageNo){
@@ -285,13 +295,7 @@ public class UserService {
         folderRepository.save(sourceFolder);
         return getUserFolder(sourceFolderID,pageNo,maxPageSize);
     }
-    public Object EditContact(Long contactID,Contact EditedContact){
-        Contact contact = contactRepository.findById(contactID).orElseThrow();
-        contact.setName(EditedContact.getName());
-        contact.setAddresses(EditedContact.getAddresses());
-        contactRepository.save(contact);
-        return contact;
-    }
+
     public Object moveToTrash(List<Long>emailIDs,Long sourceFolderID,Long TrashFolderID,int pageNo,int maxPageSize) {
         Folder sourceFolder = folderRepository.findById(sourceFolderID).orElseThrow();
         Folder TrashFolder = folderRepository.findById(TrashFolderID).orElseThrow();

@@ -1,29 +1,49 @@
 import React, { useState, useEffect } from "react";
 import "./EditContactWindow2.css";
+
 const EditContactWindow2 = ({ contact, onSave, onCancel }) => {
-  const [editedContact, setEditedContact] = useState({ ...contact, addresses: contact.addresses || [] });
+  console.log("hello");
+  console.log(contact);
+  const [editedContact, setEditedContact] = useState({
+    name: contact.name || "",
+    addresses: Array.isArray(contact.addresses) ? contact.addresses : [],
+    contactID : contact.contactID
+  });
+  
 
   useEffect(() => {
-    setEditedContact({ ...contact, addresses: contact.addresses || [] });
+    // Update the state when `contact` prop changes
+    setEditedContact({
+      name: contact.name || "",
+      addresses: Array.isArray(contact.addresses) ? contact.addresses : [],
+      contactID : contact.contactID
+    });
   }, [contact]);
 
   const handleNameChange = (e) => {
-    setEditedContact({ ...editedContact, name: e.target.value });
+    setEditedContact((prev) => ({ ...prev, name: e.target.value }));
   };
 
   const handleEmailChange = (index, value) => {
-    const updatedEmails = [...editedContact.addresses];
-    updatedEmails[index] = value;
-    setEditedContact({ ...editedContact, addresses: updatedEmails });
+    setEditedContact((prev) => {
+      const updatedAddresses = [...prev.addresses];
+      updatedAddresses[index] = value;
+      return { ...prev, addresses: updatedAddresses };
+    });
   };
 
   const handleAddEmailField = () => {
-    setEditedContact({ ...editedContact, addresses: [...editedContact.addresses, ""] });
+    setEditedContact((prev) => ({
+      ...prev,
+      addresses: [...prev.addresses, ""],
+    }));
   };
 
   const handleDeleteEmail = (index) => {
-    const updatedEmails = editedContact.addresses.filter((_, i) => i !== index);
-    setEditedContact({ ...editedContact, addresses: updatedEmails });
+    setEditedContact((prev) => ({
+      ...prev,
+      addresses: prev.addresses.filter((_, i) => i !== index),
+    }));
   };
 
   return (
@@ -31,24 +51,32 @@ const EditContactWindow2 = ({ contact, onSave, onCancel }) => {
       <h3>Edit Contact</h3>
       <div>
         <label>Name:</label>
-        <input type="text" value={editedContact.name} onChange={handleNameChange} />
+        <input
+          type="text"
+          value={editedContact.name}
+          onChange={handleNameChange}
+          placeholder="Enter contact name"
+        />
       </div>
       <div>
         <label>Emails:</label>
         {editedContact.addresses.map((address, index) => (
-          <div key={index}>
+          <div key={index} className="email-field">
             <input
               type="email"
               value={address}
               onChange={(e) => handleEmailChange(index, e.target.value)}
+              placeholder={`Email ${index + 1}`}
             />
-            <button onClick={() => handleDeleteEmail(index)}>Delete Email</button>
+            <button onClick={() => handleDeleteEmail(index)}>Delete</button>
           </div>
         ))}
       </div>
       <button onClick={handleAddEmailField}>Add Email</button>
-      <button onClick={() => onSave(editedContact)}>Save</button>
-      <button onClick={onCancel}>Cancel</button>
+      <div className="action-buttons">
+        <button onClick={() => onSave(editedContact)}>Save</button>
+        <button onClick={onCancel}>Cancel</button>
+      </div>
     </div>
   );
 };
