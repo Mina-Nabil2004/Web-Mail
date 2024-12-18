@@ -45,7 +45,7 @@ const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID
       name: file.name,
       type: file.type,
       size: file.size,
-      data: null, // Placeholder for base64 data
+      data: file.data,
     }));
   
     // Read files and update base64 data
@@ -71,33 +71,34 @@ const handleRemoveAttachment = (index) => {
 };
 const handleOpenAttachment = (attachment) => {
   try {
+    // Extract base64 data after the comma (e.g., "data:application/pdf;base64,....")
+    const base64Data = attachment.data.split(",")[1];
+    
+    // Decode base64 data into binary
+    const byteCharacters = atob(base64Data);
+    const byteArrays = [];
+    
+    for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+      const slice = byteCharacters.slice(offset, offset + 1024);
+      const byteNumbers = new Array(slice.length);
+      
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      
+      byteArrays.push(new Uint8Array(byteNumbers));
+    }
+    
     // Create a blob with the appropriate file type
-    const blob = new Blob([attachment.data], { type: attachment.type });
+    const blob = new Blob(byteArrays, { type: attachment.type });
+    const url = URL.createObjectURL(blob);
 
-    // Read the blob as binary data
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(blob);
-    reader.onloadend = function() {
-        const arrayBuffer = reader.result;
-        const byteArray = new Uint8Array(arrayBuffer);
-
-        // Convert binary data to base64
-        let binary = '';
-        for (let i = 0; i < byteArray.length; i++) {
-            binary += String.fromCharCode(byteArray[i]);
-        }
-        const base64Data = btoa(binary);
-
-        // Create a data URL
-        const dataUrl = `data:${attachment.type};base64,${base64Data}`;
-
-        // Open the file in a new tab/window
-        window.open(dataUrl, "_blank");
-    };
-} catch (error) {
-    console.error("Error encoding attachment:", error);
-    alert("Failed to encode the attachment.");
-}
+    // Open the file in a new tab/window
+    window.open(url, "_blank");
+  } catch (error) {
+    console.error("Error opening attachment:", error);
+    alert("Failed to open the attachment.");
+  }
 };
 
 
