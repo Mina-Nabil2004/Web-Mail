@@ -167,7 +167,7 @@ const handleDownloadAttachment = (attachment) => {
             />
           </div>
           <div className="input-group">
-            <label>Rank:</label>
+            <label>Priority:</label>
             <div className="radio-group">
               <label>
                 <input
@@ -226,24 +226,21 @@ const handleDownloadAttachment = (attachment) => {
               <div>
                 <p>Attachments:</p>
                 <div className="attachment-container">
-  <div className="attachment-slider">
-    {attachments.map((attachment, index) => (
-      <div key={index} className="attachment-item">
-        <p>{attachment.name}</p>
-        <p>Size: {attachment.size} bytes</p>
-        <button type="button" onClick={() => handleOpenAttachment(attachment)}>Open</button>
-        <button type="button" onClick={() => handleDownloadAttachment(attachment)}>Download</button>
-        <button type="button" onClick={() => handleRemoveAttachment(index)}>Remove</button>
-      </div>
-    ))}
-  </div>
-</div>
-
+                  <div className="attachment-slider">
+                    {attachments.map((attachment, index) => (
+                      <div key={index} className="attachment-item">
+                        <p>{attachment.name}</p>
+                        <p>Size: {attachment.size} bytes</p>
+                        <button type="button" onClick={() => handleOpenAttachment(attachment)}>Open</button>
+                        <button type="button" onClick={() => handleDownloadAttachment(attachment)}>Download</button>
+                        <button type="button" onClick={() => handleRemoveAttachment(index)}>Remove</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </div>
-
-
           <div className="modal-actions">
             <button type="submit" className="send-btn" onClick={handleSend}>
               Send
