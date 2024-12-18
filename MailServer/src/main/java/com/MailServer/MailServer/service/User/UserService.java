@@ -220,4 +220,30 @@ public class UserService {
         contactRepository.save(contact);
         return contact;
     }
+    public Object moveToTrash(List<Long>emailIDs,Long sourceFolderID,Long TrashFolderID,int pageNo,int maxPageSize) {
+        Folder sourceFolder = folderRepository.findById(sourceFolderID).orElseThrow();
+        Folder TrashFolder = folderRepository.findById(TrashFolderID).orElseThrow();
+        for (Long emailID : emailIDs) {
+            Email email = emailRepository.findById(emailID).orElseThrow();
+            sourceFolder.getEmails().remove(email);
+            email.getFolders().remove(sourceFolder);
+            email.getFolders().add(TrashFolder);
+            TrashFolder.getEmails().add(email);
+            emailRepository.save(email);
+        }
+        folderRepository.save(TrashFolder);
+        folderRepository.save(sourceFolder);
+        return getUserFolder(sourceFolderID,pageNo,maxPageSize);
+    }
+    public Object deleteFromTrash(List<Long>emailIDs,Long TrashFolderID,int pageNo,int maxPageSize){
+        Folder TrashFolder = folderRepository.findById(TrashFolderID).orElseThrow();
+        for (Long emailID : emailIDs) {
+            Email email = emailRepository.findById(emailID).orElseThrow();
+            TrashFolder.getEmails().remove(email);
+            email.getFolders().remove(TrashFolder);
+            emailRepository.save(email);
+        }
+        folderRepository.save(TrashFolder);
+        return getUserFolder(TrashFolderID,pageNo,maxPageSize);
+    }
 }
