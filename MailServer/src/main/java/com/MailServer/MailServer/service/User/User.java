@@ -2,6 +2,7 @@ package com.MailServer.MailServer.service.User;
 
 import com.MailServer.MailServer.service.Contact.Contact;
 import com.MailServer.MailServer.service.Email.Email;
+import com.MailServer.MailServer.service.Email.UserEmailStatus;
 import com.MailServer.MailServer.service.Folder.Folder;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -39,6 +40,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Contact> contacts;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserEmailStatus> userEmailStatuses;
 
 //    @ManyToMany(mappedBy = "users", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 //    private List<Email> emails;

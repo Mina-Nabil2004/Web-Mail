@@ -20,6 +20,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,13 +34,15 @@ public class UserService {
     private final FolderRepository folderRepository;
     private final EmailRepository emailRepository;
     private final ContactRepository contactRepository;
+    private final UserEmailStatusRepository userEmailStatusRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository) {
+    public UserService(UserRepository userRepository, FolderRepository folderRepository, EmailRepository emailRepository, ContactRepository contactRepository, UserEmailStatusRepository userEmailStatusRepository) {
         this.userRepository = userRepository;
         this.folderRepository = folderRepository;
         this.emailRepository = emailRepository;
         this.contactRepository = contactRepository;
+        this.userEmailStatusRepository = userEmailStatusRepository;
     }
 
     @Transactional
@@ -75,6 +80,25 @@ public class UserService {
 
     public Object getUserFolder(Long folderID, int pageNo, int maxPageSize){
         Folder folder =folderRepository.findById(folderID).orElseThrow();
+        if(folder.getName().equals("trash")){
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            for(Email email : folder.getEmails()){
+                UserEmailStatus status = userEmailStatusRepository.findByEmail(email);
+                LocalDateTime deleteTime = status.getMovedToTrashDate();
+                long difference = ChronoUnit.DAYS.between(deleteTime, currentDateTime);
+                if(difference > 30){
+                    folder.getEmails().remove(email);
+                    email.getFolders().remove(folder);
+                    userEmailStatusRepository.delete(status);
+                    if (email.getFolders().isEmpty()) {
+                        emailRepository.delete(email);
+                    } else {
+                        emailRepository.save(email);
+                    }
+                }
+            }
+            folderRepository.save(folder);
+        }
         return SortFacade.sort(folder.getEmails(), "date", false, pageNo, maxPageSize);
     }
 
@@ -185,6 +209,8 @@ public class UserService {
             emailRepository.save(email);
             folderRepository.save(activeFolder);
             folderRepository.save(trash);
+            UserEmailStatus status = new UserEmailStatus(activeFolder.getUser(),email,LocalDateTime.now(), activeFolderID);
+            userEmailStatusRepository.save(status);
         }
         return getUserFolder(activeFolderID,pageNo,maxPageSize);
     }

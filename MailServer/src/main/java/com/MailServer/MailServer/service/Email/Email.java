@@ -43,6 +43,9 @@ public class Email implements Cloneable{
     @OneToMany(mappedBy = "email", cascade = CascadeType.ALL)
     private List<Attachment> attachments;
 
+    @OneToMany(mappedBy = "email", cascade = CascadeType.ALL)
+    private List<UserEmailStatus> userEmailStatuses;
+
     private List<String> receivers;
     private String sender;
     private String subject;
@@ -57,7 +60,7 @@ public class Email implements Cloneable{
         this.sender= dto.getSender();
         this.subject=dto.getSubject();
         this.body=dto.getBody();
-        this.datetime= LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm-dd/MM/yyyy"));
+        this.datetime= LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss-dd/MM/yyyy"));
         this.receivers = dto.getReceivers();
         this.folders = folders;
         this.priority = dto.getPriority();
