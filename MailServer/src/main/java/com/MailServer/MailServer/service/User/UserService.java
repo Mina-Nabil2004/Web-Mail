@@ -291,6 +291,9 @@ public class UserService {
     public Object draftedEmail(Long emailID,Long draftID,Long activeFolderID,int pageNo,int maxPageSize){
         Email email = emailRepository.findById(emailID).orElseThrow();
         Folder draftfolder=folderRepository.findById(draftID).orElseThrow();
+        Folder activeFolder=folderRepository.findById(activeFolderID).orElseThrow();
+        email.getFolders().remove(activeFolder);
+        activeFolder.getEmails().remove(email);
         email.getFolders().add(draftfolder);
         draftfolder.getEmails().add(email);
         emailRepository.save(email);
