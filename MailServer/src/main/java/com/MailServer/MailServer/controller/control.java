@@ -110,10 +110,10 @@ public class control {
         }
     }
 
-    @DeleteMapping("/deleteEmail/{emailID}")
-    public ResponseEntity<Object> deleteEmail(@PathVariable Long emailID) {
+    @DeleteMapping("/deleteEmail/{emailID}/{activeFolderID}/{trashID}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> deleteEmail(@PathVariable Long emailID, @PathVariable Long activeFolderID, @PathVariable Long trashID, @PathVariable int maxPageSize, @PathVariable int page) {
         try {
-            return ResponseEntity.ok(userService.deleteEmail(emailID));
+            return ResponseEntity.ok(userService.deleteEmail(emailID, activeFolderID, trashID, maxPageSize, page));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }

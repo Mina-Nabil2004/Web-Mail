@@ -158,9 +158,30 @@ public class UserService {
     }
 
     @Transactional
-    public Object deleteEmail(Long emailID) {
-        emailRepository.deleteById(emailID);
-        return "Deleted";
+    public Object deleteEmail(Long emailID, Long activeFolderID, Long trashID, int maxPageSize, int pageNo) {
+        Email email = emailRepository.findById(emailID).orElseThrow();
+        Folder activeFolder = folderRepository.findById(activeFolderID).orElseThrow();
+
+        if (activeFolderID.equals(trashID)) {
+            email.getFolders().remove(activeFolder);
+            if (email.getFolders().isEmpty()) {
+                emailRepository.delete(email);
+            } else {
+                emailRepository.save(email);
+            }
+            activeFolder.getEmails().remove(email);
+            folderRepository.save(activeFolder);
+        } else {
+            Folder trash = folderRepository.findById(trashID).orElseThrow();
+            email.getFolders().remove(activeFolder);
+            email.getFolders().add(trash);
+            activeFolder.getEmails().remove(email);
+            trash.getEmails().add(email);
+            emailRepository.save(email);
+            folderRepository.save(activeFolder);
+            folderRepository.save(trash);
+        }
+        return activeFolder.getEmails();
     }
 
     @Transactional

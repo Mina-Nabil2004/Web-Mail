@@ -43,35 +43,11 @@ function App() {
   };
 
   const handleReadEmail = async (emailID) => {
-    // const response = await axios.get(`http://localhost:8080/email/folder/${emailID}`);
-
-    //swap that example with backend fetch reqqqq
-    
-    const response = {
-      data: {
-        emailID: 2,
-        sender: "minanabil2004@gmail.com",
-        receivers: ["abdo@gmail.com"],
-        subject: "mina nabil",
-        attachments: [
-          {
-            attachmentID: 1632532718000,
-            attachmentType: "image/jpeg",
-            attachmentName: "OIP.jpeg",
-            attachmentSize: 204800, // Size in bytes
-            data: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAAAAD/..."
-          }
-        ],
-        
-        body: "Hi mina nabil youssef,\n\nJust a reminder about our meeting.",
-        datetime: "02:01-17/12/2024"
-      }
-    };
+    const response = await axios.get(`http://localhost:8080/email/email/${emailID}`);
     setSelectedEmail(response.data);
     setIsModalOpen(true);
   };
   
-
   const handleCloseModal = () => {
     setSelectedEmail(null);
     setIsModalOpen(false);
@@ -173,8 +149,28 @@ function App() {
     setIsMoveModalOpen(true); // Show the folder selection modal
   };
 
+  const handleDelete = async (emailID) =>{
+    let trashID;
+    for(let i=0 ;i<folders.length ;i++) {
+      if(folders[i].name === "trash") {
+        trashID = folders[i].folderID;
+      }
+    }
+    const response = await axios.delete(`http://localhost:8080/email/deleteEmail/${emailID}/${activeFolderID}/${trashID}/${maxPageSize}/${page}`);
+    console.log(activeFolder);
+    setActiveFolder(response.data);
+    console.log(activeFolder);
+  }
 
-
+  const handleStarred = async (emailID) =>{
+    let folderID;
+    for(let i=0 ;i<folders.length ;i++) {
+      if(folders[i].name === "starred") {
+        folderID = folders[i].folderID;
+      }
+    }
+    await axios.post(`http://localhost:8080/email/star/${emailID}/${folderID}`);
+  }
 
   const handleEmailSelect = (emailID) => {
     setSelectedEmails((prevSelectedEmails) => {
@@ -228,6 +224,7 @@ function App() {
               <Menu
                 activeMenu={activeMenu}
                 setActiveFolder={setActiveFolder}
+                setActiveFolderID={setActiveFolderID}
                 setActiveMenu={handleFolderChange}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
@@ -283,17 +280,17 @@ function App() {
                           <p>
                             <strong>To: </strong> {email.receivers}
                           </p>
-                          <p>{email.body}</p>
                           <p>
                             <strong>Date: </strong> {email.datetime}
-                            </p>
+                          </p>
+                          <p>{email.body}</p>
                         </div>
                       </div>
                       <div className="email-right">
                         <button className="read-button" onClick={() => handleReadEmail(email.emailID)}>Read</button>
                         <button className="move-button" onClick={handleMoveButtonClick}>Move</button>
-                        <button className="Delete-button" >< FaTrashAlt /> </button>
-                        <button className="Started-button"><FaStar /> </button>
+                        <button className="Delete-button" onClick={() => handleDelete(email.emailID)}>< FaTrashAlt /> </button>
+                        <button className="Started-button" onClick={() => handleStarred(email.emailID)}><FaStar /> </button>
                       </div>
                     </div>
                   ))

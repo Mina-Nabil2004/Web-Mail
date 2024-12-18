@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./EmailModal.css";
+import axios from "axios";
 
 const EmailModal = ({ email, onClose, builder }) => {
   const [attachments, setAttachments] = useState(email.attachments);
@@ -75,10 +76,9 @@ const EmailModal = ({ email, onClose, builder }) => {
         <h2>{email.subject}</h2>
         <p><strong>From:</strong> {email.sender}</p>
         <p><strong>To:</strong> {email.receivers.join(", ")}</p>
-        <p><strong>Date/Time:</strong> {email.datetime}</p>
+        <p><strong>Date:</strong> {email.datetime}</p>
         <p><strong>Body:</strong></p>
         <p>{email.body}</p>
-
         <div>
           <h3>Attachments:</h3>
           {attachments.length > 0 ? (
@@ -96,7 +96,6 @@ const EmailModal = ({ email, onClose, builder }) => {
             <p>No attachments</p>
           )}
         </div>
-
         <button onClick={onClose}>Close</button>
       </div>
     </div>
