@@ -25,6 +25,7 @@ const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID
       const response = await axios.post(`http://localhost:8080/email/send/${userId}/${activeFolderID}/${maxPageSize}/${page}`,builder.build());
       builder.reset();
       setActiveFolder(response.data);
+      onClose();
       console.log("Email sent:", response.data);
     } catch (err) {
       console.error("Error sending email:", err);

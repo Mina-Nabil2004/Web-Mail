@@ -153,6 +153,7 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
       {/* Compose Modal */}
       <ComposeModal
         activeFolderID={activeFolderID}
+        setActiveFolder={setActiveFolder}
         maxPageSize={maxPageSize}
         page={page}
         userId={userId}

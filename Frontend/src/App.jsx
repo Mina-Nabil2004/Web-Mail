@@ -110,8 +110,11 @@ function App() {
 
   const handlePageChange = async (direction) => {
     if(maxPageSize == activeFolder.length && direction == 1){
-      setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page+1}`)).data);
-      setPage(page + 1);
+      const response = await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page+1}`);
+      if(response.data != ""){
+        setActiveFolder(response.data);
+        setPage(page + 1);
+      }
     }
     else if(page != 0 && direction == -1){
       setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page-1}`)).data);
