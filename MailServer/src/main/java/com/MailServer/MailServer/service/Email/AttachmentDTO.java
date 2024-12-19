@@ -15,7 +15,10 @@ public class AttachmentDTO {
         this.attachmentID = attachmentID;
         this.size = size;
     }
-    public AttachmentDTO(Long attachmentID,String data){
+    public AttachmentDTO(Long attachmentID, String name, String type, int size,String data){
+        this.name=name;
+        this.type=type;
+        this.size = size;
         this.attachmentID = attachmentID;
         this.data = data;
     }
