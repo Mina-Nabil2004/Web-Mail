@@ -59,36 +59,40 @@ const EmailModal = ({ email, onClose, builder }) => {
 };
 
 
-  
+const handleDownloadAttachment = async (attachment) => {
+  try {
+      // Fetch the attachment data (assuming it's base64-encoded)
+      const response = await axios.get(`http://localhost:8080/email/attachment/${attachment.attachmentID}`);
+      const base64Data = response.data.data.split(",")[1];
 
-  // Download Attachment
-  const handleDownloadAttachment = (attachment) => {
-    try {
-      const base64Data = attachment.data.split(",")[1];
+      // Create a Blob from the base64 data
       const byteCharacters = atob(base64Data);
-      const byteArrays = [];
-
-      for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
-        const slice = byteCharacters.slice(offset, offset + 1024);
-        const byteNumbers = new Array(slice.length);
-
-        for (let i = 0; i < slice.length; i++) {
-          byteNumbers[i] = slice.charCodeAt(i);
-        }
-
-        byteArrays.push(new Uint8Array(byteNumbers));
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: attachment.type });
 
-      const blob = new Blob(byteArrays, { type: attachment.attachmentType });
+      // Create a download link
+      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = attachment.attachmentName;
+      link.href = url;
+      link.download = attachment.name; // Use the name of the attachment
+      document.body.appendChild(link);
       link.click();
-    } catch (error) {
+
+      // Cleanup
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+  } catch (error) {
       console.error("Error downloading attachment:", error);
       alert("Failed to download the attachment.");
-    }
-  };
+  }
+};
+
+
+
 
   return (
     <div className="modal-overlay">

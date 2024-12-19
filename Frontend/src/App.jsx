@@ -27,6 +27,16 @@ function App() {
   const [isContacting, setIsContacting] = useState(false); // State for showing contact form
   const [maxPageSize, setMaxPageSize] = useState(5);
   const [page, setPage] = useState(0); // State for managing page number
+  const [searching, setSearching] = useState(false);
+  const [filtering, setFiltering] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterOptions, setFilterOptions] = useState({
+    datetime: '',
+    sender: '',
+    receiver : '',
+    subject : '',
+    body : ''
+  });
 
   const [folders, setFolders] = useState([]);
   const [Categories, setCategories] = useState([]);
@@ -153,13 +163,38 @@ function App() {
 
   const handlePageChange = async (direction) => {
     if(maxPageSize == activeFolder.length && direction == 1){
-      const response = await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page+1}`);
+      if(!searching && !filtering){
+        const response = await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page+1}`);
+      }
+      else if(searching){
+        const response = await axios.get(
+          `http://localhost:8080/email/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page+1}`
+        );
+        setActiveFolder(response.data);
+      }
+      else if(filtering){
+        const response = await axios.post(`http://localhost:8080/email/filterEmails/${activeFolderID}/${"and"}/${maxPageSize}/${page+1}`,filterOptions);
+        setActiveFolder(response.data);
+      }
       if(response.data != ""){
         setActiveFolder(response.data);
         setPage(page + 1);
       }
     }
     else if(page != 0 && direction == -1){
+      if(!searching && !filtering){
+        setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page-1}`)).data);
+      }
+      else if(searching){
+        const response = await axios.get(
+          `http://localhost:8080/email/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page-1}`
+        );
+        setActiveFolder(response.data);
+      }
+      else if(filtering){
+        const response = await axios.post(`http://localhost:8080/email/filterEmails/${activeFolderID}/${"and"}/${maxPageSize}/${page-1}`,filterOptions);
+        setActiveFolder(response.data);
+      }
       setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page-1}`)).data);
       setPage(page - 1);
     }
@@ -252,7 +287,15 @@ function App() {
                   activeFolderID={activeFolderID} 
                   maxPageSize={maxPageSize} 
                   page={page} 
-                  setActiveFolder={setActiveFolder} />
+                  setSearching={setSearching}
+                  searching={searching}
+                  filtering={filtering}
+                  setFiltering={setFiltering}
+                  setActiveFolder={setActiveFolder}
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  filterOptions={filterOptions} 
+                  setFilterOptions={setFilterOptions}/>
           <div className="app-layout">
             <div className="left-sidebar">
               <Menu
@@ -272,6 +315,8 @@ function App() {
                 maxPageSize={maxPageSize}
                 page={page}
                 setPage={setPage}
+                setSearching={setSearching}
+                setFiltering={setFiltering}
               />
               <button className="contact-btn" onClick={toggleContactForm}>
                 Contact
