@@ -308,18 +308,9 @@ public class UserService {
         return SortFacade.sort(folder.getEmails(), criteria, order, pageNo, maxPageSize);
     }
     public Object MoveEmail(List<Long>emailIDs,Long sourceFolderID,Long destinationFolderID,int pageNo,int maxPageSize) {
-        Folder sourceFolder = folderRepository.findById(sourceFolderID).orElseThrow();
-        Folder destinationFolder = folderRepository.findById(destinationFolderID).orElseThrow();
         for (Long emailID : emailIDs) {
-            Email email = emailRepository.findById(emailID).orElseThrow();
-            sourceFolder.getEmails().remove(email);
-            email.getFolders().remove(sourceFolder);
-            email.getFolders().add(destinationFolder);
-            destinationFolder.getEmails().add(email);
-            emailRepository.save(email);
+            moveEmail(emailID,sourceFolderID,destinationFolderID,maxPageSize,pageNo);
         }
-        folderRepository.save(destinationFolder);
-        folderRepository.save(sourceFolder);
         return getUserFolder(sourceFolderID,pageNo,maxPageSize);
     }
 
@@ -340,18 +331,9 @@ public class UserService {
     }
 
     public Object moveToTrash(List<Long>emailIDs,Long sourceFolderID,Long TrashFolderID,int pageNo,int maxPageSize) {
-        Folder sourceFolder = folderRepository.findById(sourceFolderID).orElseThrow();
-        Folder TrashFolder = folderRepository.findById(TrashFolderID).orElseThrow();
         for (Long emailID : emailIDs) {
-            Email email = emailRepository.findById(emailID).orElseThrow();
-            sourceFolder.getEmails().remove(email);
-            email.getFolders().remove(sourceFolder);
-            email.getFolders().add(TrashFolder);
-            TrashFolder.getEmails().add(email);
-            emailRepository.save(email);
+            deleteEmail(emailID,sourceFolderID,TrashFolderID,maxPageSize,pageNo);
         }
-        folderRepository.save(TrashFolder);
-        folderRepository.save(sourceFolder);
         return getUserFolder(sourceFolderID,pageNo,maxPageSize);
     }
     public Object deleteFromTrash(List<Long>emailIDs,Long TrashFolderID,int pageNo,int maxPageSize){

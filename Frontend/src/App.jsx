@@ -56,6 +56,8 @@ function App() {
     // Determine the next state
     const states = ["Default", "Descending", "Ascending"];
     const nextState = states[(states.indexOf(rankState) + 1) % states.length];
+    // if(nextState != "Default"){setFiltering(true)}
+    // else{setFiltering(false)}
     setRankState(nextState);
     const order = nextState === "Ascending"; // true for ascending, false for descending
     const criteria = "priority"; // Replace with your actual sorting criteria
@@ -83,22 +85,24 @@ function App() {
     const handleMoveEmail = async () => {
       console.log(selectedFolder);
       console.log(folders);
-      let wantedfolder;
-      for(let i=0 ;i<folders.length ;i++) {
-        if(folders[i].name === selectedFolder) {
-          wantedfolder = folders[i].folderID;
-        }
-      }
-      console.log(selectedFolder)
-      console.log(wantedfolder);
-      console.log(destinationssss);
+      // let wantedfolder;
+      // for(let i=0 ;i<folders.length ;i++) {
+      //   if(folders[i].name === selectedFolder) {
+      //     wantedfolder = folders[i].folderID;
+      //   }
+      // }
+      console.log(selectedFolder);
+      console.log(selectedEmails);
+      // console.log(wantedfolder);
+      // console.log(destinationssss);
       try{
-        const response = await axios.post(`http://localhost:8080/email/move/${activeFolderID}/${wantedfolder}/${maxPageSize}/${page}`,
+        const response = await axios.post(`http://localhost:8080/email/move/${activeFolderID}/${selectedFolder}/${maxPageSize}/${page}`,
           {
-            "emailIDs" : [destinationssss]
+            "emailIDs" : selectedEmails
           }
         );
         setActiveFolder(response.data);
+        setSelectedEmails([]);
       }catch(e){
         console.error("Error moving email:", e);
       }
@@ -262,19 +266,28 @@ function App() {
       }
     });
   };
-  const handleBulkMove = () => {
+  const handleBulkMove = async () => {
+    handleMoveButtonClick();
+    console.log(selectedFolder);
+    console.log(selectedEmails);
     if (selectedEmails.length > 0 && selectedFolder) {
-      // Logic to move the selected emails to the selected folder
       console.log("Moving emails to:", selectedFolder);
-      // Meow API call to delete the selected emails
+      const response = await axios.post(`http://localhost:8080/email/move/${activeFolderID}/${selectedFolder}/${maxPageSize}/${page}`,
+        {
+          "emailIDs": selectedEmails
+        });
+      setActiveFolder(response.data);
     }
   };
   
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
     if (selectedEmails.length > 0) {
-      // Logic to delete the selected emails
       console.log("Deleting emails:", selectedEmails);
-      // Meow API call to delete the selected emails
+      const response = await axios.post(`http://localhost:8080/email/movetoTrash/${activeFolderID}/${folders[3].folderID}/${maxPageSize}/${page}`,
+        {
+          "emailIDs": selectedEmails
+        });
+      setActiveFolder(response.data);
     }
   };
 
@@ -453,15 +466,15 @@ function App() {
           <div className="move-folder-content">
             <h3>Select a Folder</h3>
             <div>
-              {["inbox", "sent", "draft", "trash", "starred"].map((folderName) => (
-                <label key={folderName}>
+              {folders.map((folder) => (
+                <label key={folder.name}>
                   <input
                     type="radio"
                     name="folder"
-                    value={folderName}
-                    onChange={() => setSelectedFolder(folderName)}
+                    value={folder.name}
+                    onChange={() => setSelectedFolder(folder.folderID)}
                   />
-                  {folderName.charAt(0).toUpperCase() + folderName.slice(1)}
+                  {folder.name.charAt(0).toUpperCase() + folder.name.slice(1)}
                 </label>
               ))}
             </div>
