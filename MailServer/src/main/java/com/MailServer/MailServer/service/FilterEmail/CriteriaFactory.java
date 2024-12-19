@@ -10,6 +10,7 @@ public class CriteriaFactory {
 //        else if(criteria.equals("receiver")){
 //            return new CriteriaReciever(dto);
 //        }
+            case "priority" -> new Criteriapriority(dto);
             case "datetime" -> new CriteriaDate(dto);
             case "and" -> new AndCriteria(dto);
             default -> new OrCriteria(criteria);
