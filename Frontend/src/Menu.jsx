@@ -14,8 +14,8 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
   const [isModalOpen, setModalOpen] = useState(false);
   const [isContactsOpen, setContactsOpen] = useState(false);
   const [isAddFolderModalOpen, setAddFolderModalOpen] = useState(false); 
-  console.log(activeFolderID);
-  console.log(categories);
+  // console.log(activeFolderID);
+  // console.log(categories);
 
   const openModal = () => {
     setModalOpen(true);
@@ -82,7 +82,6 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
 
   const addNewFolder = async (folderName) => {
     try{
-      console.log();
       const response = await axios.post(`http://localhost:8080/email/addFolder/${userId}/${folderName}/${activeFolderID}/${maxPageSize}/${page}`)
       setCategories(response.data);
      } catch (error) {

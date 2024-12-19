@@ -35,14 +35,38 @@ function App() {
 
   const [isMoveModalOpen, setIsMoveModalOpen] = useState(false); // State for move folder modal visibility
   const [selectedFolder, setSelectedFolder] = useState(null); // State for the selected folder
-  const handleMoveEmail = () => {
-    if (selectedFolder) {
+  const [destinationssss, setDestinationssss] = useState(null);
+
+    const handleMoveEmail = async () => {
+      console.log(selectedFolder);
+      console.log(folders);
+      let wantedfolder;
+      for(let i=0 ;i<folders.length ;i++) {
+        if(folders[i].name === selectedFolder) {
+          wantedfolder = folders[i].folderID;
+        }
+      }
+      console.log(selectedFolder)
+      console.log(wantedfolder);
+      console.log(destinationssss);
+      try{
+        const response = await axios.post(`http://localhost:8080/email/move/${activeFolderID}/${wantedfolder}/${maxPageSize}/${page}`,
+          {
+            "emailIDs" : [destinationssss]
+          }
+        );
+        setFolders(response.data);
+      }catch(e){
+        console.error("Error moving email:", e);
+      }
       // Logic for moving the email to the selected folder
       console.log(`Email moved to: ${selectedFolder}`);
       setIsMoveModalOpen(false); // Close the modal after moving
-    }
   };
-
+  const handleMoveButtonClick = (emailID) => {
+    setDestinationssss(emailID);
+    setIsMoveModalOpen(true); // Show the folder selection modal
+  };
   const handleReadEmail = async (emailID) => {
     const response = await axios.get(`http://localhost:8080/email/email/${emailID}`);
     console.log(emailID);
@@ -133,9 +157,7 @@ function App() {
   };
 
 
-  const handleMoveButtonClick = () => {
-    setIsMoveModalOpen(true); // Show the folder selection modal
-  };
+
 
   const handleDelete = async (emailID) =>{
     let trashID;
@@ -278,7 +300,7 @@ function App() {
                       </div>
                       <div className="email-right">
                         <button className="read-button" onClick={() => handleReadEmail(email.emailID)}>Read</button>
-                        <button className="move-button" onClick={handleMoveButtonClick}>Move</button>
+                        <button className="move-button" onClick={() => handleMoveButtonClick(email.emailID)}>Move</button>
                         <button className="Delete-button" onClick={() => handleDelete(email.emailID)}>< FaTrashAlt /> </button>
                         {folders[3].folderID != activeFolderID &&
                           (<button className="Started-button" onClick={() => handleStarred(email.emailID)}><FaStar /> </button>)
