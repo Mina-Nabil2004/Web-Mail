@@ -28,8 +28,9 @@ public class Attachment {
     private String type;
     private int size;
 
-    @Column(columnDefinition = "LONGTEXT")
-    private String data;
+    @Lob
+    @Column(columnDefinition = "BLOB")
+    private byte[] data;
 
     public Attachment(AttachmentDTO dto, Email email) {
         this.name = dto.getName();
@@ -80,11 +81,11 @@ public class Attachment {
         this.size = size;
     }
 
-    public String getData() {
+    public byte[] getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(byte[] data) {
         this.data = data;
     }
 }
