@@ -3,6 +3,8 @@ import axios from "axios";
 import "./ContactsWindow.css";
 import EditContactWindow from "./EditContactWindow"; // For adding a new contact
 import EditContactWindow2 from "./EditContactWindow2"; // For editing an existing contact
+import SearchIcon from '@mui/icons-material/Search';
+import "./Header.css";
 
 const ContactsWindow = ({ onClose }) => {
   const [contacts, setContacts] = useState([]);
@@ -111,6 +113,12 @@ const ContactsWindow = ({ onClose }) => {
   const handleEditContact = (index) => {
     setSelectedContactIndex(index);
   };
+  const handleSearchClick = async () => {
+    const response = await axios.get(
+      `http://localhost:8080/email/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page}`
+    );
+    setActiveFolder(response.data);
+  };
   return (
     <div className="contacts-window">
       {/* Add Contact Window */}
@@ -136,6 +144,11 @@ const ContactsWindow = ({ onClose }) => {
         <div className="contacts-list-window">
           <h3>Contacts</h3>
           <button onClick={handleAddContact}>Add Contact</button>
+          
+          
+          <button className="search-button" onClick={handleSearchClick}>
+          <SearchIcon />
+          </button>
 
           <div className="contacts-list">
             {contacts.map((contact, index) => (

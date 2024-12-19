@@ -38,6 +38,18 @@ function App() {
   const [isMoveModalOpen, setIsMoveModalOpen] = useState(false); // State for move folder modal visibility
   const [selectedFolder, setSelectedFolder] = useState(null); // State for the selected folder
   const [destinationssss, setDestinationssss] = useState(null);
+  const [isDraftFolderModalOpen, setDraftFolderModalOpen] = useState(false); 
+  const [selectedDraftEmail, setSelectedDraftEmail] = useState(null);
+ 
+ 
+  const openDraftFolderModal = () => {
+    setDraftFolderModalOpen(true);
+  };
+
+  const closeDraftFolderModal = () => {
+    setDraftFolderModalOpen(false);
+  };
+
 
     const handleMoveEmail = async () => {
       console.log(selectedFolder);
@@ -214,8 +226,10 @@ function App() {
   }
 
   const handleDraftEmail = (emailID) => {
-    
-  }
+    const draftEmail = activeFolder.find((email) => email.emailID === emailID); // Find the draft email data
+    setSelectedDraftEmail(draftEmail); // Set the selected draft email
+    openDraftFolderModal(); // Open the modal
+  };
 
   return (
     <div className="app">
@@ -364,7 +378,7 @@ function App() {
 
        {/* Draft Modal */}
        <DraftModel
-        userId = {userId}
+        userId={userId}
         activeMenu={activeMenu}
         setActiveFolder={setActiveFolder}
         activeFolderID={activeFolderID}
@@ -374,14 +388,16 @@ function App() {
         onDraft={handleDraft}
         handleLoginSuccess={handleLoginSuccess}
         handleAllMail={handleAllMail}
-        folders ={folders}
+        folders={folders}
         categories={Categories}
         setCategories={setCategories}
+        // emailID={emailID}
         maxPageSize={maxPageSize}
         page={page}
         setPage={setPage}
-        isOpen={isModalOpen}
-        // onClose={closeModal}
+        isOpen={isDraftFolderModalOpen}
+        onClose={closeDraftFolderModal}
+        draftEmail={selectedDraftEmail} // Pass the selected draft email
       />
 
       {/* Contact Form Modal */}

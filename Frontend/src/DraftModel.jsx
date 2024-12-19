@@ -5,7 +5,7 @@ import {Builder} from "./EmailBuilder.jsx"
 import { red } from "@mui/material/colors";
 import "./Form.css";
 
-const DraftModel = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID, maxPageSize, page, onSend, onDraft }) => {
+const DraftModel = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID, maxPageSize, page, emailID }) => {
   if (!isOpen) return null; 
   const [receivers, setReceivers] = useState([]);
   const [priority, setPriority] = useState(null);

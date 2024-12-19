@@ -43,7 +43,7 @@ const EditContactWindow = ({ contact = {}, onSave, onCancel }) => {
 
   return (
     <div className="edit-contact-window">
-      <h3>Edit Contact</h3>
+      <h3>Edit Contact</h3> 
       <div>
         <label>Name:</label>
         <input
