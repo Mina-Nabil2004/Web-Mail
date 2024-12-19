@@ -85,7 +85,7 @@ public class UserService {
         if(folder.getName().equals("trash")){
             LocalDateTime currentDateTime = LocalDateTime.now();
             for(Email email : folder.getEmails()){
-                UserEmailStatus status = userEmailStatusRepository.findByEmail(email);
+                UserEmailStatus status = userEmailStatusRepository.findByEmailAndUserUserID(email,folder.getUser().getUserID());
                 LocalDateTime deleteTime = status.getMovedToTrashDate();
                 long difference = ChronoUnit.DAYS.between(deleteTime, currentDateTime);
                 if(difference > 30){
@@ -230,6 +230,23 @@ public class UserService {
             userEmailStatusRepository.save(status);
         }
         return getUserFolder(activeFolderID,pageNo,maxPageSize);
+    }
+
+    @Transactional
+    public Object restoreEmail(Long emailID, Long trashID, int maxPageSize, int pageNo) {
+        Email email = emailRepository.findById(emailID).orElseThrow();
+        Folder trashFolder = folderRepository.findById(trashID).orElseThrow();
+        UserEmailStatus status = userEmailStatusRepository.findByEmailAndUserUserID(email,trashFolder.getUser().getUserID());
+        Folder folder = folderRepository.findById(status.getDeletedFrom()).orElseThrow();
+        email.getFolders().remove(trashFolder);
+        email.getFolders().add(folder);
+        trashFolder.getEmails().remove(email);
+        folder.getEmails().add(email);
+        emailRepository.save(email);
+        folderRepository.save(trashFolder);
+        folderRepository.save(folder);
+        userEmailStatusRepository.delete(status);
+        return getUserFolder(trashID,pageNo,maxPageSize);
     }
 
     @Transactional

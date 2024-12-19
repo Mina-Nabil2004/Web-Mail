@@ -129,6 +129,14 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
         }
     }
+    @PostMapping("/restoreEmail/{emailID}/{trashID}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> restoreEmail(@PathVariable Long emailID, @PathVariable Long trashID, @PathVariable int maxPageSize, @PathVariable int page) {
+        try {
+            return ResponseEntity.ok(userService.restoreEmail(emailID, trashID, maxPageSize, page));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while registering the user.");
+        }
+    }
 
     @DeleteMapping("/deleteContact/{contactID}")
     public ResponseEntity<Object> deleteContact(@PathVariable Long contactID) {
