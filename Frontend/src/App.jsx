@@ -288,6 +288,7 @@ function App() {
           "emailIDs": selectedEmails
         });
       setActiveFolder(response.data);
+      setSelectedEmails([]);
     }
   };
 

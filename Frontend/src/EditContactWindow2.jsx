@@ -47,7 +47,7 @@ const EditContactWindow2 = ({ contact, onSave, onCancel }) => {
   };
 
   return (
-    <div className="edit-contact-window">
+    <div className="edit-contact-window" style={{zIndex:"1000"}}>
       <h3>Edit Contact</h3>
       <div>
         <label>Name:</label>
