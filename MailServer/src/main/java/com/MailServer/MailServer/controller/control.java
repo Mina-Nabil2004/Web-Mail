@@ -289,10 +289,10 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to edit contact: " + e.getMessage());
         }
     }
-        @PostMapping("/saveDraft/{userID}/{emailID}/{draftID}/{activeFolderID}/{page}/{maxPageSize}")
-        public ResponseEntity<Object> savedraft(@PathVariable Long userID,@PathVariable Long emailID,@PathVariable Long draftID,@PathVariable Long activeFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
+        @PostMapping("/saveDraft/{userID}/{emailID}/{activeFolderID}/{page}/{maxPageSize}")
+        public ResponseEntity<Object> savedraft(@RequestBody EmailDTO dto,@PathVariable Long userID,@PathVariable Long activeFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
             try {
-                return ResponseEntity.ok(userService.saveDraft(userID,emailID,draftID,activeFolderID,page,maxPageSize));
+                return ResponseEntity.ok(userService.saveDraft(dto, userID,activeFolderID,page,maxPageSize));
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
             }

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -68,7 +69,7 @@ public class UserService {
     public Object getUser(String email, String password){
         User user = userRepository.findByEmail(email);
         if(user == null){return "Not Registered";}
-        if(user.getPassword().equals(password)){
+        if(new BCryptPasswordEncoder().matches(password, user.getPassword())){
             return user.getUserID();
         }
         return "Incorrect Password";
@@ -379,17 +380,23 @@ public class UserService {
         return folder;
     }
     @Transactional
-    public Object saveDraft(Long userID,Long emailID,Long draftID,Long activeFolderID,int pageNo,int maxPageSize){
-        User user = userRepository.findById(userID).orElseThrow();
-        Email email = emailRepository.findById(emailID).orElseThrow();
-        Folder draftfolder =folderRepository.findById(draftID).orElseThrow();
-        Folder activeFolder =folderRepository.findById(activeFolderID).orElseThrow();
-        user.getFolders().add(draftfolder);
-        email.getFolders().add(draftfolder);
-        draftfolder.getEmails().add(email);
+    public Object saveDraft(EmailDTO emailDTO, Long userID, Long folderID, int maxPageSize, int pageNo) {
+        User sender = userRepository.findById(userID).orElseThrow();
+        Folder draftFolder = sender.getFolders().get(2);
+        List<Folder> folder = new ArrayList<>();
+        folder.add(draftFolder);
+        emailDTO.setSender(sender.getEmail());
+        List<Attachment> attachments = new ArrayList<>();
+        Email email = new Email(emailDTO, attachments, folder);
+        if (emailDTO.getAttachments() != null) {
+            for (AttachmentDTO attachment : emailDTO.getAttachments()) {
+                attachments.add(new Attachment(attachment, email));
+            }
+        }
+        email.setAttachments(attachments);
+        draftFolder.getEmails().add(email);
         emailRepository.save(email);
-        folderRepository.save(draftfolder);
-        userRepository.save(user);
-        return getUserFolder(activeFolderID,pageNo,maxPageSize);
+        folderRepository.save(draftFolder);
+        return getUserFolder(folderID,pageNo,maxPageSize);
     }
 }
