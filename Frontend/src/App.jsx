@@ -52,14 +52,24 @@ function App() {
   const [selectedDraftEmail, setSelectedDraftEmail] = useState(null);
   const [rankState, setRankState] = useState("Default");
 
-  const toggleRankState = () => {
-    setRankState((prevState) => {
-      if (prevState === "Default") return "Descending";
-      if (prevState === "Descending") return "Ascending";
-      return "Default";
-    });
+  const toggleRankState = async () => {
+    // Determine the next state
+    const states = ["Default", "Descending", "Ascending"];
+    const nextState = states[(states.indexOf(rankState) + 1) % states.length];
+    setRankState(nextState);
+    const order = nextState === "Ascending"; // true for ascending, false for descending
+    const criteria = "priority"; // Replace with your actual sorting criteria
+    // const folderID = 53;    // Replace with your actual folder ID
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/email/sort/${criteria}/${activeFolderID}/${order}/${maxPageSize}/${page}`
+      );
+      console.log("Sorted emails:", response.data); 
+      setActiveFolder(response.data);
+    } catch (error) {
+      console.error("Failed to sort emails:", error.response?.data || error.message);
+    }
   };
- 
  
   const openDraftFolderModal = () => {
     setDraftFolderModalOpen(true);
@@ -88,7 +98,7 @@ function App() {
             "emailIDs" : [destinationssss]
           }
         );
-        setFolders(response.data);
+        setActiveFolder(response.data);
       }catch(e){
         console.error("Error moving email:", e);
       }
@@ -97,6 +107,7 @@ function App() {
       setIsMoveModalOpen(false); // Close the modal after moving
   };
   const handleMoveButtonClick = (emailID) => {
+    console.log(activeFolder);
     setDestinationssss(emailID);
     setIsMoveModalOpen(true); // Show the folder selection modal
   };
@@ -340,31 +351,32 @@ function App() {
               <div style={{ display: "flex" , marginTop: "-50px", position:"fixed", zIndex: "3"}}>
                 <h2 style={{width: "100px", marginLeft: "-35px"}}>{activeMenu}</h2>
                 <div style={{ display: "flex", marginLeft: "100px" }}>
-                  <button
-                  className="rank-button"
-                  style={{
-                    marginLeft: "10px",
-                    padding: "10px",
-                    border: "1px solid #ccc",
-                    borderRadius: "5px",
-                    backgroundColor:
-                      rankState === "Default"
-                        ? "#f0f0f0"
-                        : rankState === "Descending"
-                        ? "#d0e6a5"
-                        : "#f4b4b4",
-                    minWidth: "120px", // Minimum width to make sure all text fits
-                    textAlign: "center", // Center text within the button
-                  }}
-                  onClick={toggleRankState}
-                >
-                  {rankState === "Default"
-                    ? "Default"
-                    : rankState === "Descending"
-                    ? "Descending"
-                    : "Ascending"}
+                <button
+                    className="rank-button"
+                    style={{
+                      marginLeft: "-100px",
+                      marginTop:"-2px",
+                      height:"40px",
+                      padding: "2px",
+                      border: "1px solid #ccc",
+                      borderRadius: "5px",
+                      backgroundColor:
+                        rankState === "Default"
+                          ? "#f0f0f0"
+                          : rankState === "Descending"
+                          ? "#d0e6a5"
+                          : "#f4b4b4",
+                      minWidth: "90px", // Minimum width to make sure all text fits
+                      textAlign: "center", // Center text within the button
+                    }}
+                    onClick={toggleRankState}
+                    >
+                    {rankState === "Default"
+                      ? "Default"
+                      : rankState === "Descending"
+                      ? "Descending"
+                      : "Ascending"}
                 </button>
-
 
                   <button className="pages-button" style={{ marginLeft: "1300px", marginRight: "10px" }} onClick={() => handlePageChange(-1)} disabled={page === 0}>
                     <FaArrowLeft />
@@ -393,7 +405,7 @@ function App() {
                                 onChange={() => handleEmailSelect(email.emailID)}
                         />
                         <div className="email-content">
-                          <h3>{email.subject}</h3>
+                          <h3>{email.subject}   (priority: <strong>{email.priority})</strong></h3>
                           <p>
                             <strong>From: </strong> {email.sender}
                           </p>
@@ -441,7 +453,7 @@ function App() {
           <div className="move-folder-content">
             <h3>Select a Folder</h3>
             <div>
-              {["inbox", "sent", "drafts", "trash", "starred"].map((folderName) => (
+              {["inbox", "sent", "draft", "trash", "starred"].map((folderName) => (
                 <label key={folderName}>
                   <input
                     type="radio"

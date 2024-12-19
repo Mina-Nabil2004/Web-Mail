@@ -332,7 +332,7 @@ public class UserService {
         email.getFolders().remove(sourceFolder);
         email.getFolders().add(destinationFolder);
         destinationFolder.getEmails().add(email);
-        
+
         emailRepository.save(email);
         folderRepository.save(destinationFolder);
         folderRepository.save(sourceFolder);
