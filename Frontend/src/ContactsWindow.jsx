@@ -4,12 +4,14 @@ import "./ContactsWindow.css";
 import EditContactWindow from "./EditContactWindow"; // For adding a new contact
 import EditContactWindow2 from "./EditContactWindow2"; // For editing an existing contact
 import SearchIcon from '@mui/icons-material/Search';
+import FilterListIcon from '@mui/icons-material/FilterList'; // Filter icon import
 import "./Header.css";
 
 const ContactsWindow = ({ onClose }) => {
   const [contacts, setContacts] = useState([]);
   const [selectedContactIndex, setSelectedContactIndex] = useState(null); // For editing
   const [selectedIndex, setSelectedIndex] = useState(null); // For adding
+  const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const userId = localStorage.getItem("userId");
 
   // Fetch contacts on component mount
@@ -33,9 +35,9 @@ const ContactsWindow = ({ onClose }) => {
     setContacts([...contacts, newContact]);
     setSelectedIndex(contacts.length); 
   };
+
   const handleSaveContact = async (updatedContact) => {
     console.log(updatedContact);
-    console.log(updatedContact.contactID);
     try {
       if (selectedIndex !== null) {
         // Add a new contact
@@ -45,61 +47,33 @@ const ContactsWindow = ({ onClose }) => {
         setContacts(response.data); // Update contacts with server response
         setSelectedIndex(null);
       } else if (selectedContactIndex !== null) {
-        console.log(contacts);
-        console.log(updatedContact.contactID);
-          try {
-            const response = await axios.post(`http://localhost:8080/email/editContact/${updatedContact.contactID}/${userId}`,
-              {
-                name: updatedContact.name,
-                addresses: updatedContact.addresses.join(",")       
-              }
-            );
-            console.log(response.data);
-            setContacts(response.data);
-            setSelectedContactIndex(null);
-          } catch (error) {
-            console.error("Error saving contact:", error);
-          }
+        try {
+          const response = await axios.post(`http://localhost:8080/email/editContact/${updatedContact.contactID}/${userId}`,
+            {
+              name: updatedContact.name,
+              addresses: updatedContact.addresses.join(",")       
+            }
+          );
+          setContacts(response.data);
+          setSelectedContactIndex(null);
+        } catch (error) {
+          console.error("Error saving contact:", error);
+        }
       }
     } catch (error) {
       console.error("Error saving contact:", error);
     }
   };
-  // const handleSaveContact = async (index) => {
-  //   const updatedContacts = contacts[index]; // Get the contact using the passed index
-  
-  //   try {
-  //     if (selectedIndex !== null) {
-  //       // Add a new contact
-  //       const response = await axios.post(
-  //         `http://localhost:8080/email/addContact/${userId}/${updatedContacts.name}/${updatedContacts.addresses}`
-  //       );
-  //       setContacts(response.data); // Update contacts with server response
-  //       setSelectedIndex(null);
-  //     } else if (index !== null) {
-  //       // Edit an existing contact, using the passed index to get the correct contact ID
-  //       const response = await axios.post(
-  //         `http://localhost:8080/email/editContact/${updatedContacts.contactID}`,
-  //         updatedContacts
-  //       );
-  //       const updatedContacts = [...contacts];
-  //       updatedContacts[index] = response.data; // Update specific contact at the passed index
-  //       setContacts(updatedContacts);
-  //       setSelectedContactIndex(null);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error saving contact:", error);
-  //   }
-  // };
+
   // Cancel editing or adding
   const handleCancelEdit = () => {
     setSelectedIndex(null);
     setSelectedContactIndex(null);
   };
+
   // Delete contact
   const handleDeleteContact = async (index) => {
     const contactToDelete = contacts[index];
-    console.log(contactToDelete);
     try {
       await axios.delete(
         `http://localhost:8080/email/deleteContact/${contactToDelete.contactID}`
@@ -109,16 +83,18 @@ const ContactsWindow = ({ onClose }) => {
       console.error("Error deleting contact:", error);
     }
   };
+
   // Edit an existing contact
   const handleEditContact = (index) => {
     setSelectedContactIndex(index);
   };
-  const handleSearchClick = async () => {
-    const response = await axios.get(
-      `http://localhost:8080/email/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page}`
-    );
-    setActiveFolder(response.data);
+
+  // Search function
+  const handleSearchClick = () => {
+    // Implement search logic here
+    console.log("Searching for:", searchQuery);
   };
+
   return (
     <div className="contacts-window">
       {/* Add Contact Window */}
@@ -139,27 +115,39 @@ const ContactsWindow = ({ onClose }) => {
         />
       )}
 
+      {/* Search Bar and Filter Icon */}
+      <div className="search-bar-container">
+        <input
+          type="text"
+          placeholder="Search contacts..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="search-input"
+        />
+        <button className="search-button" onClick={handleSearchClick}>
+          <SearchIcon />
+        </button>
+        <button className="filter-button">
+          <FilterListIcon />
+        </button>
+      </div>
+
       {/* Contacts List */}
       {selectedIndex === null && selectedContactIndex === null && (
         <div className="contacts-list-window">
           <h3>Contacts</h3>
           <button onClick={handleAddContact}>Add Contact</button>
-          
-          
-          <button className="search-button" onClick={handleSearchClick}>
-          <SearchIcon />
-          </button>
 
           <div className="contacts-list">
             {contacts.map((contact, index) => (
-          <div key={index} className="contact-item">
-            <p onClick={() => handleContactClick(index)}>
-              {contact.name || "Unnamed Contact"}
-            </p>
-            <p>{Array.isArray(contact.addresses) ? contact.addresses.join(", ") : contact.addresses}</p>
-            <button onClick={() => handleDeleteContact(index)}>Delete Contact</button>
-            <button onClick={() => handleEditContact(index)}>Edit Contact</button>
-          </div>
+              <div key={index} className="contact-item">
+                <p onClick={() => handleEditContact(index)}>
+                  {contact.name || "Unnamed Contact"}
+                </p>
+                <p>{Array.isArray(contact.addresses) ? contact.addresses.join(", ") : contact.addresses}</p>
+                <button onClick={() => handleDeleteContact(index)}>Delete Contact</button>
+                <button onClick={() => handleEditContact(index)}>Edit Contact</button>
+              </div>
             ))}
           </div>
 
