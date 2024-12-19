@@ -6,6 +6,8 @@ import Sidebar2 from "./Sidebar2";
 import Form from "./Form";
 import CreateAccount from "./CreateAccount";
 import ComposeModal from "./ComposeModal";
+import DraftModel from "./DraftModel";
+
 import "./App.css";
 import axios from "axios";
 import EmailModal from './EmailModal';
@@ -310,12 +312,13 @@ function App() {
                       <div className="email-right">
                         
                         <button className="read-button" onClick={() => handleReadEmail(email.emailID)}>Read</button>
-                        {folders[3].folderID != activeFolderID ?
-                          (<button className="move-button" onClick={() => handleMoveButtonClick(email.emailID)}>Move</button>):
-                          folders[2].folderID != activeFolderID ?
-                          (<button className="read-button" onClick={() => handleRestoreEmail(email.emailID)}>Restore</button>):
-                          (<button className="read-button" onClick={() => handleDraftEmail(email.emailID)}>Edit</button>)
-                        }
+                        {folders[3].folderID !== activeFolderID ? (
+                          <button className="move-button" onClick={() => handleMoveButtonClick(email.emailID)}>Move</button>
+                        ) : folders[2].folderID !== activeFolderID ? (
+                          <button className="read-button" onClick={() => handleRestoreEmail(email.emailID)}>Restore</button>
+                        ) : (
+                          <button className="read-button" onClick={() => handleDraftEmail(email.emailID)}>Edit</button>
+                        )}
                         <button className="Delete-button" onClick={() => handleDelete(email.emailID)}>< FaTrashAlt /> </button>
                         {(folders[2].folderID != activeFolderID || folders[3].folderID != activeFolderID)&&
                           (<button className="Started-button" onClick={() => handleStarred(email.emailID)}><FaStar /> </button>)
@@ -358,6 +361,28 @@ function App() {
           </div>
         </div>
       )}
+
+       {/* Draft Modal */}
+       <DraftModel
+        userId = {userId}
+        activeMenu={activeMenu}
+        setActiveFolder={setActiveFolder}
+        activeFolderID={activeFolderID}
+        setActiveFolderID={setActiveFolderID}
+        setActiveMenu={handleFolderChange}
+        onSend={handleSend}
+        onDraft={handleDraft}
+        handleLoginSuccess={handleLoginSuccess}
+        handleAllMail={handleAllMail}
+        folders ={folders}
+        categories={Categories}
+        setCategories={setCategories}
+        maxPageSize={maxPageSize}
+        page={page}
+        setPage={setPage}
+        isOpen={isModalOpen}
+        // onClose={closeModal}
+      />
 
       {/* Contact Form Modal */}
       {isContacting && (
