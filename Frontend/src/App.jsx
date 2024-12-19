@@ -139,7 +139,7 @@ function App() {
       const response = await axios.get(`http://localhost:8080/email/folders/${userId}`);
       console.log(response);
       const allFolders = response.data;
-      setFolders(allFolders.slice(0,5));
+      setFolders(allFolders);
       setCategories(allFolders.slice(5));
       setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${response.data[0].folderID}/${maxPageSize}/${page}`)).data);
       setActiveFolderID(response.data[0].folderID);
