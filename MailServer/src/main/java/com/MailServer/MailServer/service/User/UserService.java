@@ -380,4 +380,18 @@ public class UserService {
         folderRepository.save(folder);
         return folder;
     }
+    @Transactional
+    public Object saveDraft(Long userID,Long emailID,Long draftID,Long activeFolderID,int pageNo,int maxPageSize){
+        User user = userRepository.findById(userID).orElseThrow();
+        Email email = emailRepository.findById(emailID).orElseThrow();
+        Folder draftfolder =folderRepository.findById(draftID).orElseThrow();
+        Folder activeFolder =folderRepository.findById(activeFolderID).orElseThrow();
+        user.getFolders().add(draftfolder);
+        email.getFolders().add(draftfolder);
+        draftfolder.getEmails().add(email);
+        emailRepository.save(email);
+        folderRepository.save(draftfolder);
+        userRepository.save(user);
+        return getUserFolder(activeFolderID,pageNo,maxPageSize);
+    }
 }

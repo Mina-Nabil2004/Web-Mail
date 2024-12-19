@@ -52,13 +52,25 @@ function App() {
   const [selectedDraftEmail, setSelectedDraftEmail] = useState(null);
   const [rankState, setRankState] = useState("Default");
 
-  const toggleRankState = () => {
-    setRankState((prevState) => {
-      if (prevState === "Default") return "Descending";
-      if (prevState === "Descending") return "Ascending";
-      return "Default";
-    });
+  const toggleRankState = async () => {
+    // Determine the next state
+    const states = ["Default", "Descending", "Ascending"];
+    const nextState = states[(states.indexOf(rankState) + 1) % states.length];
+    setRankState(nextState);
+    const order = nextState === "Ascending"; // `true` for ascending, `false` for descending
+    const criteria = "priority"; // Replace with your actual sorting criteria
+    // const folderID = 53;    // Replace with your actual folder ID
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/email/sort/${criteria}/${activeFolderID}/${order}/${maxPageSize}/${page}`
+      );
+      console.log("Sorted emails:", response.data); 
+      setActiveFolder(response.data);
+    } catch (error) {
+      console.error("Failed to sort emails:", error.response?.data || error.message);
+    }
   };
+
  
  
   const openDraftFolderModal = () => {

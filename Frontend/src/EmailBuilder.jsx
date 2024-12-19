@@ -60,8 +60,22 @@ export class Builder {
     }
 
     full() {
-        return this.subject !== null && this.body !== null && this.receivers.length > 0;
+        if (this.subject !== null && this.body !== null && this.receivers !== null) {
+            console.log("true");
+            console.log(this.subject);
+            console.log(this.body);
+            console.log(this.receivers);
+            return "true"; // Return as string "true"
+        } else {
+            console.log("false");
+            console.log(this.subject);
+            console.log(this.body);
+            console.log(this.receivers);
+            return "false"; // Return as string "false"
+        }
     }
+    
+    
 
     reset() {
         this.subject = null;

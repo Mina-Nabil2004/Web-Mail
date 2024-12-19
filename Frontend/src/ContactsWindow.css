@@ -95,3 +95,54 @@ button:focus {
   color: white;
   margin-left: 10px;
 }
+/* Common Styles for Buttons */
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007BFF; /* Primary blue */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Search Button */
+.search-button {
+  margin-right: 8px; /* Add space between buttons */
+}
+
+/* Filter Button */
+.filter-button {
+  margin-left: 8px; /* Add space between buttons */
+}
+
+/* Hover Effect */
+button:hover {
+  background-color: #0056b3; /* Darker blue */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Active/Clicked Effect */
+button:active {
+  background-color: #004080; /* Even darker blue */
+  transform: scale(0.95); /* Shrink slightly */
+}
+
+/* Focus Outline for Accessibility */
+button:focus {
+  outline: 2px solid #80D0FF; /* Light blue focus ring */
+  outline-offset: 2px;
+}
+
+/* Icons Inside Buttons */
+button svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px; /* Space between icon and text */
+  fill: white; /* Ensure icons are white */
+}

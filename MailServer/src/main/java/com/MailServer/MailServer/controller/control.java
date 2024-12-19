@@ -274,12 +274,20 @@ public class control {
     @PostMapping("/editFolder/{activeFolderID}")
     public ResponseEntity<Object> editfolder(@RequestBody FolderDTO dto, @PathVariable Long activeFolderID) {
         try {
-            Folder editedFolder =new Folder();
+            Folder editedFolder = new Folder();
             editedFolder.setName(dto.getName());
             return ResponseEntity.ok(userService.EditFolder(activeFolderID, editedFolder));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to edit contact: " + e.getMessage());
         }
     }
+        @PostMapping("/saveDraft/{userID}/{emailID}/{draftID}/{activeFolderID}/{page}/{maxPageSize}")
+        public ResponseEntity<Object> savedraft(@PathVariable Long userID,@PathVariable Long emailID,@PathVariable Long draftID,@PathVariable Long activeFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
+            try {
+                return ResponseEntity.ok(userService.saveDraft(userID,emailID,draftID,activeFolderID,page,maxPageSize));
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
+            }
+        }
 
 }

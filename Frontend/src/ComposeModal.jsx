@@ -20,6 +20,9 @@ const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID
     builder.setReceivers(emailArray); 
   };
   const handleSend = async (e) => {
+    builder.full();
+    console.log(builder.full());
+    if(builder.full){
     e.preventDefault();
     try {
       console.log(builder.build());
@@ -30,6 +33,9 @@ const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID
       console.log("Email sent:", response.data);
     } catch (err) {
       console.error("Error sending email:", err);
+    }
+  }else{
+    alert("Please fill in all fields.");
     }
   };
 

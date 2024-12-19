@@ -5,7 +5,7 @@ import EditContactWindow from "./EditContactWindow"; // For adding a new contact
 import EditContactWindow2 from "./EditContactWindow2"; // For editing an existing contact
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList'; // Filter icon import
-import "./Header.css";
+import FilterWindow2 from "./FilterWindow2";
 
 const ContactsWindow = ({ onClose }) => {
   const [contacts, setContacts] = useState([]);
@@ -13,6 +13,11 @@ const ContactsWindow = ({ onClose }) => {
   const [selectedIndex, setSelectedIndex] = useState(null); // For adding
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const userId = localStorage.getItem("userId");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filterOptions, setFilterOptions] = useState({
+    name : "",
+    email: "",
+  });
 
   // Fetch contacts on component mount
   useEffect(() => {
@@ -105,70 +110,106 @@ const ContactsWindow = ({ onClose }) => {
     }
   };
   
-  
-  
-  
+  const handleFilterClick = () => {
+    setIsFilterOpen(true); // Open the filter window
+  };
+
+  const handleCloseFilter = () => {
+    setIsFilterOpen(false); // Close the filter window
+  };
+
+  // const handleApplyFilter = (options) => {
+  //   console.log("Applying filters with options:", options);
+  //   // Perform filtering logic here (e.g., API call or state update)
+  //   setIsFilterOpen(false); // Close the filter window after applying filters
+  // };
+
+  const handleApplyFilter = async (options) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/email/filterContact/${userId}/name/0`, 
+        {
+            name: options.name,
+            email: options.email  
+        }
+      );
+      console.log(searchQuery);
+      setContacts(response.data);
+      console.log(response.data); // Log response data
+    } catch (error) {
+      console.error("Error searching contacts:", error);
+    }
+  };
   return (
     <div className="contacts-window">
-      {/* Add Contact Window */}
-      {selectedIndex !== null && (
-        <EditContactWindow
-          contact={contacts[selectedIndex]} // Pass new contact for adding
-          onSave={handleSaveContact}
-          onCancel={handleCancelEdit}
-        />
-      )}
+    {selectedIndex !== null && (
+      <EditContactWindow
+        contact={contacts[selectedIndex]}
+        onSave={handleSaveContact}
+        onCancel={handleCancelEdit}
+      />
+    )}
 
-      {/* Edit Contact Window */}
-      {selectedContactIndex !== null && (
-        <EditContactWindow2
-          contact={contacts[selectedContactIndex]} // Pass existing contact for editing
-          onSave={handleSaveContact}
-          onCancel={handleCancelEdit}
-        />
-      )}
+    {selectedContactIndex !== null && (
+      <EditContactWindow2
+        contact={contacts[selectedContactIndex]}
+        onSave={handleSaveContact}
+        onCancel={handleCancelEdit}
+      />
+    )}
 
-      {/* Search Bar and Filter Icon */}
-      <div className="search-bar-container">
-        <input
-          type="text"
-          placeholder="Search contacts..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
-        <button className="search-button" onClick={handleSearchClick}>
-          <SearchIcon />
-        </button>
-        <button className="filter-button">
-          <FilterListIcon />
-        </button>
-      </div>
-
-      {/* Contacts List */}
-      {selectedIndex === null && selectedContactIndex === null && (
-        <div className="contacts-list-window">
-          <h3>Contacts</h3>
-          <button onClick={handleAddContact}>Add Contact</button>
-
-          <div className="contacts-list">
-            {contacts.map((contact, index) => (
-              <div key={index} className="contact-item">
-                <p onClick={() => handleEditContact(index)}>
-                  {contact.name || "Unnamed Contact"}
-                </p>
-                <p>{Array.isArray(contact.addresses) ? contact.addresses.join(", ") : contact.addresses}</p>
-                <button onClick={() => handleDeleteContact(index)}>Delete Contact</button>
-                <button onClick={() => handleEditContact(index)}>Edit Contact</button>
-              </div>
-            ))}
-          </div>
-
-          <button onClick={onClose}>Close</button>
-        </div>
-      )}
+    <div className="search-bar-container">
+      <input
+        type="text"
+        placeholder="Search contacts..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="search-input"
+      />
+      <button className="search-button" onClick={handleSearchClick}>
+        <SearchIcon />
+      </button>
+      <button className="filter-button" onClick={handleFilterClick}>
+        <FilterListIcon />
+      </button>
     </div>
-  );
+
+    {isFilterOpen && (
+      <div className="overlay">
+        <FilterWindow2
+          filterOptions={filterOptions}
+          setFilterOptions={setFilterOptions}
+          onClose={handleCloseFilter}
+          onApplyFilter={handleApplyFilter}
+        />
+      </div>
+    )}
+
+    <div className="contacts-list-window">
+      <h3>Contacts</h3>
+      <button onClick={handleAddContact}>Add Contact</button>
+      <div className="contacts-list">
+        {contacts.map((contact, index) => (
+          <div key={index} className="contact-item">
+            <p onClick={() => handleEditContact(index)}>
+              {contact.name || "Unnamed Contact"}
+            </p>
+            <p>
+              {Array.isArray(contact.addresses)
+                ? contact.addresses.join(", ")
+                : contact.addresses}
+            </p>
+            <button onClick={() => handleDeleteContact(index)}>
+              Delete Contact
+            </button>
+            <button onClick={() => handleEditContact(index)}>Edit</button>
+          </div>
+        ))}
+      </div>
+      <button onClick={onClose}>Close</button>
+    </div>
+  </div>
+);
 };
 
 export default ContactsWindow;
