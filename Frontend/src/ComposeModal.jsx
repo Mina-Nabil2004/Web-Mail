@@ -3,16 +3,13 @@ import "./ComposeModal.css";
 import axios from "axios";
 import {Builder} from "./EmailBuilder.jsx"
 import { red } from "@mui/material/colors";
-import "./Form.css";
 
 const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID, maxPageSize, page, onSend, onDraft }) => {
   if (!isOpen) return null; 
   const [receivers, setReceivers] = useState([]);
   const [priority, setPriority] = useState(null);
   const builder = Builder.getInstance();
-  // const [rank, setRank] = useState(null);
   const [attachments, setAttachments] = useState([]); // Changed to array for multiple attachments
-  const [errors, setErrors] = useState(0);
   console.log(activeFolderID);
 
   const handleReceiversChange = (e) => {
@@ -31,7 +28,6 @@ const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID
       onClose();
       console.log("Email sent:", response.data);
     } catch (err) {
-      setErrors(1);
       console.error("Error sending email:", err);
     }
   };
@@ -45,27 +41,28 @@ const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID
   const handleAttachmentChange = (e) => {
     const files = Array.from(e.target.files); // Convert FileList to an array
     const newAttachments = files.map((file) => ({
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      data: file.data,
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        data: null, // Placeholder for Blob data
     }));
-  
-    // Read files and update base64 data
+
+    // Read files and update Blob data
     newAttachments.forEach((file, index) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        file.data = reader.result; // Set the base64 data
-        setAttachments((prevAttachments) => {
-          const updatedAttachments = [...prevAttachments, file]; // Append new file
-          builder.setAttachments(updatedAttachments); // Update builder's attachments
-          return updatedAttachments; // Update local state
-        });
-      };
-      reader.readAsDataURL(files[index]); // Read the file data
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const arrayBuffer = reader.result;
+            const blob = new Blob([arrayBuffer], { type: file.type });
+            file.data = blob; // Set the Blob data
+            setAttachments((prevAttachments) => {
+                const updatedAttachments = [...prevAttachments, file]; // Append new file
+                builder.setAttachments(updatedAttachments); // Update builder's attachments
+                return updatedAttachments; // Update local state
+            });
+        };
+        reader.readAsArrayBuffer(files[index]); // Read the file data as ArrayBuffer
     });
-  };
-  
+};
 
 const handleRemoveAttachment = (index) => {
   const newAttachments = attachments.filter((_, i) => i !== index);
@@ -104,7 +101,6 @@ const handleOpenAttachment = (attachment) => {
   }
 };
 
-
 const handleDownloadAttachment = (attachment) => {
   // Decode the base64 data into binary
   const byteCharacters = atob(attachment.data.split(',')[1]); // Remove the "data:image/png;base64," part
@@ -131,9 +127,9 @@ const handleDownloadAttachment = (attachment) => {
   return (
     <div className="compose-modal">
       <div className="modal-content">
-        <span className="close-btn" onClick={onClose}>&times;
+        <span className="close-btn" onClick={onClose}>
+          &times;
         </span>
-        {errors === 1 && <div className="form-error">Connot Find Receiver</div>}
         <h2>New Message</h2>
         <form onSubmit={handleSend}>
           <div className="input-group">
@@ -178,7 +174,6 @@ const handleDownloadAttachment = (attachment) => {
                   type="radio"
                   name="rank"
                   value="1"
-                  // checked={priority == '1'}
                   onChange={(e) => builder.setPriority(1)}
                 />
                 1
@@ -188,7 +183,6 @@ const handleDownloadAttachment = (attachment) => {
                   type="radio"
                   name="rank"
                   value="2"
-                  // checked={priority === 2}
                   onChange={(e) => builder.setPriority(2)}
                 />
                 2
@@ -198,7 +192,6 @@ const handleDownloadAttachment = (attachment) => {
                   type="radio"
                   name="rank"
                   value="3"
-                  //  checked={priority === 3}
                   onChange={(e) => builder.setPriority(3)}
                 />
                 3
@@ -208,14 +201,12 @@ const handleDownloadAttachment = (attachment) => {
                   type="radio"
                   name="rank"
                   value="4"
-                  // checked={priority === 4}
                   onChange={(e) =>builder.setPriority(4)}
                 />
                 4
               </label>
             </div>
           </div>
-
 
            {/* Attachment input */}
            <div className="input-group">

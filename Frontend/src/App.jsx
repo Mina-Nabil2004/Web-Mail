@@ -312,10 +312,10 @@ function App() {
                       <div className="email-right">
                         
                         <button className="read-button" onClick={() => handleReadEmail(email.emailID)}>Read</button>
-                        {folders[3].folderID !== activeFolderID ? (
-                          <button className="move-button" onClick={() => handleMoveButtonClick(email.emailID)}>Move</button>
-                        ) : folders[2].folderID !== activeFolderID ? (
+                        {folders[3].folderID === activeFolderID ? (
                           <button className="read-button" onClick={() => handleRestoreEmail(email.emailID)}>Restore</button>
+                        ) : folders[2].folderID !== activeFolderID ? (
+                          <button className="move-button" onClick={() => handleMoveButtonClick(email.emailID)}>Move</button>
                         ) : (
                           <button className="read-button" onClick={() => handleDraftEmail(email.emailID)}>Edit</button>
                         )}
