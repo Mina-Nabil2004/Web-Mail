@@ -159,8 +159,10 @@ const ContactsWindow = ({ onClose }) => {
               <div key={index} className="contact-item">
                 <p onClick={() => handleEditContact(index)}>
                   {contact.name || "Unnamed Contact"}
+                  
                 </p>
                 <p>{Array.isArray(contact.addresses) ? contact.addresses.join(", ") : contact.addresses}</p>
+                <p>{contact.email}</p>
                 <button onClick={() => handleDeleteContact(index)}>Delete Contact</button>
                 <button onClick={() => handleEditContact(index)}>Edit Contact</button>
               </div>
