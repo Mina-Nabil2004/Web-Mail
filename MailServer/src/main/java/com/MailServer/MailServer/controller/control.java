@@ -185,7 +185,7 @@ public class control {
         }
     }
 
-    @GetMapping("/filterContact/{contactID}/{criteria}/{page}")
+    @PostMapping("/filterContact/{userID}/{criteria}/{page}")
     public ResponseEntity<Object> filterContact(@RequestBody ContactFilterDTO request, @PathVariable Long userID, @PathVariable String criteria, @PathVariable int page){
         try{
             return ResponseEntity.ok(userService.filterContact(request,userID,criteria,page));

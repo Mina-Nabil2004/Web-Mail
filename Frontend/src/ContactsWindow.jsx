@@ -89,12 +89,25 @@ const ContactsWindow = ({ onClose }) => {
     setSelectedContactIndex(index);
   };
 
-  // Search function
-  const handleSearchClick = () => {
-    // Implement search logic here
-    console.log("Searching for:", searchQuery);
+  const handleSearchClick = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/email/filterContact/${userId}/name/0`, 
+        {
+            name: searchQuery  
+        }
+      );
+      console.log(searchQuery);
+      setContacts(response.data);
+      console.log(response.data); // Log response data
+    } catch (error) {
+      console.error("Error searching contacts:", error);
+    }
   };
-
+  
+  
+  
+  
   return (
     <div className="contacts-window">
       {/* Add Contact Window */}
