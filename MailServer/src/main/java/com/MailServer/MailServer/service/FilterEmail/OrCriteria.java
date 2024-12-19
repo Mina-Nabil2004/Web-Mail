@@ -11,13 +11,15 @@ public class OrCriteria implements Criteria{
     private Criteria criteria3;
     private Criteria criteria4;
     private Criteria criteria5;
+    private Criteria criteria6;
 
     public OrCriteria(String criteria) {
         this.criteria1 = new CriteriaSender(criteria);
         this.criteria2 = new CriteriaSubject(criteria);
         this.criteria3 = new CriteriaDate(criteria);
         this.criteria4 = new CriteriaBody(criteria);
-//        this.criteria5 = new ;
+        this.criteria5 = new Criteriapriority(criteria);
+        this.criteria6 = new CriteriaReciever(criteria);
     }
 
     @Override
@@ -55,17 +57,24 @@ public class OrCriteria implements Criteria{
                 }
             }
         }
-//        if(this.criteria5.get()!=null){
-//            ArrayList<Email> criteria5filters =this.criteria5.meetCriteria(emails);
-//            for (Email email:criteria5filters){
-//                if(!criteriaFilters.contains(email)){
-//                    criteriaFilters.add(email);
-//                }
-//            }
-//        }
+        if(this.criteria5.get()!=null){
+            List<Email> criteria5filters =this.criteria5.meetCriteria(emails);
+            for (Email email:criteria5filters){
+                if(!criteriaFilters.contains(email)){
+                    criteriaFilters.add(email);
+                }
+            }
+        }
+        if(this.criteria6.get()!=null){
+            List<Email> criteria6filters =this.criteria5.meetCriteria(emails);
+            for (Email email:criteria6filters){
+                if(!criteriaFilters.contains(email)){
+                    criteriaFilters.add(email);
+                }
+            }
+        }
         return criteriaFilters;
     }
-
     @Override
     public String get() {
         return null;
