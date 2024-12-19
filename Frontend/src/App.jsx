@@ -50,6 +50,15 @@ function App() {
   const [destinationssss, setDestinationssss] = useState(null);
   const [isDraftFolderModalOpen, setDraftFolderModalOpen] = useState(false); 
   const [selectedDraftEmail, setSelectedDraftEmail] = useState(null);
+  const [rankState, setRankState] = useState("Default");
+
+  const toggleRankState = () => {
+    setRankState((prevState) => {
+      if (prevState === "Default") return "Descending";
+      if (prevState === "Descending") return "Ascending";
+      return "Default";
+    });
+  };
  
  
   const openDraftFolderModal = () => {
@@ -328,6 +337,32 @@ function App() {
               <div style={{ display: "flex" , marginTop: "-50px", position:"fixed", zIndex: "3"}}>
                 <h2 style={{width: "100px", marginLeft: "-35px"}}>{activeMenu}</h2>
                 <div style={{ display: "flex", marginLeft: "100px" }}>
+                  <button
+                  className="rank-button"
+                  style={{
+                    marginLeft: "10px",
+                    padding: "10px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    backgroundColor:
+                      rankState === "Default"
+                        ? "#f0f0f0"
+                        : rankState === "Descending"
+                        ? "#d0e6a5"
+                        : "#f4b4b4",
+                    minWidth: "120px", // Minimum width to make sure all text fits
+                    textAlign: "center", // Center text within the button
+                  }}
+                  onClick={toggleRankState}
+                >
+                  {rankState === "Default"
+                    ? "Default"
+                    : rankState === "Descending"
+                    ? "Descending"
+                    : "Ascending"}
+                </button>
+
+
                   <button className="pages-button" style={{ marginLeft: "1300px", marginRight: "10px" }} onClick={() => handlePageChange(-1)} disabled={page === 0}>
                     <FaArrowLeft />
                   </button>
