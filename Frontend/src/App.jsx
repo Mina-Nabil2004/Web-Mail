@@ -56,8 +56,10 @@ function App() {
     // Determine the next state
     const states = ["Default", "Descending", "Ascending"];
     const nextState = states[(states.indexOf(rankState) + 1) % states.length];
+    // if(nextState != "Default"){setFiltering(true)}
+    // else{setFiltering(false)}
     setRankState(nextState);
-    const order = nextState === "Ascending"; // `true` for ascending, `false` for descending
+    const order = nextState === "Ascending"; // true for ascending, false for descending
     const criteria = "priority"; // Replace with your actual sorting criteria
     // const folderID = 53;    // Replace with your actual folder ID
     try {
@@ -70,8 +72,6 @@ function App() {
       console.error("Failed to sort emails:", error.response?.data || error.message);
     }
   };
-
- 
  
   const openDraftFolderModal = () => {
     setDraftFolderModalOpen(true);
@@ -85,22 +85,24 @@ function App() {
     const handleMoveEmail = async () => {
       console.log(selectedFolder);
       console.log(folders);
-      let wantedfolder;
-      for(let i=0 ;i<folders.length ;i++) {
-        if(folders[i].name === selectedFolder) {
-          wantedfolder = folders[i].folderID;
-        }
-      }
-      console.log(selectedFolder)
-      console.log(wantedfolder);
-      console.log(destinationssss);
+      // let wantedfolder;
+      // for(let i=0 ;i<folders.length ;i++) {
+      //   if(folders[i].name === selectedFolder) {
+      //     wantedfolder = folders[i].folderID;
+      //   }
+      // }
+      console.log(selectedFolder);
+      console.log(selectedEmails);
+      // console.log(wantedfolder);
+      // console.log(destinationssss);
       try{
-        const response = await axios.post(`http://localhost:8080/email/move/${activeFolderID}/${wantedfolder}/${maxPageSize}/${page}`,
+        const response = await axios.post(`http://localhost:8080/email/move/${activeFolderID}/${selectedFolder}/${maxPageSize}/${page}`,
           {
-            "emailIDs" : [destinationssss]
+            "emailIDs" : selectedEmails
           }
         );
-        setFolders(response.data);
+        setActiveFolder(response.data);
+        setSelectedEmails([]);
       }catch(e){
         console.error("Error moving email:", e);
       }
@@ -109,6 +111,7 @@ function App() {
       setIsMoveModalOpen(false); // Close the modal after moving
   };
   const handleMoveButtonClick = (emailID) => {
+    console.log(activeFolder);
     setDestinationssss(emailID);
     setIsMoveModalOpen(true); // Show the folder selection modal
   };
@@ -184,17 +187,19 @@ function App() {
 
   const handlePageChange = async (direction) => {
     if(maxPageSize == activeFolder.length && direction == 1){
+      let response;
       if(!searching && !filtering){
-        const response = await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page+1}`);
+        response = await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page+1}`);
       }
       else if(searching){
-        const response = await axios.get(
+        console.log("hello");
+        response = await axios.get(
           `http://localhost:8080/email/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page+1}`
         );
         setActiveFolder(response.data);
       }
       else if(filtering){
-        const response = await axios.post(`http://localhost:8080/email/filterEmails/${activeFolderID}/${"and"}/${maxPageSize}/${page+1}`,filterOptions);
+        response = await axios.post(`http://localhost:8080/email/filterEmails/${activeFolderID}/${"and"}/${maxPageSize}/${page+1}`,filterOptions);
         setActiveFolder(response.data);
       }
       if(response.data != ""){
@@ -207,6 +212,7 @@ function App() {
         setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page-1}`)).data);
       }
       else if(searching){
+        console.log("hello");
         const response = await axios.get(
           `http://localhost:8080/email/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page-1}`
         );
@@ -260,19 +266,29 @@ function App() {
       }
     });
   };
-  const handleBulkMove = () => {
+  const handleBulkMove = async () => {
+    handleMoveButtonClick();
+    console.log(selectedFolder);
+    console.log(selectedEmails);
     if (selectedEmails.length > 0 && selectedFolder) {
-      // Logic to move the selected emails to the selected folder
       console.log("Moving emails to:", selectedFolder);
-      // Meow API call to delete the selected emails
+      const response = await axios.post(`http://localhost:8080/email/move/${activeFolderID}/${selectedFolder}/${maxPageSize}/${page}`,
+        {
+          "emailIDs": selectedEmails
+        });
+      setActiveFolder(response.data);
     }
   };
   
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
     if (selectedEmails.length > 0) {
-      // Logic to delete the selected emails
       console.log("Deleting emails:", selectedEmails);
-      // Meow API call to delete the selected emails
+      const response = await axios.post(`http://localhost:8080/email/movetoTrash/${activeFolderID}/${folders[3].folderID}/${maxPageSize}/${page}`,
+        {
+          "emailIDs": selectedEmails
+        });
+      setActiveFolder(response.data);
+      setSelectedEmails([]);
     }
   };
 
@@ -349,31 +365,32 @@ function App() {
               <div style={{ display: "flex" , marginTop: "-50px", position:"fixed", zIndex: "3"}}>
                 <h2 style={{width: "100px", marginLeft: "-35px"}}>{activeMenu}</h2>
                 <div style={{ display: "flex", marginLeft: "100px" }}>
-                  <button
-                  className="rank-button"
-                  style={{
-                    marginLeft: "10px",
-                    padding: "10px",
-                    border: "1px solid #ccc",
-                    borderRadius: "5px",
-                    backgroundColor:
-                      rankState === "Default"
-                        ? "#f0f0f0"
-                        : rankState === "Descending"
-                        ? "#d0e6a5"
-                        : "#f4b4b4",
-                    minWidth: "120px", // Minimum width to make sure all text fits
-                    textAlign: "center", // Center text within the button
-                  }}
-                  onClick={toggleRankState}
-                >
-                  {rankState === "Default"
-                    ? "Default"
-                    : rankState === "Descending"
-                    ? "Descending"
-                    : "Ascending"}
+                <button
+                    className="rank-button"
+                    style={{
+                      marginLeft: "-100px",
+                      marginTop:"-2px",
+                      height:"40px",
+                      padding: "2px",
+                      border: "1px solid #ccc",
+                      borderRadius: "5px",
+                      backgroundColor:
+                        rankState === "Default"
+                          ? "#f0f0f0"
+                          : rankState === "Descending"
+                          ? "#d0e6a5"
+                          : "#f4b4b4",
+                      minWidth: "90px", // Minimum width to make sure all text fits
+                      textAlign: "center", // Center text within the button
+                    }}
+                    onClick={toggleRankState}
+                    >
+                    {rankState === "Default"
+                      ? "Default"
+                      : rankState === "Descending"
+                      ? "Descending"
+                      : "Ascending"}
                 </button>
-
 
                   <button className="pages-button" style={{ marginLeft: "1300px", marginRight: "10px" }} onClick={() => handlePageChange(-1)} disabled={page === 0}>
                     <FaArrowLeft />
@@ -402,7 +419,7 @@ function App() {
                                 onChange={() => handleEmailSelect(email.emailID)}
                         />
                         <div className="email-content">
-                          <h3>{email.subject}</h3>
+                          <h3>{email.subject}   (priority: <strong>{email.priority})</strong></h3>
                           <p>
                             <strong>From: </strong> {email.sender}
                           </p>
@@ -450,15 +467,15 @@ function App() {
           <div className="move-folder-content">
             <h3>Select a Folder</h3>
             <div>
-              {["inbox", "sent", "drafts", "trash", "starred"].map((folderName) => (
-                <label key={folderName}>
+              {folders.map((folder) => (
+                <label key={folder.name}>
                   <input
                     type="radio"
                     name="folder"
-                    value={folderName}
-                    onChange={() => setSelectedFolder(folderName)}
+                    value={folder.name}
+                    onChange={() => setSelectedFolder(folder.folderID)}
                   />
-                  {folderName.charAt(0).toUpperCase() + folderName.slice(1)}
+                  {folder.name.charAt(0).toUpperCase() + folder.name.slice(1)}
                 </label>
               ))}
             </div>

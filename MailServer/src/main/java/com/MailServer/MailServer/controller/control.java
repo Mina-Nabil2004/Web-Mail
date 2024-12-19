@@ -228,6 +228,14 @@ public class control {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
         }
     }
+    @PostMapping("/moveOne/{emailID}/{sourceFolderID}/{destinationFolderID}/{maxPageSize}/{page}")
+    public ResponseEntity<Object> moveOneEmail(@PathVariable Long emailID, @PathVariable Long sourceFolderID, @PathVariable Long destinationFolderID,@PathVariable int page, @PathVariable int maxPageSize) {
+        try {
+            return ResponseEntity.ok(userService.moveEmail(emailID,sourceFolderID,destinationFolderID,maxPageSize,page));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to sort emails: " + e.getMessage());
+        }
+    }
     @PostMapping("/editContact/{contactID}/{userID}")
     public ResponseEntity<Object> editContact(@RequestBody ContactDTO dto, @PathVariable Long contactID,@PathVariable Long userID) {
         try {

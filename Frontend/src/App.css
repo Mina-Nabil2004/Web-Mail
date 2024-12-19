@@ -57,7 +57,7 @@
   font-size: 20px;
   color: #333;
   margin-bottom: 20px;
-  z-index: -1;
+  margin-left: 20px;
 }
 
 .email-item p {
@@ -322,4 +322,65 @@ body.dark-mode {
   right: 100px;
   display: flex; 
   margin-left: 100px;
+}
+
+/* Style for the button */
+.toggle-button {
+  padding: 12px 25px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  text-transform: uppercase;
+}
+
+/* Default state (light background with soft shadow) */
+.toggle-button.default {
+  background: linear-gradient(145deg, #f0f0f0, #d9d9d9);
+  color: #333;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Rank state (green with soft shadow and hover effect) */
+.toggle-button.rank {
+  background: linear-gradient(145deg, #4caf50, #45a049);
+  color: white;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-button.rank:hover {
+  background: linear-gradient(145deg, #45a049, #4caf50);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Rank inverse state (red with hover effect and soft shadow) */
+.toggle-button.rank-inverse {
+  background: linear-gradient(145deg, #f44336, #d32f2f);
+  color: white;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-button.rank-inverse:hover {
+  background: linear-gradient(145deg, #d32f2f, #f44336);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Icon style */
+.toggle-button i {
+  font-size: 22px;
+  transition: transform 0.3s ease;
+}
+
+/* Hover icon effect */
+.toggle-button:hover i {
+  transform: rotate(15deg);
 }
