@@ -5,7 +5,7 @@ public class AttachmentDTO {
     private String name;
     private String type;
     private int size;
-    private byte[] data;
+    private String data;
 
     public AttachmentDTO(){}
 
@@ -15,7 +15,7 @@ public class AttachmentDTO {
         this.attachmentID = attachmentID;
         this.size = size;
     }
-    public AttachmentDTO(Long attachmentID, byte[] data){
+    public AttachmentDTO(Long attachmentID,String data){
         this.attachmentID = attachmentID;
         this.data = data;
     }
@@ -51,11 +51,11 @@ public class AttachmentDTO {
         this.size = size;
     }
 
-    public byte[] getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(byte[] data) {
+    public void setData(String data) {
         this.data = data;
     }
 }

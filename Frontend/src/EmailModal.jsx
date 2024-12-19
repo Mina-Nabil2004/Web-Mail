@@ -15,31 +15,22 @@ const EmailModal = ({ email, onClose, builder }) => {
   // Open Attachment in a New Tab
   const handleOpenAttachment = async (attachment) => {
     try {
-      // Extract base64 data after the comma (e.g., "data:image/jpeg;base64,...")
-      const response = await axios.get(`http://localhost:8080/email/attachment/${attachment.attachmentID}`)
+      // Fetch the attachment data (assuming it's base64-encoded)
+      const response = await axios.get(`http://localhost:8080/email/attachment/${attachment.attachmentID}`);
       const base64Data = response.data.data.split(",")[1];
-      // Decode base64 data into binary
-      const byteCharacters = atob(base64Data);
-      const byteArrays = [];
-
-      for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
-        const slice = byteCharacters.slice(offset, offset + 1024);
-        const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) {
-          byteNumbers[i] = slice.charCodeAt(i);
-        }
-        byteArrays.push(new Uint8Array(byteNumbers));
-      }
-
-      // Create a blob and open in a new tab
-      const blob = new Blob(byteArrays, { type: attachment.attachmentType });
-      const url = URL.createObjectURL(blob);
-      window.open(url, "_blank");
+  
+      // Create a data URL for the image
+      const imageUrl = `data:${attachment.attachmentType};base64,${base64Data}`;
+  
+      // Open the image in a new tab by creating an img element in the new window
+      const newWindow = window.open();
+      newWindow.document.write(`<img src="${imageUrl}" alt="Attachment" />`);
     } catch (error) {
       console.error("Error opening attachment:", error);
       alert("Failed to open the attachment.");
     }
   };
+  
 
   // Download Attachment
   const handleDownloadAttachment = (attachment) => {
