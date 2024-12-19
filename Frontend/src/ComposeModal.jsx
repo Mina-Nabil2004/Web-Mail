@@ -3,6 +3,7 @@ import "./ComposeModal.css";
 import axios from "axios";
 import {Builder} from "./EmailBuilder.jsx"
 import { red } from "@mui/material/colors";
+import "./Form.css";
 
 const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID, maxPageSize, page, onSend, onDraft }) => {
   if (!isOpen) return null; 
@@ -11,6 +12,7 @@ const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID
   const builder = Builder.getInstance();
   // const [rank, setRank] = useState(null);
   const [attachments, setAttachments] = useState([]); // Changed to array for multiple attachments
+  const [errors, setErrors] = useState(0);
   console.log(activeFolderID);
 
   const handleReceiversChange = (e) => {
@@ -29,6 +31,7 @@ const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID
       onClose();
       console.log("Email sent:", response.data);
     } catch (err) {
+      setErrors(1);
       console.error("Error sending email:", err);
     }
   };
@@ -128,9 +131,9 @@ const handleDownloadAttachment = (attachment) => {
   return (
     <div className="compose-modal">
       <div className="modal-content">
-        <span className="close-btn" onClick={onClose}>
-          &times;
+        <span className="close-btn" onClick={onClose}>&times;
         </span>
+        {errors === 1 && <div className="form-error">Connot Find Receiver</div>}
         <h2>New Message</h2>
         <form onSubmit={handleSend}>
           <div className="input-group">
