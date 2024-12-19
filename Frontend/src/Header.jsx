@@ -8,19 +8,19 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import ProfileMenu from "./ProfileMenu";
 import axios from "axios";
 
-const Header = ({ userId, onLogout, activeFolderID, maxPageSize, page, setActiveFolder}) => {
+const Header = ({searchQuery, setSearchQuery, filterOptions, setFilterOptions, userId, onLogout, activeFolderID, maxPageSize, page, setActiveFolder, setSearching, searching, filtering, setFiltering, setActiveFolde}) => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [user, setUser] = useState({ });
   const [initial, setInitial] = useState();
   const [filterWindowOpen, setFilterWindowOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterOptions, setFilterOptions] = useState({
-    datetime: '',
-    sender: '',
-    receiver : '',
-    subject : '',
-    body : ''
-  });
+  // const [searchQuery, setSearchQuery] = useState("");
+  // const [filterOptions, setFilterOptions] = useState({
+  //   datetime: '',
+  //   sender: '',
+  //   receiver : '',
+  //   subject : '',
+  //   body : ''
+  // });
 
   const toggleProfileMenu = () => {
     setProfileMenuOpen((prevState) => !prevState);
@@ -46,12 +46,20 @@ const Header = ({ userId, onLogout, activeFolderID, maxPageSize, page, setActive
   }, [userId]); // Dependency on userId
 
   const handleSearchClick = async () => {
+    if(searching){setSearching(false)}
+    else{setSearching(true);setFiltering(false)}
+    console.log(activeFolderID);
+    console.log(searchQuery);
+    console.log(maxPageSize);
+    console.log(page);
     const response = await axios.get(
       `http://localhost:8080/email/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page}`
     );
     setActiveFolder(response.data);
   };
   const handleRefreashClick = async () => {
+    setSearching(false);
+    setFiltering(false);
     const response = await axios.get(
       `http://localhost:8080/email/folders/${activeFolderID}/${maxPageSize}/${page}`);
     setActiveFolder(response.data);
@@ -60,6 +68,14 @@ const Header = ({ userId, onLogout, activeFolderID, maxPageSize, page, setActive
     setSearchQuery(event.target.value);
   };
   const handleFilterClick = () => {
+    if(filtering){setFiltering(false);setFilterOptions({
+      datetime: '',
+      sender: '',
+      receiver : '',
+      subject : '',
+      body : ''
+    });return;}
+    else{setFiltering(true);setSearching(false)}
     setFilterWindowOpen(true);
   };
 

@@ -285,10 +285,10 @@ public class UserService {
         List<Email> emails =  folderRepository.findById(folderID).orElseThrow().getEmails();
         return FilterFacade.filter(new FilterDTO() ,emails, criteria, pageNo, maxPageSize);
     }
-    public Object searchContact(Long userID, String criteria, int pageNo, int maxPageSize) {
-        List<Contact> contacts =  userRepository.findById(userID).orElseThrow().getContacts();
-        return FilterFacade.filter(new FilterDTO() ,contacts, criteria, pageNo, maxPageSize);
-    }
+//    public Object searchContact(Long userID, String criteria, int pageNo, int maxPageSize) {
+//        List<Contact> contacts =  userRepository.findById(userID).orElseThrow().getContacts();
+//        return FilterFacade.filter(new FilterDTO() ,contacts, criteria, pageNo, maxPageSize);
+//    }
     public Object filterContact(ContactFilterDTO request, Long userID, String criteria, int pageNo) {
         CriteriaContact filter = ContactFactory.getCriteria(request,criteria);
         List<Contact> contacts = userRepository.findById(userID).orElseThrow().getContacts();

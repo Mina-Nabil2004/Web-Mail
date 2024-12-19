@@ -19,14 +19,15 @@ public class ContactFactory {
 //        }
 //        return null;
 
-        return switch (criteria) {
-//        else if(criteria.equals("receiver")){
-//            return new CriteriaReciever(dto);
+//        return switch (criteria) {
+////        else if(criteria.equals("receiver")){
+////            return new CriteriaReciever(dto);
+////        }
+//            case "datetime" -> new CriteriaDate(dto);
+//            case "and" -> new AndCriteria(dto);
+//            default -> new OrCriteria(criteria);
 //        }
-            case "datetime" -> new CriteriaDate(dto);
-            case "and" -> new AndCriteria(dto);
-            default -> new OrCriteria(criteria);
-        }
+        return null;
     }
 
 }

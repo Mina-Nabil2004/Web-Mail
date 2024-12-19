@@ -10,7 +10,7 @@ import AddFolderModal from "./AddFolderModal";
 import "./Menu.css";
 import axios from "axios";
 
-const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handleAllMail, folders, setActiveFolder, setActiveFolderID, activeFolderID, maxPageSize,page, setPage,categories,setCategories}) => {
+const Menu = ({ userId, user, activeMenu, setActiveMenu, setFiltering, setSearching, onSend, onDraft , handleAllMail, folders, setActiveFolder, setActiveFolderID, activeFolderID, maxPageSize,page, setPage,categories,setCategories}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isContactsOpen, setContactsOpen] = useState(false);
   const [isAddFolderModalOpen, setAddFolderModalOpen] = useState(false); 
@@ -35,6 +35,8 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
 
   const handleMenuClick = async (menu) => {
     setPage(0);
+    setSearching(false);
+    setFiltering(false);
     for(let i=0 ;i<folders.length ;i++) {
       if(folders[i].name === menu) {
        try {
@@ -51,6 +53,8 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
 
   const handleAllMailClick = async () =>{
     setPage(0);
+    setSearching(false);
+    setFiltering(false);
     try {
       const response = await axios.get(`http://localhost:8080/email/allMail/${userId}/${maxPageSize}/${0}`)
       setActiveFolder(response.data);
@@ -62,6 +66,8 @@ const Menu = ({ userId, user, activeMenu, setActiveMenu, onSend, onDraft , handl
   };
   const handleCatgoryClick = async (category) =>{
     setPage(0);
+    setSearching(false);
+    setFiltering(false);
     try {
       const response = await axios.get(`http://localhost:8080/email/folder/${category.folderID}/${maxPageSize}/${0}`)
       setActiveFolder(response.data);
