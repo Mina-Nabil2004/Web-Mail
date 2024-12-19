@@ -176,7 +176,7 @@ public class UserService {
     }
     public Object getUserAttachment(Long attachmentID) {
         Attachment attachment = attachmentRepository.findById(attachmentID).orElseThrow();
-        return new AttachmentDTO(attachment.getAttachmentID(),attachment.getData());
+        return new AttachmentDTO(attachment.getAttachmentID(), attachment.getName(), attachment.getType(), attachment.getSize(), attachment.getData());
     }
 
     @Transactional

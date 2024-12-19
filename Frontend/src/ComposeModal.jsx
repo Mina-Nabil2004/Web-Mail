@@ -9,6 +9,7 @@ const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID
   const [receivers, setReceivers] = useState([]);
   const [priority, setPriority] = useState(null);
   const builder = Builder.getInstance();
+  // const [rank, setRank] = useState(null);
   const [attachments, setAttachments] = useState([]); // Changed to array for multiple attachments
   console.log(activeFolderID);
 
@@ -41,28 +42,27 @@ const ComposeModal = ({ isOpen, onClose, userId, setActiveFolder, activeFolderID
   const handleAttachmentChange = (e) => {
     const files = Array.from(e.target.files); // Convert FileList to an array
     const newAttachments = files.map((file) => ({
-        name: file.name,
-        type: file.type,
-        size: file.size,
-        data: null, // Placeholder for Blob data
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      data: file.data,
     }));
-
-    // Read files and update Blob data
+  
+    // Read files and update base64 data
     newAttachments.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const arrayBuffer = reader.result;
-            const blob = new Blob([arrayBuffer], { type: file.type });
-            file.data = blob; // Set the Blob data
-            setAttachments((prevAttachments) => {
-                const updatedAttachments = [...prevAttachments, file]; // Append new file
-                builder.setAttachments(updatedAttachments); // Update builder's attachments
-                return updatedAttachments; // Update local state
-            });
-        };
-        reader.readAsArrayBuffer(files[index]); // Read the file data as ArrayBuffer
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        file.data = reader.result; // Set the base64 data
+        setAttachments((prevAttachments) => {
+          const updatedAttachments = [...prevAttachments, file]; // Append new file
+          builder.setAttachments(updatedAttachments); // Update builder's attachments
+          return updatedAttachments; // Update local state
+        });
+      };
+      reader.readAsDataURL(files[index]); // Read the file data
     });
-};
+  };
+  
 
 const handleRemoveAttachment = (index) => {
   const newAttachments = attachments.filter((_, i) => i !== index);
@@ -100,6 +100,7 @@ const handleOpenAttachment = (attachment) => {
     alert("Failed to open the attachment.");
   }
 };
+
 
 const handleDownloadAttachment = (attachment) => {
   // Decode the base64 data into binary
@@ -174,6 +175,7 @@ const handleDownloadAttachment = (attachment) => {
                   type="radio"
                   name="rank"
                   value="1"
+                  // checked={priority == '1'}
                   onChange={(e) => builder.setPriority(1)}
                 />
                 1
@@ -183,6 +185,7 @@ const handleDownloadAttachment = (attachment) => {
                   type="radio"
                   name="rank"
                   value="2"
+                  // checked={priority === 2}
                   onChange={(e) => builder.setPriority(2)}
                 />
                 2
@@ -192,6 +195,7 @@ const handleDownloadAttachment = (attachment) => {
                   type="radio"
                   name="rank"
                   value="3"
+                  //  checked={priority === 3}
                   onChange={(e) => builder.setPriority(3)}
                 />
                 3
@@ -201,12 +205,14 @@ const handleDownloadAttachment = (attachment) => {
                   type="radio"
                   name="rank"
                   value="4"
+                  // checked={priority === 4}
                   onChange={(e) =>builder.setPriority(4)}
                 />
                 4
               </label>
             </div>
           </div>
+
 
            {/* Attachment input */}
            <div className="input-group">
