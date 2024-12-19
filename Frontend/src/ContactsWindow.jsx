@@ -6,6 +6,7 @@ import EditContactWindow2 from "./EditContactWindow2"; // For editing an existin
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList'; // Filter icon import
 import "./Header.css";
+import zIndex from "@mui/material/styles/zIndex";
 
 const ContactsWindow = ({ onClose }) => {
   const [contacts, setContacts] = useState([]);
@@ -129,7 +130,8 @@ const ContactsWindow = ({ onClose }) => {
       )}
 
       {/* Search Bar and Filter Icon */}
-      <div className="search-bar-container">
+      {selectedIndex === null && selectedContactIndex === null &&(
+      <div className="search-bar-container" style={{display: "flex", zIndex:"-1"}}>
         <input
           type="text"
           placeholder="Search contacts..."
@@ -140,10 +142,11 @@ const ContactsWindow = ({ onClose }) => {
         <button className="search-button" onClick={handleSearchClick}>
           <SearchIcon />
         </button>
-        <button className="filter-button">
+        {/* <button className="filter-button">
           <FilterListIcon />
-        </button>
+        </button> */}
       </div>
+      )}
 
       {/* Contacts List */}
       {selectedIndex === null && selectedContactIndex === null && (

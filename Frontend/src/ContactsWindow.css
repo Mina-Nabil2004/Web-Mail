@@ -95,3 +95,9 @@ button:focus {
   color: white;
   margin-left: 10px;
 }
+
+.search-input{
+  width: 480px;
+  border-radius: 50px;
+  padding-left: 10px;
+}
