@@ -211,6 +211,10 @@ function App() {
     setActiveFolder(response.data);
   }
 
+  const handleDraftEmail = (emailID) => {
+    
+  }
+
   return (
     <div className="app">
       {!loggedIn ? (
@@ -308,10 +312,12 @@ function App() {
                         <button className="read-button" onClick={() => handleReadEmail(email.emailID)}>Read</button>
                         {folders[3].folderID != activeFolderID ?
                           (<button className="move-button" onClick={() => handleMoveButtonClick(email.emailID)}>Move</button>):
-                          (<button className="read-button" onClick={() => handleRestoreEmail(email.emailID)}>Restore</button>)
+                          folders[2].folderID != activeFolderID ?
+                          (<button className="read-button" onClick={() => handleRestoreEmail(email.emailID)}>Restore</button>):
+                          (<button className="read-button" onClick={() => handleDraftEmail(email.emailID)}>Edit</button>)
                         }
                         <button className="Delete-button" onClick={() => handleDelete(email.emailID)}>< FaTrashAlt /> </button>
-                        {folders[3].folderID != activeFolderID &&
+                        {(folders[2].folderID != activeFolderID || folders[3].folderID != activeFolderID)&&
                           (<button className="Started-button" onClick={() => handleStarred(email.emailID)}><FaStar /> </button>)
                         }
                       </div>
