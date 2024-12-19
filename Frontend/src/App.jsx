@@ -206,6 +206,11 @@ function App() {
     }
   };
 
+  const handleRestoreEmail = async (emailID) => {
+    const response = await axios.post(`http://localhost:8080/email/restoreEmail/${emailID}/${activeFolderID}/${maxPageSize}/${page}`);
+    setActiveFolder(response.data);
+  }
+
   return (
     <div className="app">
       {!loggedIn ? (
@@ -299,8 +304,12 @@ function App() {
                         </div>
                       </div>
                       <div className="email-right">
+                        
                         <button className="read-button" onClick={() => handleReadEmail(email.emailID)}>Read</button>
-                        <button className="move-button" onClick={() => handleMoveButtonClick(email.emailID)}>Move</button>
+                        {folders[3].folderID != activeFolderID ?
+                          (<button className="move-button" onClick={() => handleMoveButtonClick(email.emailID)}>Move</button>):
+                          (<button className="read-button" onClick={() => handleRestoreEmail(email.emailID)}>Restore</button>)
+                        }
                         <button className="Delete-button" onClick={() => handleDelete(email.emailID)}>< FaTrashAlt /> </button>
                         {folders[3].folderID != activeFolderID &&
                           (<button className="Started-button" onClick={() => handleStarred(email.emailID)}><FaStar /> </button>)
