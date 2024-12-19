@@ -163,17 +163,19 @@ function App() {
 
   const handlePageChange = async (direction) => {
     if(maxPageSize == activeFolder.length && direction == 1){
+      let response;
       if(!searching && !filtering){
-        const response = await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page+1}`);
+        response = await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page+1}`);
       }
       else if(searching){
-        const response = await axios.get(
+        console.log("hello");
+        response = await axios.get(
           `http://localhost:8080/email/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page+1}`
         );
         setActiveFolder(response.data);
       }
       else if(filtering){
-        const response = await axios.post(`http://localhost:8080/email/filterEmails/${activeFolderID}/${"and"}/${maxPageSize}/${page+1}`,filterOptions);
+        response = await axios.post(`http://localhost:8080/email/filterEmails/${activeFolderID}/${"and"}/${maxPageSize}/${page+1}`,filterOptions);
         setActiveFolder(response.data);
       }
       if(response.data != ""){
@@ -186,6 +188,7 @@ function App() {
         setActiveFolder((await axios.get(`http://localhost:8080/email/folder/${activeFolderID}/${maxPageSize}/${page-1}`)).data);
       }
       else if(searching){
+        console.log("hello");
         const response = await axios.get(
           `http://localhost:8080/email/searchEmails/${activeFolderID}/${searchQuery}/${maxPageSize}/${page-1}`
         );
