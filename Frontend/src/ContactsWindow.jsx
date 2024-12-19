@@ -110,7 +110,7 @@ const ContactsWindow = ({ onClose }) => {
   
   
   return (
-    <div className="contacts-window">
+    <div className="contacts-window" style={{marginTop:"100px"}}>
       {/* Add Contact Window */}
       {selectedIndex !== null && (
         <EditContactWindow
