@@ -66,7 +66,7 @@ const EditContactWindow2 = ({ contact, onSave, onCancel }) => {
               type="email"
               value={address}
               onChange={(e) => handleEmailChange(index, e.target.value)}
-              placeholder={`Email ${index + 1}`}
+              placeholder={`${contact.addresses} ${index + 1}`}
             />
             <button onClick={() => handleDeleteEmail(index)}>Delete</button>
           </div>
